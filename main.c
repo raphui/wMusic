@@ -2,26 +2,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <libspotify/api.h>
+#include "audio.h"
 
-#define USERNAME ""
-#define PASSWORD ""
+#define USERNAME "othane"
+#define PASSWORD "TestRaphio"
 
-int log_in = 0;
+
+sp_session *sp;
+sp_track *track;
+static audio_fifo_t g_audiofifo;
+
+int playing;
+int running;
+int login = 0;
 
 static void logged_in( sp_session *session , sp_error error)
 {
-    printf("In logged_in function.\n");
 
     if( error != SP_ERROR_OK )
     {
         printf("Fail to login, reason: %s.\n" ,  sp_error_message( error ) );
-    }
-    else
-    {
-        printf("Success to login.\n");
 
-        log_in = 1;
+        exit( 1 );
     }
+
+    printf("Success to login.\n");
+
+    login = 1;
 }
 
 static void logged_out( sp_session *session )
@@ -31,7 +38,19 @@ static void logged_out( sp_session *session )
 
 static void metadata_updated( sp_session *session )
 {
+    sp_error error;
 
+    if( track != NULL )
+    {
+        printf("Track name: %s" , sp_track_name( track ) );
+    }
+
+    error = sp_session_player_load( sp , track );
+
+    if( error != SP_ERROR_OK )
+    {
+        printf("Cannot load track, reason: %s" , sp_error_message( error ) );
+    }
 }
 
 static void connection_error( sp_session *session , sp_error error )
@@ -57,6 +76,79 @@ static void offline_status_updated( sp_session *session )
 static void credentials_blob_updated( sp_session *session , const char *blob )
 {
 
+}
+
+static void end_of_track( sp_session *session )
+{
+
+    audio_fifo_flush( &g_audiofifo );
+    sp_session_player_play( session , 0 );
+    sp_session_player_unload( session );
+
+    playing = 0;
+}
+
+static void start_playback( sp_session *session )
+{
+
+}
+
+static void stop_playback( sp_session *session )
+{
+
+}
+
+static int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames )
+{
+    printf("Playing music...\n");
+
+    audio_fifo_t *af = &g_audiofifo;
+    audio_fifo_data_t *afd;
+    size_t s;
+
+    // audio discontinuity, do nothing
+    if( num_frames == 0 )
+    {
+        pthread_mutex_unlock( &af->mutex );
+        return 0;
+    }
+
+    // buffer one second of audio
+    if( af->qlen > format->sample_rate )
+        return 0;
+
+    s = num_frames * sizeof( int16_t ) * format->channels;
+    afd = malloc( sizeof( *afd ) + s );
+
+    memcpy( afd->samples , frames , s );
+
+    afd->nsamples = num_frames;
+    afd->rate = format->sample_rate;
+    afd->channels = format->channels;
+
+    TAILQ_INSERT_TAIL( &af->q , afd , link );
+    af->qlen += num_frames;
+
+    pthread_cond_signal( &af->cond );
+    pthread_mutex_unlock( &af->mutex );
+
+    return num_frames;
+}
+
+void play( sp_session *sp , sp_track *track )
+{
+    sp_error error;
+
+    error = sp_session_player_load( sp , track );
+
+    if( error != SP_ERROR_OK )
+    {
+        printf("Cannot load track, reason: %s" , sp_error_message( error ) );
+    }
+    else
+    {
+        printf("Track loaded.\n");
+    }
 }
 
 const uint8_t g_appkey[] = {
@@ -85,26 +177,35 @@ const uint8_t g_appkey[] = {
 
 const size_t g_appkey_size = sizeof( g_appkey );
 
+static sp_session_callbacks spSessionCallbacks;
+
 int main( void )
 {
-    sp_session *sp;
     sp_session_config spconfig;
-    sp_session_callbacks spSessionCallbacks;
     sp_error error;
+    sp_link *link;
 
     char username[] = USERNAME;
     char password[] = PASSWORD;
 
     int next_timeout = 0;
 
+    memset( &spconfig , 0 , sizeof( spconfig ) );
+    memset( &spSessionCallbacks , 0 , sizeof( spSessionCallbacks ) );
+
     spSessionCallbacks.logged_in = &logged_in;
-    spSessionCallbacks.logged_out = &logged_out;
-    spSessionCallbacks.metadata_updated = &metadata_updated;
-    spSessionCallbacks.connection_error = &connection_error;
     spSessionCallbacks.notify_main_thread = &notify_main_thread;
-    spSessionCallbacks.log_message = &log_message;
-    spSessionCallbacks.offline_status_updated = &offline_status_updated;
-    spSessionCallbacks.credentials_blob_updated = &credentials_blob_updated;
+    spSessionCallbacks.end_of_track = &end_of_track;
+    spSessionCallbacks.start_playback = &start_playback;
+    spSessionCallbacks.stop_playback = &stop_playback;
+    spSessionCallbacks.music_delivery = &music_delivery;
+//    spSessionCallbacks.logged_out = &logged_out;
+//    spSessionCallbacks.metadata_updated = &metadata_updated;
+//    spSessionCallbacks.connection_error = &connection_error;
+
+//    spSessionCallbacks.log_message = &log_message;
+//    spSessionCallbacks.offline_status_updated = &offline_status_updated;
+//    spSessionCallbacks.credentials_blob_updated = &credentials_blob_updated;
 
     spconfig.api_version = SPOTIFY_API_VERSION;
     spconfig.cache_location = "/home/raphio/tmp";
@@ -129,14 +230,86 @@ int main( void )
     {
         printf("Trying to login....\n");
 
-        sp_session_login( sp , username , password , 0 , NULL );
+        login = 0;
 
-        while( !log_in )
+        error = sp_session_login( sp , username , password , 0 , NULL );
+
+        if( error != SP_ERROR_OK )
+        {
+            printf("Fail to login, reason: %s" , sp_error_message( error ) );
+
+            return -1;
+        }
+
+        while( login != 1 )
+        {
+            usleep( next_timeout * 1000 );
+
+            sp_session_process_events( sp , &next_timeout );
+        }
+
+        printf("Creating URI...\n");
+
+        link = sp_link_create_from_string("spotify:track:56fwHfJaBpaauvFJrnwk2L");
+
+        if( link == NULL )
+        {
+            printf("Fail to create link.\n");
+
+            return -1;
+        }
+        else
+        {
+            printf("Success to create link.\n");
+        }
+
+        printf("Construct track...\n");
+
+        track = sp_link_as_track( link );
+
+        if( track == NULL )
+        {
+            printf("Faibooll to create track.\n");
+
+            return -1;
+        }
+        else
+        {
+            printf("Success to create track.\n");
+        }
+
+        error = sp_track_add_ref( track );
+
+        if( error != SP_ERROR_OK )
+        {
+            printf("Cannot add ref track, reason: %s" , sp_error_message( error ) );
+        }
+
+        sp_link_release( link );
+
+//        error = sp_session_player_load( sp , track );
+//        error = sp_session_player_play( sp , 1 );
+
+//        if( error != SP_ERROR_OK )
+//        {
+//            printf("Cannot load track, reason: %s" , sp_error_message( error ) );
+//        }
+
+        running = 1;
+        playing = 0;
+
+        while( running )
         {
             sp_session_process_events( sp , &next_timeout );
 
-            usleep( next_timeout * 1000 );
+            if( ( login == 1 ) && ( playing == 0 ) )
+            {
+                play( sp , track );
+
+                playing = 1;
+            }
         }
+
     }
 
 
