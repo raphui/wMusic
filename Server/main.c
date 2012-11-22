@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pthread.h>
 #include <libspotify/api.h>
 
 #include "audio.h"
@@ -9,6 +10,7 @@
 #define USERNAME "othane"
 #define PASSWORD "TestRaphio"
 
+pthread_t serverThread;
 
 sp_session *sp;
 sp_track *track;
@@ -101,7 +103,18 @@ static void stop_playback( sp_session *session )
 
 static int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames )
 {
-    printf("Playing music...\n");
+//    s_data *buff;
+
+//    buff.sample_rate = format->sample_rate;
+//    buff.channels = format->channels;
+//    buff.frames = ( int16_t * ) frames;
+//    buff.num_frames = num_frames;
+
+//    printf("Playing music...%d\n" , buff.frames );
+
+//    sendData( format->sample_rate , format->channels , ( int * ) frames , num_frames );
+
+    printf("Playing music...%d\n" , num_frames );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
@@ -126,6 +139,8 @@ static int music_delivery( sp_session *session , const sp_audioformat *format , 
     afd->nsamples = num_frames;
     afd->rate = format->sample_rate;
     afd->channels = format->channels;
+
+    sendData( afd , s );
 
     TAILQ_INSERT_TAIL( &af->q , afd , link );
     af->qlen += num_frames;
@@ -155,12 +170,9 @@ void play( sp_session *sp , sp_track *track )
         printf("Track loaded.\n");
     }
 
-//    printf("Start server...\n");
+    printf("Start server...\n");
 
-//    if( createServer() == PC_ERROR )
-//    {
-//        printf("Cannot start the server...\n");
-//    }
+    pthread_create( &serverThread , NULL , &createServer , NULL );
 
     error = sp_session_player_play( sp , 1 );
 
@@ -310,14 +322,6 @@ int main( void )
         }
 
         sp_link_release( link );
-
-//        error = sp_session_player_load( sp , track );
-//        error = sp_session_player_play( sp , 1 );
-
-//        if( error != SP_ERROR_OK )
-//        {
-//            printf("Cannot load track, reason: %s" , sp_error_message( error ) );
-//        }
 
         audio_init( &g_audiofifo );
 

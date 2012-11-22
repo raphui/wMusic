@@ -15,3 +15,6 @@ HEADERS += \
     audio.h \
     server.h \
     types.h
+
+target.path = /home/pi/Development
+INSTALLS += target

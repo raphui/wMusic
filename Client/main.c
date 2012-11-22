@@ -5,17 +5,94 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <pthread.h>
 
-#define IP_SERVER "127.0.0.1"
+#include "audio.h"
+
+#define IP_SERVER   "127.0.0.1"
+#define BUFF_SIZE   4
+#define DATA_SIZE   8192
+
+static audio_fifo_t g_audiofifo;
+
+int sock;
+//int buff[BUFF_SIZE];
+
+struct sockaddr_in serverAddr;
+
+typedef struct data{
+
+    int sample_rate;
+    int channels;
+    int16_t frames;
+    int num_frames;
+
+}s_data;
+
+//int play( int sample_rate , int channels , int frames , int num_frames )
+int play( audio_fifo_data_t *data )
+{
+
+    printf("Playing music...%d\n" , data->nsamples );
+
+    audio_fifo_t *af = &g_audiofifo;
+    audio_fifo_data_t *afd;
+    size_t s;
+
+    afd = data;
+
+    // audio discontinuity, do nothing
+//    if( num_frames == 0 )
+//    {
+//        pthread_mutex_unlock( &af->mutex );
+//        return 0;
+//    }
+
+    if( afd->nsamples == 0 )
+    {
+        pthread_mutex_unlock( &af->mutex );
+        return 0;
+    }
+
+//    // buffer one second of audio
+//    if( af->qlen > sample_rate )
+//        return 0;
+
+    if( af->qlen > afd->rate )
+        return 0;
+
+//    s = num_frames * sizeof( int16_t ) * channels;
+//    afd = malloc( sizeof( *afd ) + s );
+
+//    memcpy( afd->samples , frames , s );
+
+//    afd->nsamples = num_frames;
+//    afd->rate = sample_rate;
+//    afd->channels = channels;
+
+    TAILQ_INSERT_TAIL( &af->q , afd , link );
+//    af->qlen += num_frames;
+    af->qlen += afd->nsamples;
+
+    pthread_cond_signal( &af->cond );
+    pthread_mutex_unlock( &af->mutex );
+
+//    return num_frames;
+    return afd->nsamples;
+}
 
 int main( void )
 {
 
-    int sock;
-    struct sockaddr_in serverAddr;
+    audio_fifo_data_t *buff;
 
+    audio_init( &g_audiofifo );
 
-    if( sock = socket( AF_INET , SOCK_STREAM , 0 ) < 0 )
+    buff = ( audio_fifo_data_t * ) malloc( DATA_SIZE * sizeof( audio_fifo_data_t ) );
+
+    sock = socket( AF_INET , SOCK_STREAM , 0 );
+
+    if( sock < 0 )
     {
         printf("Cannot create socket...\n");
 
@@ -33,6 +110,23 @@ int main( void )
         printf("Cannot connect to the server...\n");
 
         return -1;
+    }
+
+    while( 1 )
+    {
+        if( read( sock , buff , DATA_SIZE ) > 0 )
+        {
+
+            printf("Playing music...%d\n" , buff->nsamples );
+
+//            play( buff[0] , buff[1] , buff[2] , buff[3] );
+
+            play( buff );
+        }
+        else
+        {
+            printf("Cannot receive data.\n");
+        }
     }
 
     printf("\n");

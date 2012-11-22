@@ -1,9 +1,9 @@
 #include "server.h"
 
-int createServer( void )
+void createServer( void )
 {
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
-    int s_client;
+//    int s_client;
 
     struct sockaddr_in serv_addr;
 
@@ -13,7 +13,7 @@ int createServer( void )
     {
         printf("[-]Error to create socket.\n");
 
-        return PC_ERROR;
+        pthread_exit( PC_ERROR );
     }
 
     serv_addr.sin_family = AF_INET;
@@ -24,14 +24,14 @@ int createServer( void )
     {
         printf("[-]Error to bind on port: 1337.\n");
 
-        return PC_ERROR;
+        pthread_exit( PC_ERROR );
     }
 
     if( listen( s_server , 10 ) < 0 )
     {
         printf("[-]Error to listen to 10 connection.\n");
 
-        return PC_ERROR;
+        pthread_exit( PC_ERROR );
     }
 
     while( 1 )
@@ -40,12 +40,12 @@ int createServer( void )
         s_client = accept( s_server , NULL , NULL );
 
         printf("[!]New client connected.\n");
-        pthread_create( &thread , NULL , receivingThread , &s_client );
+        pthread_create( &thread , NULL , &receivingThread , &s_client );
 
     }
 
 
-    return PC_SUCCESS;
+    pthread_exit( PC_SUCCESS );
 }
 
 
@@ -79,4 +79,20 @@ void receivingThread( void *socket )
     printf("[!]Quitting receiving thread !\n");
 
     pthread_exit( NULL );
+}
+
+
+void sendData( audio_fifo_data_t *data , size_t size )
+{
+
+    printf("############################## SIZE: %d\n" , size );
+
+    if( s_client != 0 )
+    {
+        if( write( s_client , data , size ) < 0 )
+        {
+            printf("Cannot write data to client.\n");
+        }
+    }
+
 }
