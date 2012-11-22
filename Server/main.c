@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <libspotify/api.h>
-#include "audio.h"
 
-#define USERNAME ""
-#define PASSWORD ""
+#include "audio.h"
+#include "server.h"
+
+#define USERNAME "othane"
+#define PASSWORD "TestRaphio"
 
 
 sp_session *sp;
@@ -152,6 +154,13 @@ void play( sp_session *sp , sp_track *track )
     {
         printf("Track loaded.\n");
     }
+
+//    printf("Start server...\n");
+
+//    if( createServer() == PC_ERROR )
+//    {
+//        printf("Cannot start the server...\n");
+//    }
 
     error = sp_session_player_play( sp , 1 );
 
