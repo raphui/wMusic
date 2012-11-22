@@ -42,15 +42,13 @@ static void metadata_updated( sp_session *session )
 
     if( track != NULL )
     {
-        printf("Track name: %s" , sp_track_name( track ) );
+        printf("Track name: %s\n" , sp_track_name( track ) );
+
+        play( sp , track );
+
     }
 
-    error = sp_session_player_load( sp , track );
 
-    if( error != SP_ERROR_OK )
-    {
-        printf("Cannot load track, reason: %s" , sp_error_message( error ) );
-    }
 }
 
 static void connection_error( sp_session *session , sp_error error )
@@ -60,7 +58,7 @@ static void connection_error( sp_session *session , sp_error error )
 
 static void notify_main_thread( sp_session *session )
 {
-
+    printf("Notifying main thread.\n");
 }
 
 static void log_message( sp_session *session , const char *data )
@@ -80,6 +78,7 @@ static void credentials_blob_updated( sp_session *session , const char *blob )
 
 static void end_of_track( sp_session *session )
 {
+    printf("End of track...\n");
 
     audio_fifo_flush( &g_audiofifo );
     sp_session_player_play( session , 0 );
@@ -90,12 +89,12 @@ static void end_of_track( sp_session *session )
 
 static void start_playback( sp_session *session )
 {
-
+    printf("Starting playback...\n");
 }
 
 static void stop_playback( sp_session *session )
 {
-
+    printf("Stoping playback...\n");
 }
 
 static int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames )
@@ -137,18 +136,34 @@ static int music_delivery( sp_session *session , const sp_audioformat *format , 
 
 void play( sp_session *sp , sp_track *track )
 {
+    printf("Loading track...\n");
+
     sp_error error;
 
     error = sp_session_player_load( sp , track );
 
     if( error != SP_ERROR_OK )
     {
-        printf("Cannot load track, reason: %s" , sp_error_message( error ) );
+        printf("Cannot load track, reason: %s\n" , sp_error_message( error ) );
+
+        return;
     }
     else
     {
         printf("Track loaded.\n");
     }
+
+    error = sp_session_player_play( sp , 1 );
+
+    if( error != SP_ERROR_OK )
+    {
+        printf("Cannot play track, reason: %s\n" , sp_error_message( error ) );
+    }
+    else
+    {
+        printf("Success to play track.\n");
+    }
+
 }
 
 const uint8_t g_appkey[] = {
@@ -199,8 +214,8 @@ int main( void )
     spSessionCallbacks.start_playback = &start_playback;
     spSessionCallbacks.stop_playback = &stop_playback;
     spSessionCallbacks.music_delivery = &music_delivery;
+    spSessionCallbacks.metadata_updated = &metadata_updated;
 //    spSessionCallbacks.logged_out = &logged_out;
-//    spSessionCallbacks.metadata_updated = &metadata_updated;
 //    spSessionCallbacks.connection_error = &connection_error;
 
 //    spSessionCallbacks.log_message = &log_message;
@@ -269,7 +284,7 @@ int main( void )
 
         if( track == NULL )
         {
-            printf("Faibooll to create track.\n");
+            printf("Fail to create track.\n");
 
             return -1;
         }
@@ -295,6 +310,8 @@ int main( void )
 //            printf("Cannot load track, reason: %s" , sp_error_message( error ) );
 //        }
 
+        audio_init( &g_audiofifo );
+
         running = 1;
         playing = 0;
 
@@ -304,7 +321,8 @@ int main( void )
 
             if( ( login == 1 ) && ( playing == 0 ) )
             {
-                play( sp , track );
+                printf("Let's play the music !\n");
+
 
                 playing = 1;
             }
