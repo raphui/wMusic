@@ -6,8 +6,8 @@
 #include "audio.h"
 #include "server.h"
 
-#define USERNAME ""
-#define PASSWORD ""
+#define USERNAME "othane"
+#define PASSWORD "TestRaphio"
 
 
 sp_session *sp;
