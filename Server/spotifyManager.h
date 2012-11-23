@@ -10,12 +10,14 @@
 #include "audio.h"
 #include "server.h"
 #include "trace.h"
+#include "threadManager.h"
 
 #define USERNAME ""
 #define PASSWORD ""
 
 void launchSpotifyManager( void );
-void play( char *uri );
+void launchServer( void );
+int play( char *uri );
 
 static void playMusic( sp_session *sp , sp_track *track );
 static void logged_in( sp_session *session , sp_error error);
@@ -52,11 +54,13 @@ static const uint8_t g_appkey[] = {
 
 static const size_t g_appkey_size = sizeof( g_appkey );
 
-static pthread_t serverThread;
+static pthread_t serverStreamerThread;
+static pthread_t serverCommanderThread;
 static sp_session_callbacks spSessionCallbacks;
 static sp_session *sp;
 static sp_track *track;
 static audio_fifo_t g_audiofifo;
+static audio_fifo_data_t *prev_afd = NULL;
 
 static int playing;
 static int running;

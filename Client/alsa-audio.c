@@ -197,8 +197,6 @@ static void* alsa_audio_start(void *aux)
 				fprintf(stderr, "Unable to open ALSA device (%d channels, %d Hz), dying\n",
 				        cur_channels, cur_rate);
 
-                printf("COUCOU2");
-
 				exit(1);
 			}
 		}

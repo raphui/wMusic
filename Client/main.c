@@ -19,11 +19,8 @@ static audio_fifo_t g_audiofifo;
 int play( audio_fifo_data_t *data )
 {
 
-    printf("Playing music...%d\n" , data->nsamples );
-
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
-    size_t s;
 
     afd = ( audio_fifo_data_t * ) malloc( DATA_SIZE * sizeof( audio_fifo_data_t ) );
 
@@ -50,6 +47,9 @@ int play( audio_fifo_data_t *data )
 int main( void )
 {
     int sock;
+
+    char message[] = "PLAYER:PLAY:zae";
+
     struct sockaddr_in serverAddr;
 
     audio_fifo_data_t *buff;
@@ -80,6 +80,8 @@ int main( void )
         return -1;
     }
 
+    send( sock , message , sizeof( message ) , 0 );
+
     while( 1 )
     {
 
@@ -87,9 +89,6 @@ int main( void )
 
         if( read( sock , buff , DATA_SIZE ) > 0 )
         {
-
-            printf("Playing music...%d\n" , buff->nsamples );
-
             play( buff );
         }
         else

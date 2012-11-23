@@ -191,13 +191,13 @@ static void* alsa_audio_start(void *aux)
 			cur_rate = afd->rate;
 			cur_channels = afd->channels;
 
-			h = alsa_open("default", cur_rate, cur_channels);
+            h = alsa_open("default", cur_rate, cur_channels);
 
-			if (!h) {
-				fprintf(stderr, "Unable to open ALSA device (%d channels, %d Hz), dying\n",
-				        cur_channels, cur_rate);
-				exit(1);
-			}
+            if (!h) {
+                fprintf(stderr, "Unable to open ALSA device (%d channels, %d Hz), dying\n",
+                        cur_channels, cur_rate);
+                exit(1);
+            }
 		}
 
 		c = snd_pcm_wait(h, 1000);
@@ -208,7 +208,7 @@ static void* alsa_audio_start(void *aux)
 		if (c == -EPIPE)
 			snd_pcm_prepare(h);
 
-		snd_pcm_writei(h, afd->samples, afd->nsamples);
+//        snd_pcm_writei(h, afd->samples, afd->nsamples);
 		free(afd);
 	}
 }

@@ -8,10 +8,16 @@ void createThread( void *routine , void *arg )
 
     if( arg == NULL )
     {
-        pthread_create( &newThread , NULL , ( void * ) &routine , NULL );
+        pthread_create( &newThread , NULL , ( void * ) routine , NULL );
+
+        countThreads++;
     }
     else
     {
-        pthread_create( &newThread , NULL , ( void * ) &routine , arg );
+        pthread_create( &newThread , NULL , ( void * ) routine , arg );
+
+        countThreads++;
     }
+
+    TRACE_1( THREADMANAGER , "Current number of threads: %d." , countThreads );
 }

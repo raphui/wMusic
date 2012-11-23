@@ -61,10 +61,44 @@ void launchSpotifyManager( void )
 
             sp_session_process_events( sp , &next_timeout );
         }
+
+        launchServer();
+
+        running = 1;
+        playing = 0;
+
+        while( running )
+        {
+            sp_session_process_events( sp , &next_timeout );
+
+            if( ( login == 1 ) && ( playing == 0 ) )
+            {
+                printf("Let's play the music !\n");
+
+
+                playing = 1;
+            }
+        }
     }
 }
 
-void play( char *uri )
+void launchServer( void )
+{
+    TRACE_2( SPOTIFYMANAGER , "lanchServer()");
+
+    int portStreamer = 1337;
+    int portCommander = 1338;
+
+    printf("Start server on port %d...\n" , portStreamer );
+
+    pthread_create( &serverStreamerThread , NULL , &createServer , portStreamer );
+
+    printf("Start server on port %d...\n" , portCommander );
+
+    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
+}
+
+int play( char *uri )
 {
     TRACE_2( SPOTIFYMANAGER , "play( %s )" , uri );
 
@@ -72,68 +106,11 @@ void play( char *uri )
     sp_error error;
     int next_timeout;
 
-//    sp_session_config spconfig;
-//    sp_error error;
-//    sp_link *link;
+    printf("Creating URI : %s...\n" , uri );
 
-//    char username[] = USERNAME;
-//    char password[] = PASSWORD;
+//    link = sp_link_create_from_string( uri );
 
-//    int next_timeout = 0;
-
-//    memset( &spconfig , 0 , sizeof( spconfig ) );
-//    memset( &spSessionCallbacks , 0 , sizeof( spSessionCallbacks ) );
-
-//    spSessionCallbacks.logged_in = &logged_in;
-//    spSessionCallbacks.notify_main_thread = &notify_main_thread;
-//    spSessionCallbacks.end_of_track = &end_of_track;
-//    spSessionCallbacks.music_delivery = &music_delivery;
-//    spSessionCallbacks.metadata_updated = &metadata_updated;
-
-//    spconfig.api_version = SPOTIFY_API_VERSION;
-//    spconfig.cache_location = "/home/raphio/tmp";
-//    spconfig.settings_location = "/home/raphio/tmp";
-//    spconfig.application_key = g_appkey;
-//    spconfig.application_key_size = g_appkey_size;
-//    spconfig.user_agent = "spotify-poc";
-//    spconfig.callbacks = &spSessionCallbacks;
-
-//    error = sp_session_create( &spconfig , &sp );
-
-//    if( error != SP_ERROR_OK )
-//    {
-//        printf("Fail to create session, reason: %s\n" , sp_error_message( error ) );
-//    }
-//    else
-//    {
-//        printf("Success to create session\n");
-//    }
-
-//    if( sp != NULL )
-//    {
-//        printf("Trying to login....\n");
-
-//        login = 0;
-
-//        error = sp_session_login( sp , username , password , 0 , NULL );
-
-//        if( error != SP_ERROR_OK )
-//        {
-//            printf("Fail to login, reason: %s" , sp_error_message( error ) );
-
-//            return -1;
-//        }
-
-//        while( login != 1 )
-//        {
-//            usleep( next_timeout * 1000 );
-
-//            sp_session_process_events( sp , &next_timeout );
-//        }
-
-    printf("Creating URI...\n");
-
-    link = sp_link_create_from_string( uri );
+    link = sp_link_create_from_string("spotify:track:0hErXRUxNluo55B4djV9pU");
 
     if( link == NULL )
     {
@@ -202,10 +179,6 @@ static void logged_in( sp_session *session , sp_error error)
     }
 
     printf("Success to login.\n");
-
-    printf("Start server...\n");
-
-    pthread_create( &serverThread , NULL , ( void * ) &createServer , 1337 );
 
     login = 1;
 }
@@ -315,7 +288,16 @@ static int music_delivery( sp_session *session , const sp_audioformat *format , 
     afd->rate = format->sample_rate;
     afd->channels = format->channels;
 
-    sendData( afd , s );
+    if( prev_afd == NULL )
+    {
+        prev_afd = ( audio_fifo_data_t * )malloc( sizeof( *afd ) + s );
+    }
+    else
+    {
+        memcpy( prev_afd , afd , s );
+
+        sendData( prev_afd , s );
+    }
 
     TAILQ_INSERT_TAIL( &af->q , afd , link );
     af->qlen += num_frames;

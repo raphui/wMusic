@@ -12,6 +12,8 @@
 #include "types.h"
 #include "trace.h"
 
+static int countThreads = 0;
+
 void createThread( void *routine , void *arg );
 
 #endif // THREADMANAGER_H

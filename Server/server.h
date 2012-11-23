@@ -17,12 +17,17 @@
 #include "threadManager.h"
 #include "spotifyManager.h"
 
-#define BUFF_SIZE   1024
+#define BUFF_SIZE       1024
+#define MAX_CLIENT      10
+#define PORT_STREAMER   1337
+#define PORT_COMMANDER  1338
 
-static int s_client;
+static int s_client[MAX_CLIENT];
+static int countClients;
 
 void createServer( int port );
 int closeServer( void );
+void acceptingThread( void *s_server );
 void receivingThread( void *socket );
 void sendData( audio_fifo_data_t *data , size_t size );
 //void sendData( int sample_rate , int channels , int frames , int num_frames );

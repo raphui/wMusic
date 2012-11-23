@@ -2,13 +2,11 @@
 
 void createServer( int port )
 {
-    TRACE_2( STREAMINGSERVER , "createServer().");
+    TRACE_2( STREAMINGSERVER , "createServer( %d )." , port );
 
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
 
     struct sockaddr_in serv_addr;
-
-    pthread_t thread;
 
     if( s_server < 0 )
     {
@@ -37,15 +35,16 @@ void createServer( int port )
 
     while( 1 )
     {
+        if( countClients < MAX_CLIENT )
+        {
+            s_client[countClients] = accept( s_server , NULL , NULL );
 
-        s_client = accept( s_server , NULL , NULL );
+            printf("[!]New client connected.\n");
 
-        printf("[!]New client connected.\n");
+            createThread( &receivingThread , &s_client[countClients] );
 
-        pthread_create( &thread , NULL ,( void * ) &receivingThread , &s_client );
-
-        //createThread( &receivingThread , &s_client );
-
+            countClients++;
+        }
     }
 
 
@@ -99,9 +98,9 @@ void sendData( audio_fifo_data_t *data , size_t size )
 {
     TRACE_2( STREAMINGSERVER , "sendData().");
 
-    if( s_client != 0 )
+    if( s_client[countClients - 1] != 0 )
     {
-        if( write( s_client , data , size ) < 0 )
+        if( write( s_client[countClients - 1] , data , size ) < 0 )
         {
             printf("Cannot write data to client.\n");
         }
