@@ -13,21 +13,15 @@
 
 #include "audio.h"
 #include "types.h"
+#include "trace.h"
+#include "threadManager.h"
+#include "spotifyManager.h"
 
 #define BUFF_SIZE   1024
 
-typedef struct data{
-
-    int sample_rate;
-    int channels;
-    int16_t frames;
-    int num_frames;
-
-}s_data;
-
 static int s_client;
 
-void createServer( void );
+void createServer( int port );
 int closeServer( void );
 void receivingThread( void *socket );
 void sendData( audio_fifo_data_t *data , size_t size );

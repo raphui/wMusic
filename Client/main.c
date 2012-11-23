@@ -16,21 +16,6 @@
 
 static audio_fifo_t g_audiofifo;
 
-int sock;
-//int buff[BUFF_SIZE];
-
-struct sockaddr_in serverAddr;
-
-typedef struct data{
-
-    int sample_rate;
-    int channels;
-    int16_t frames;
-    int num_frames;
-
-}s_data;
-
-//int play( int sample_rate , int channels , int frames , int num_frames )
 int play( audio_fifo_data_t *data )
 {
 
@@ -40,18 +25,9 @@ int play( audio_fifo_data_t *data )
     audio_fifo_data_t *afd;
     size_t s;
 
-//    afd = data;
-
     afd = ( audio_fifo_data_t * ) malloc( DATA_SIZE * sizeof( audio_fifo_data_t ) );
 
     memcpy( afd , data , DATA_SIZE );
-
-    // audio discontinuity, do nothing
-//    if( num_frames == 0 )
-//    {
-//        pthread_mutex_unlock( &af->mutex );
-//        return 0;
-//    }
 
     if( afd->nsamples == 0 )
     {
@@ -59,35 +35,22 @@ int play( audio_fifo_data_t *data )
         return 0;
     }
 
-//    // buffer one second of audio
-//    if( af->qlen > sample_rate )
-//        return 0;
-
     if( af->qlen > afd->rate )
         return 0;
 
-//    s = num_frames * sizeof( int16_t ) * channels;
-//    afd = malloc( sizeof( *afd ) + s );
-
-//    memcpy( afd->samples , frames , s );
-
-//    afd->nsamples = num_frames;
-//    afd->rate = sample_rate;
-//    afd->channels = channels;
-
     TAILQ_INSERT_TAIL( &af->q , afd , link );
-//    af->qlen += num_frames;
     af->qlen += afd->nsamples;
 
     pthread_cond_signal( &af->cond );
     pthread_mutex_unlock( &af->mutex );
 
-//    return num_frames;
     return afd->nsamples;
 }
 
 int main( void )
 {
+    int sock;
+    struct sockaddr_in serverAddr;
 
     audio_fifo_data_t *buff;
 

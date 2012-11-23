@@ -1,9 +1,10 @@
 #include "server.h"
 
-void createServer( void )
+void createServer( int port )
 {
+    TRACE_2( STREAMINGSERVER , "createServer().");
+
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
-//    int s_client;
 
     struct sockaddr_in serv_addr;
 
@@ -18,11 +19,11 @@ void createServer( void )
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl( INADDR_ANY );
-    serv_addr.sin_port = htons( 1337 );
+    serv_addr.sin_port = htons( port );
 
     if( bind( s_server , ( struct sockaddr* )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        printf("[-]Error to bind on port: 1337.\n");
+        printf("[-]Error to bind on port: %d.\n" , port );
 
         pthread_exit( PC_ERROR );
     }
@@ -40,7 +41,10 @@ void createServer( void )
         s_client = accept( s_server , NULL , NULL );
 
         printf("[!]New client connected.\n");
-        pthread_create( &thread , NULL , &receivingThread , &s_client );
+
+        pthread_create( &thread , NULL ,( void * ) &receivingThread , &s_client );
+
+        //createThread( &receivingThread , &s_client );
 
     }
 
@@ -51,6 +55,7 @@ void createServer( void )
 
 int closeServer( void )
 {
+    TRACE_2( STREAMINGSERVER , "close().");
 
     return PC_SUCCESS;
 }
@@ -58,6 +63,7 @@ int closeServer( void )
 void receivingThread( void *socket )
 {
     char buff[BUFF_SIZE];
+    char *uri;
     int ret;
 
     printf("[!]Receiving thread create !\n");
@@ -72,6 +78,13 @@ void receivingThread( void *socket )
         {
             printf("[+]Data: %s\n" , buff );
 
+            if( strstr( buff , "PLAYER:PLAY" ) != NULL )
+            {
+                uri = strstr( buff , "spotify" );
+
+                play( uri );
+            }
+
         }
 
     }
@@ -84,8 +97,7 @@ void receivingThread( void *socket )
 
 void sendData( audio_fifo_data_t *data , size_t size )
 {
-
-    printf("############################## SIZE: %d\n" , size );
+    TRACE_2( STREAMINGSERVER , "sendData().");
 
     if( s_client != 0 )
     {
