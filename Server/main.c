@@ -7,8 +7,8 @@
 #include "audio.h"
 #include "server.h"
 
-#define USERNAME "othane"
-#define PASSWORD "TestRaphio"
+#define USERNAME ""
+#define PASSWORD ""
 
 pthread_t serverThread;
 

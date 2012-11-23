@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -39,7 +40,11 @@ int play( audio_fifo_data_t *data )
     audio_fifo_data_t *afd;
     size_t s;
 
-    afd = data;
+//    afd = data;
+
+    afd = ( audio_fifo_data_t * ) malloc( DATA_SIZE * sizeof( audio_fifo_data_t ) );
+
+    memcpy( afd , data , DATA_SIZE );
 
     // audio discontinuity, do nothing
 //    if( num_frames == 0 )
@@ -114,12 +119,13 @@ int main( void )
 
     while( 1 )
     {
+
+        memset( buff , 0 , DATA_SIZE );
+
         if( read( sock , buff , DATA_SIZE ) > 0 )
         {
 
             printf("Playing music...%d\n" , buff->nsamples );
-
-//            play( buff[0] , buff[1] , buff[2] , buff[3] );
 
             play( buff );
         }
