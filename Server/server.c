@@ -1,5 +1,21 @@
 #include "server.h"
 
+void launchServer( void )
+{
+    TRACE_2( SPOTIFYMANAGER , "lanchServer()");
+
+    int portStreamer = 1337;
+    int portCommander = 1338;
+
+    printf("Start server on port %d...\n" , portStreamer );
+
+    pthread_create( &serverStreamerThread , NULL , &createServer , portStreamer );
+
+    printf("Start server on port %d...\n" , portCommander );
+
+    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
+}
+
 void createServer( int port )
 {
     TRACE_2( STREAMINGSERVER , "createServer( %d )." , port );
@@ -81,7 +97,8 @@ void receivingThread( void *socket )
             {
                 uri = strstr( buff , "spotify" );
 
-                play( uri );
+                //sp from spotifyManager.h
+                play( sp , uri );
             }
 
         }
@@ -98,11 +115,19 @@ void sendData( audio_fifo_data_t *data , size_t size )
 {
     TRACE_2( STREAMINGSERVER , "sendData().");
 
+    static int countPackets = 0;
+
     if( s_client[countClients - 1] != 0 )
     {
         if( write( s_client[countClients - 1] , data , size ) < 0 )
         {
             printf("Cannot write data to client.\n");
+        }
+        else
+        {
+            countPackets++;
+
+            printf("######### %d packets sended ! ######\n" , countPackets );
         }
     }
 

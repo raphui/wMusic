@@ -8,7 +8,11 @@ SOURCES += main.c \
     server.c \
     trace.c \
     threadManager.c \
-    spotifyManager.c
+    spotifyManager.c \
+    accountManager.c \
+    playerManager.c \
+    searchManager.c \
+    playlistManager.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound
@@ -20,7 +24,11 @@ HEADERS += \
     types.h \
     trace.h \
     threadManager.h \
-    spotifyManager.h
+    spotifyManager.h \
+    accountManager.h \
+    playerManager.h \
+    searchManager.h \
+    playlistManager.h
 
 target.path = /home/pi/Development
 INSTALLS += target

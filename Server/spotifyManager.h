@@ -11,22 +11,16 @@
 #include "server.h"
 #include "trace.h"
 #include "threadManager.h"
+#include "accountManager.h"
+#include "playerManager.h"
 
 #define USERNAME ""
 #define PASSWORD ""
 
-void launchSpotifyManager( void );
-void launchServer( void );
-int play( char *uri );
+int launchSpotifyManager( void );
 
-static void playMusic( sp_session *sp , sp_track *track );
-static void logged_in( sp_session *session , sp_error error);
-static void logged_out( sp_session *session );
-static void metadata_updated( sp_session *session );
 static void notify_main_thread( sp_session *session );
 static void log_message( sp_session *session , const char *data );
-static void end_of_track( sp_session *session );
-static int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames );
 
 static const uint8_t g_appkey[] = {
  0x01, 0x88, 0x00, 0x53, 0x92, 0x9E, 0x65, 0x93, 0xF8, 0x24, 0x44, 0xAF, 0x6B, 0x00, 0x8F, 0xEF,
@@ -54,16 +48,8 @@ static const uint8_t g_appkey[] = {
 
 static const size_t g_appkey_size = sizeof( g_appkey );
 
-static pthread_t serverStreamerThread;
-static pthread_t serverCommanderThread;
 static sp_session_callbacks spSessionCallbacks;
 static sp_session *sp;
-static sp_track *track;
-static audio_fifo_t g_audiofifo;
-static audio_fifo_data_t *prev_afd = NULL;
 
-static int playing;
-static int running;
-static int login = 0;
 
 #endif // SPOTIFYMANAGER_H

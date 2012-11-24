@@ -19,6 +19,8 @@ static audio_fifo_t g_audiofifo;
 int play( audio_fifo_data_t *data )
 {
 
+    static int countPackets = 0;
+
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
 
@@ -41,6 +43,10 @@ int play( audio_fifo_data_t *data )
     pthread_cond_signal( &af->cond );
     pthread_mutex_unlock( &af->mutex );
 
+    countPackets++;
+
+    printf("######### %d packets received ! ######\n" , countPackets );
+
     return afd->nsamples;
 }
 
@@ -56,7 +62,7 @@ int main( void )
 
     audio_init( &g_audiofifo );
 
-    buff = ( audio_fifo_data_t * ) malloc( DATA_SIZE * sizeof( audio_fifo_data_t ) );
+    buff = ( audio_fifo_data_t * )malloc( DATA_SIZE + sizeof( audio_fifo_data_t ) );
 
     sock = socket( AF_INET , SOCK_STREAM , 0 );
 
