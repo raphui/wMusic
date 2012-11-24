@@ -78,7 +78,7 @@ int closeServer( void )
 void receivingThread( void *socket )
 {
     char buff[BUFF_SIZE];
-    char *uri;
+    char *arg;
     int ret;
 
     printf("[!]Receiving thread create !\n");
@@ -95,10 +95,16 @@ void receivingThread( void *socket )
 
             if( strstr( buff , "PLAYER:PLAY" ) != NULL )
             {
-                uri = strstr( buff , "spotify" );
+                arg = strstr( buff , "spotify" );
 
-                //sp from spotifyManager.h
-                play( sp , uri );
+                //g_session from spotifyManager.h
+                play( g_session , arg );
+            }
+            else if( strstr( buff , "SEARCH:ARTIST") != NULL )
+            {
+                arg = strstr( buff , "David" );
+
+                search( g_session , arg );
             }
 
         }

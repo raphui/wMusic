@@ -13,9 +13,10 @@
 #include "threadManager.h"
 #include "accountManager.h"
 #include "playerManager.h"
+#include "searchManager.h"
 
-#define USERNAME ""
-#define PASSWORD ""
+#define USERNAME "othane"
+#define PASSWORD "TestRaphio"
 
 int launchSpotifyManager( void );
 
@@ -49,7 +50,7 @@ static const uint8_t g_appkey[] = {
 static const size_t g_appkey_size = sizeof( g_appkey );
 
 static sp_session_callbacks spSessionCallbacks;
-static sp_session *sp;
+sp_session *g_session;
 
 
 #endif // SPOTIFYMANAGER_H

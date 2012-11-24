@@ -29,7 +29,7 @@ int launchSpotifyManager( void )
     spconfig.user_agent = "spotify-poc";
     spconfig.callbacks = &spSessionCallbacks;
 
-    error = sp_session_create( &spconfig , &sp );
+    error = sp_session_create( &spconfig , &g_session );
 
     if( error != SP_ERROR_OK )
     {
@@ -40,9 +40,9 @@ int launchSpotifyManager( void )
         printf("Success to create session\n");
     }
 
-    if( sp != NULL )
+    if( g_session != NULL )
     {
-        if( signin( sp , USERNAME , PASSWORD ) == CONNECTION_OK )
+        if( signin( g_session , USERNAME , PASSWORD ) == CONNECTION_OK )
         {
             launchServer();
 
@@ -51,7 +51,7 @@ int launchSpotifyManager( void )
 
             while( running )
             {
-                sp_session_process_events( sp , &next_timeout );
+                sp_session_process_events( g_session , &next_timeout );
 
                 if( ( login == 1 ) && ( playing == 0 ) )
                 {

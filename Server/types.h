@@ -12,4 +12,10 @@ enum accountManagerState
     CONNECTION_OK
 };
 
+enum searchManagerState
+{
+    SEARCH_ERROR,
+    SEARCH_OK
+};
+
 #endif // TYPES_H
