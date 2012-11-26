@@ -208,7 +208,7 @@ static void* alsa_audio_start(void *aux)
 		if (c == -EPIPE)
 			snd_pcm_prepare(h);
 
-        snd_pcm_writei(h, afd->samples, afd->nsamples);
+//        snd_pcm_writei(h, afd->samples, afd->nsamples);
 		free(afd);
 	}
 }

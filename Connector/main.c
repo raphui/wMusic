@@ -90,7 +90,9 @@ int main( void )
 
     while( 1 )
     {
-        b = read( sock , buff , size );
+//        b = read( sock , buff , size );
+
+        b = recv( sock , ( char *)buff , size , 0 );
 
         if( b > 0 )
         {
