@@ -51,6 +51,7 @@ int launchSpotifyManager( void )
 
             while( running )
             {
+
                 sp_session_process_events( g_session , &next_timeout );
 
                 if( ( login == 1 ) && ( playing == 0 ) )

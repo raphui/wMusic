@@ -11,9 +11,9 @@ void launchServer( void )
 
     pthread_create( &serverStreamerThread , NULL , &createServer , portStreamer );
 
-    printf("Start server on port %d...\n" , portCommander );
+//    printf("Start server on port %d...\n" , portCommander );
 
-    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
+//    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
 }
 
 void createServer( int port )
@@ -82,7 +82,7 @@ void receivingThread( void *socket )
     int ret;
 
     printf("[!]Receiving thread create !\n");
-
+play( g_session , arg );
     while( 1 )
     {
         memset( buff , 0 , BUFF_SIZE );
@@ -104,9 +104,9 @@ void receivingThread( void *socket )
             {
                 arg = strstr( buff , "David" );
 
+                //g_session from spotifyManager.h
                 search( g_session , arg );
             }
-
         }
 
     }
@@ -122,18 +122,23 @@ void sendData( audio_fifo_data_t *data , size_t size )
     TRACE_2( STREAMINGSERVER , "sendData().");
 
     static int countPackets = 0;
+    ssize_t b;
 
     if( s_client[countClients - 1] != 0 )
     {
-        if( write( s_client[countClients - 1] , data , size ) < 0 )
+        b = write( s_client[countClients - 1] , data , size );
+
+        if( b < 0 )
         {
             printf("Cannot write data to client.\n");
         }
         else
         {
+            printf("Playing music...%d\n" , data->nsamples );
+
             countPackets++;
 
-            printf("######### %d packets sended ! ######\n" , countPackets );
+            printf("######### %d packets sended ! ###### \t\t SIZE:%d\tBYTES:%d\n" , countPackets , size , b );
         }
     }
 

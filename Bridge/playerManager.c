@@ -56,18 +56,18 @@ int play( sp_session *session , char *uri )
     running = 1;
     playing = 0;
 
-    while( running )
-    {
-        sp_session_process_events( session , &next_timeout );
+//    while( running )
+//    {
+//        sp_session_process_events( session , &next_timeout );
 
-        if( playing == 0 )
-        {
-            printf("Let's play the music !\n");
+//        if( playing == 0 )
+//        {
+//            printf("Let's play the music !\n");
 
 
-            playing = 1;
-        }
-    }
+//            playing = 1;
+//        }
+//    }
 }
 
 static void playMusic( sp_session *sp , sp_track *track )
@@ -135,7 +135,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 {
     TRACE_2( SPOTIFYMANAGER , "music_delivery().");
 
-    //printf("Playing music...%d\n" , num_frames );
+//    printf("Playing music...%d\n" , num_frames );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
@@ -161,7 +161,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     afd->rate = format->sample_rate;
     afd->channels = format->channels;
 
-    sendData( afd , s );
+    sendData( afd , s + sizeof( *afd ) );
 
     TAILQ_INSERT_TAIL( &af->q , afd , link );
     af->qlen += num_frames;

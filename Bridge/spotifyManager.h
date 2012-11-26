@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <libspotify/api.h>
 
+#include "types.h"
 #include "audio.h"
 #include "server.h"
 #include "trace.h"
@@ -15,8 +16,8 @@
 #include "playerManager.h"
 #include "searchManager.h"
 
-#define USERNAME ""
-#define PASSWORD ""
+#define USERNAME "othane"
+#define PASSWORD "TestRaphio"
 
 int launchSpotifyManager( void );
 
@@ -51,6 +52,7 @@ static const size_t g_appkey_size = sizeof( g_appkey );
 
 static sp_session_callbacks spSessionCallbacks;
 sp_session *g_session;
+
 
 
 #endif // SPOTIFYMANAGER_H

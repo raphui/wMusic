@@ -1,8 +1,13 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <pthread.h>
+
 #define PC_SUCCESS  0
 #define PC_ERROR    -1
+
+
+pthread_mutex_t mutexSession;
 
 enum accountManagerState
 {

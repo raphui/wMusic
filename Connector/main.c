@@ -24,7 +24,7 @@ int play( audio_fifo_data_t *data )
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
 
-    afd = ( audio_fifo_data_t * ) malloc( DATA_SIZE * sizeof( audio_fifo_data_t ) );
+    afd = ( audio_fifo_data_t * ) malloc( DATA_SIZE + sizeof( *afd ) );
 
     memcpy( afd , data , DATA_SIZE );
 
@@ -62,7 +62,7 @@ int main( void )
 
     audio_init( &g_audiofifo );
 
-    buff = ( audio_fifo_data_t * )malloc( DATA_SIZE + sizeof( audio_fifo_data_t ) );
+    buff = ( audio_fifo_data_t * )malloc( DATA_SIZE + sizeof( *buff ) );
 
     sock = socket( AF_INET , SOCK_STREAM , 0 );
 

@@ -9,6 +9,7 @@
 #include "audio.h"
 #include "types.h"
 #include "trace.h"
+#include "server.h"
 
 /* ############# CALLBACK functions ############# */
 void metadata_updated( sp_session *session );
