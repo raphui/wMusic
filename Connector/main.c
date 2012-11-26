@@ -105,7 +105,7 @@ int main( void )
 
             play( buff );
 
-            memset( buff , 0 , DATA_SIZE );
+//            memset( buff , 0 , DATA_SIZE );
 
         }
         else

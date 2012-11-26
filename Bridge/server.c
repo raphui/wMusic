@@ -128,19 +128,6 @@ void sendData( audio_fifo_data_t *data , size_t size )
     {
 //        b = write( s_client[countClients - 1] , data , size );
 
-//        if( b < 0 )
-//        {
-//            printf("Cannot write data to client.\n");
-//        }
-//        else
-//        {
-//            printf("Playing music...%d\n" , data->nsamples );
-
-//            countPackets++;
-
-//            printf("######### %d packets sended ! ###### \t\t SIZE:%d\tBYTES:%d\n" , countPackets , size , b );
-//        }
-
         b = send( s_client[countClients - 1] , ( char * )data , size , 0 );
 
         if( b < 0 )
