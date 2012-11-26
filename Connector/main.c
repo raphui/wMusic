@@ -10,16 +10,18 @@
 
 #include "audio.h"
 
-#define IP_SERVER   "127.0.0.1"
+//#define IP_SERVER   "127.0.0.1"
+#define IP_SERVER   "192.168.1.11"
 #define BUFF_SIZE   4
 #define DATA_SIZE   8192
 
 static audio_fifo_t g_audiofifo;
 
+static int countPackets = 0;
+
 int play( audio_fifo_data_t *data )
 {
-
-    static int countPackets = 0;
+//    printf("Playing music...%d\n" , data->nsamples );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
@@ -43,22 +45,20 @@ int play( audio_fifo_data_t *data )
     pthread_cond_signal( &af->cond );
     pthread_mutex_unlock( &af->mutex );
 
-    countPackets++;
-
-    printf("######### %d packets received ! ######\n" , countPackets );
-
     return afd->nsamples;
 }
 
 int main( void )
 {
+
     int sock;
+    struct sockaddr_in serverAddr;
 
     char message[] = "PLAYER:PLAY:zae";
 
-    struct sockaddr_in serverAddr;
-
     audio_fifo_data_t *buff;
+    size_t size = DATA_SIZE + sizeof( *buff );
+    ssize_t b;
 
     audio_init( &g_audiofifo );
 
@@ -86,16 +86,25 @@ int main( void )
         return -1;
     }
 
-    send( sock , message , sizeof( message ) , 0 );
+//    send( sock , message , sizeof( message ) , 0 );
 
     while( 1 )
     {
+        b = read( sock , buff , size );
 
-        memset( buff , 0 , DATA_SIZE );
-
-        if( read( sock , buff , DATA_SIZE ) > 0 )
+        if( b > 0 )
         {
+
+            countPackets++;
+
+            printf("######### %d packets received ! ######\n\t\t SIZE:%d\tBYTES:%d\n" , countPackets , DATA_SIZE + sizeof( *buff ) , b );
+
+            printf("Playing music...%d\n" , buff->nsamples );
+
             play( buff );
+
+            memset( buff , 0 , DATA_SIZE );
+
         }
         else
         {
