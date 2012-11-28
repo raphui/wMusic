@@ -16,8 +16,8 @@
 #include "playerManager.h"
 #include "searchManager.h"
 
-#define USERNAME ""
-#define PASSWORD ""
+#define USERNAME "othane"
+#define PASSWORD "TestRaphio"
 
 int launchSpotifyManager( void );
 

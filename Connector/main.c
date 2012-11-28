@@ -10,25 +10,45 @@
 
 #include "audio.h"
 
-//#define IP_SERVER   "127.0.0.1"
-#define IP_SERVER   "192.168.1.11"
+#define IP_SERVER   "127.0.0.1"
+//#define IP_SERVER   "192.168.1.11"
 #define BUFF_SIZE   4
 #define DATA_SIZE   8192
 
 static audio_fifo_t g_audiofifo;
 
 static int countPackets = 0;
+static FILE *f;
+
+audio_fifo_data_t *buff;
+size_t size = DATA_SIZE + sizeof( *buff );
 
 int play( audio_fifo_data_t *data )
 {
-//    printf("Playing music...%d\n" , data->nsamples );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
 
-    afd = ( audio_fifo_data_t * ) malloc( DATA_SIZE + sizeof( *afd ) );
+    afd = ( audio_fifo_data_t * ) malloc( size );
 
-    memcpy( afd , data , DATA_SIZE );
+//    memcpy( afd , data , size );
+
+    afd->channels = data->channels;
+    afd->rate = data->rate;
+    afd->nsamples = data->nsamples;
+
+    memcpy( afd->samples , data->samples , DATA_SIZE );
+
+    f = fopen("/home/raphio/client.txt" , "a" );
+
+
+    fprintf( f, "Playing music...\n");
+    fprintf( f, "Channels:\t %d\n" , afd->channels );
+    fprintf( f, "Rate:\t\t %d\n" , afd->rate );
+    fprintf( f, "NSamples:\t %d\n" , afd->nsamples );
+    fprintf( f, "Samples:\t %d\n" , afd->samples[0] );
+
+    fclose( f );
 
     if( afd->nsamples == 0 )
     {
@@ -55,9 +75,8 @@ int main( void )
     struct sockaddr_in serverAddr;
 
     char message[] = "PLAYER:PLAY:zae";
+    char packetControl[6];
 
-    audio_fifo_data_t *buff;
-    size_t size = DATA_SIZE + sizeof( *buff );
     ssize_t b;
 
     audio_init( &g_audiofifo );
@@ -86,33 +105,48 @@ int main( void )
         return -1;
     }
 
-//    send( sock , message , sizeof( message ) , 0 );
-
     while( 1 )
     {
-//        b = read( sock , buff , size );
+        memset( packetControl , 0 , 6 );
+        memset( buff , 0 , size );
 
-        b = recv( sock , ( char *)buff , size , 0 );
+        b = recv( sock , packetControl , sizeof( packetControl ) , 0 );
 
-        if( b > 0 )
+        if( strstr( packetControl , "START" ) != NULL )
         {
+            printf("###################### %s #################\n" , packetControl );
 
-            countPackets++;
+            b = 0;
+            while( b < size )
+                b += recv( sock , buff + b , size - b , 0 );
 
-            printf("######### %d packets received ! ######\n\t\t SIZE:%d\tBYTES:%d\n" , countPackets , DATA_SIZE + sizeof( *buff ) , b );
+            if( b > 0 )
+            {
 
-            printf("Playing music...%d\n" , buff->nsamples );
+                countPackets++;
 
-            play( buff );
+                printf("######### %d packets received ! ######\n\t\t SIZE:%d\tBYTES:%d\n" , countPackets , DATA_SIZE + sizeof( *buff ) , b );
 
-//            memset( buff , 0 , DATA_SIZE );
+                play( buff );
+            }
+            else
+            {
+                printf("Cannot receive data.\n");
+            }
+        }
+        else if( strstr( packetControl , "STOP" ) != NULL )
+        {
+            printf("###################### %s #################\n" , packetControl );
 
+            continue;
         }
         else
         {
-            printf("Cannot receive data.\n");
+            continue;
         }
     }
+
+
 
     printf("\n");
     return 0;

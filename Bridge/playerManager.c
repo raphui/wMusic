@@ -137,6 +137,8 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
 //    printf("Playing music...%d\n" , num_frames );
 
+    sendControl("START");
+
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
     size_t s;
@@ -168,6 +170,8 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
     pthread_cond_signal( &af->cond );
     pthread_mutex_unlock( &af->mutex );
+
+    sendControl("STOP");
 
     return num_frames;
 }

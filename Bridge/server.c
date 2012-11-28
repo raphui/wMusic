@@ -122,13 +122,17 @@ void sendData( audio_fifo_data_t *data , size_t size )
     TRACE_2( STREAMINGSERVER , "sendData().");
 
     static int countPackets = 0;
+    static FILE *f;
+
+    f = fopen("/home/raphio/serv.txt" , "a" );
+
     ssize_t b;
 
     if( s_client[countClients - 1] != 0 )
     {
-//        b = write( s_client[countClients - 1] , data , size );
+        b = write( s_client[countClients - 1] , data , size );
 
-        b = send( s_client[countClients - 1] , ( char * )data , size , 0 );
+//        b = send( s_client[countClients - 1] , data , size , 0 );
 
         if( b < 0 )
         {
@@ -136,7 +140,15 @@ void sendData( audio_fifo_data_t *data , size_t size )
         }
         else
         {
-            printf("Playing music...%d\n" , data->nsamples );
+//            printf("Playing music...%d\n" , data->nsamples );
+
+            fprintf( f, "Playing music...\n");
+            fprintf( f, "Channels:\t %d\n" , data->channels );
+            fprintf( f, "Rate:\t\t %d\n" , data->rate );
+            fprintf( f, "NSamples:\t %d\n" , data->nsamples );
+            fprintf( f, "Samples:\t %d\n" , data->samples[0] );
+
+            fclose( f );
 
             countPackets++;
 
@@ -144,4 +156,12 @@ void sendData( audio_fifo_data_t *data , size_t size )
         }
     }
 
+}
+
+void sendControl( char *command )
+{
+    if( s_client[countClients - 1] != 0 )
+    {
+        send( s_client[countClients - 1] , command , 6 , 0 );
+    }
 }

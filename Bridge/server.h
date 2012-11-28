@@ -31,7 +31,7 @@ int closeServer( void );
 void acceptingThread( void *s_server );
 void receivingThread( void *socket );
 void sendData( audio_fifo_data_t *data , size_t size );
-
+void sendControl( char *command );
 
 static pthread_t serverStreamerThread;
 static pthread_t serverCommanderThread;
