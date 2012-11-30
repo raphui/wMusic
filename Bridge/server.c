@@ -83,7 +83,7 @@ void receivingThread( void *socket )
 
     printf("[!]Receiving thread create !\n");
 
-//    play( g_session , arg );
+    play( g_session , arg );
 
     while( 1 )
     {
@@ -165,5 +165,22 @@ void sendControl( char *command )
     if( s_client[countClients - 1] != 0 )
     {
         send( s_client[countClients - 1] , command , 6 , 0 );
+    }
+}
+
+
+void sendVoid( int16_t data , size_t size )
+{
+    static FILE *f;
+
+    f = fopen("/home/raphio/serv.txt" , "a" );
+
+    if( s_client[countClients - 1] != 0 )
+    {
+        send( s_client[countClients - 1] , &data , size , 0 );
+
+        fprintf( f, "%d\n" , data );
+
+        fclose( f );
     }
 }

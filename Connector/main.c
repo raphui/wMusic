@@ -11,7 +11,7 @@
 #include "audio.h"
 
 #define IP_SERVER   "127.0.0.1"
-//#define IP_SERVER   "192.168.1.11"
+//#define IP_SERVER   "192.168.1.12"
 #define BUFF_SIZE   4
 #define DATA_SIZE   8192
 
@@ -76,6 +76,7 @@ int main( void )
 
     char message[] = "PLAYER:PLAY:zae";
     char packetControl[6];
+    int16_t *tmp;
 
     ssize_t b;
 
@@ -105,8 +106,11 @@ int main( void )
         return -1;
     }
 
+    tmp = ( int16_t * )malloc( DATA_SIZE );
+
     while( 1 )
     {
+        memset( tmp , 0 , DATA_SIZE );
         memset( packetControl , 0 , 6 );
         memset( buff , 0 , size );
 
@@ -116,9 +120,50 @@ int main( void )
         {
             printf("###################### %s #################\n" , packetControl );
 
-            b = 0;
-            while( b < size )
-                b += recv( sock , buff + b , size - b , 0 );
+//            b = 0;
+//            while( b < size )
+//                b += recv( sock , datastr + b , size - b , 0 );
+
+
+            b = recv( sock , &buff->channels , sizeof( int ) , 0 );
+
+            buff->channels = 2;
+
+            b = recv( sock , &buff->rate , sizeof( int ) , 0 );
+
+            buff->rate = 44100;
+
+            b = recv( sock , &buff->nsamples , sizeof( int ) , 0 );
+
+            buff->nsamples = 2048;
+
+            b = recv( sock , tmp , sizeof( int16_t ) , 0 );
+
+            memcpy( buff->samples , tmp , DATA_SIZE );
+
+
+//            buff->channels = ( int *)strtok( datastr , ":");
+//            buff->rate = ( int *)strtok( datastr , ":");
+//            buff->nsamples = ( int *)strtok( datastr , ":");
+//            buff->samples[0] = ( int16_t )strtok( datastr , ":");
+
+//            f = fopen("/home/raphio/client.txt" , "a" );
+
+
+//            fprintf( f, "Playing music...\n");
+//            fprintf( f, "Channels:\t %d\n" , buff->channels );
+//            fprintf( f, "Rate:\t\t %d\n" , buff->rate );
+//            fprintf( f, "NSamples:\t %d\n" , buff->nsamples );
+//            fprintf( f, "Samples:\t %d\n" , buff->samples[0] );
+
+//            fclose( f );
+
+//            memcpy( buff->samples , ( int16_t * )strtok( datastr , ":") , )
+
+
+//            b = 0;
+//            while( b < size )
+//                b += recv( sock , buff + b , size - b , 0 );
 
             if( b > 0 )
             {

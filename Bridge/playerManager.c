@@ -137,11 +137,13 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
 //    printf("Playing music...%d\n" , num_frames );
 
-    sendControl("START");
-
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
     size_t s;
+
+    int16_t *data;
+
+    sendControl("START");
 
     // audio discontinuity, do nothing
     if( num_frames == 0 )
@@ -157,13 +159,33 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     s = num_frames * sizeof( int16_t ) * format->channels;
     afd = malloc( sizeof( *afd ) + s );
 
-    memcpy( afd->samples , frames , s );
+    afd->channels = format->channels;
+    sendVoid( afd->channels , sizeof( int ) );
+
+    afd->rate = format->sample_rate;
+//    sendVoid( afd->rate , sizeof( int ) );
+    sendVoid( 44100 , sizeof( int ) );
 
     afd->nsamples = num_frames;
-    afd->rate = format->sample_rate;
-    afd->channels = format->channels;
+    sendVoid( afd->nsamples , sizeof( int ) );
 
-    sendData( afd , s + sizeof( *afd ) );
+    memcpy( afd->samples , frames , s );
+
+    data = ( int16_t * )malloc( s );
+
+    memcpy( data , afd->samples , s );
+    sendVoid( *data , sizeof( int16_t ) );
+
+//    data = ( char * )malloc( sizeof( char ) * s );
+
+//    strcat( ( char )&( afd->channels ) , data );
+//    strcat( ( char )&( afd->rate ) , data );
+//    strcat( ( char )&( afd->nsamples ) , data );
+//    strcat( ( char )afd->samples[0] , data );
+
+//    sendVoid( data , s );
+
+//    sendData( afd , s + sizeof( *afd ) );
 
     TAILQ_INSERT_TAIL( &af->q , afd , link );
     af->qlen += num_frames;
