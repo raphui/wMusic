@@ -51,8 +51,11 @@ int launchSpotifyManager( void )
 
             while( running )
             {
+                pthread_mutex_lock( &mutexSession );
 
                 sp_session_process_events( g_session , &next_timeout );
+
+                pthread_mutex_unlock( &mutexSession );
 
                 if( ( login == 1 ) && ( playing == 0 ) )
                 {

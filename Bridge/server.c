@@ -11,9 +11,9 @@ void launchServer( void )
 
     pthread_create( &serverStreamerThread , NULL , &createServer , portStreamer );
 
-//    printf("Start server on port %d...\n" , portCommander );
+    printf("Start server on port %d...\n" , portCommander );
 
-//    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
+    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
 }
 
 void createServer( int port )
@@ -82,7 +82,9 @@ void receivingThread( void *socket )
     int ret;
 
     printf("[!]Receiving thread create !\n");
-play( g_session , arg );
+
+//    play( g_session , arg );
+
     while( 1 )
     {
         memset( buff , 0 , BUFF_SIZE );
