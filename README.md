@@ -1,4 +1,4 @@
-PoCSpotify
+SpotifyEverywhere
 ==========
 
-PoC using lib spotify.
+Streaming system using Spotify.
