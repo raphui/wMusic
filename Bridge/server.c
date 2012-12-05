@@ -1,25 +1,46 @@
 #include "server.h"
 
+static int socketMulticast;
 static int s_client[MAX_CLIENT];
 static int countClients;
 
+static struct sockaddr_in addrMulticast;
+
 static pthread_t serverStreamerThread;
 static pthread_t serverCommanderThread;
+
+int initMulticastSocket()
+{
+    TRACE_2( STREAMINGSERVER , "initMulticastSocket()");
+
+    socketMulticast = socket( AF_INET , SOCK_DGRAM , 0 );
+
+    if( socketMulticast < 0 )
+    {
+        TRACE_ERROR( STREAMINGSERVER , "Cannot create the multicast socket.");
+
+        return PC_ERROR;
+    }
+
+    addrMulticast.sin_family = AF_INET;
+    addrMulticast.sin_addr.s_addr = inet_addr( MULTICAST_ADDR );
+    addrMulticast.sin_port = htons( MULTICAST_PORT );
+
+
+    return PC_SUCCESS;
+}
 
 void launchServer( void )
 {
     TRACE_2( SPOTIFYMANAGER , "lanchServer()");
 
-    int portStreamer = 1337;
     int portCommander = 1338;
-
-    printf("Start server on port %d...\n" , portStreamer );
-
-    pthread_create( &serverStreamerThread , NULL , ( void * )&createServer , portStreamer );
 
     printf("Start server on port %d...\n" , portCommander );
 
     pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , portCommander );
+
+    initMulticastSocket();
 }
 
 void createServer( int port )
@@ -63,10 +84,7 @@ void createServer( int port )
 
             printf("[!]New client connected.\n");
 
-
-            //Only port commander, accept to receive commands.
-            if( port == PORT_COMMANDER )
-                createThread( &receivingThread , &s_client[countClients] );
+            createThread( &receivingThread , &s_client[countClients] );
 
             countClients++;
         }
@@ -92,8 +110,6 @@ void receivingThread( void *socket )
 
     printf("[!]Receiving thread create !\n");
 
-//    play( g_session , arg );
-
     while( 1 )
     {
         memset( buff , 0 , BUFF_SIZE );
@@ -113,10 +129,16 @@ void receivingThread( void *socket )
             }
             else if( strstr( buff , "SEARCH:ARTIST") != NULL )
             {
-                arg = strstr( buff , "David" );
+                arg = strrchr( buff , ':' );
 
                 //g_session from spotifyManager.h
                 search( g_session , arg );
+            }
+            else if( strstr( buff , "DISC") != NULL )
+            {
+                disconnectClient( socket );
+
+                break;
             }
         }
 
@@ -127,6 +149,14 @@ void receivingThread( void *socket )
     pthread_exit( NULL );
 }
 
+void disconnectClient( int *socket )
+{
+    countClients--;
+
+    s_client[countClients] = 0;
+
+    TRACE_INFO( COMMANDERSERVER , "Client disconnect.");
+}
 
 void sendData( audio_fifo_data_t *data , size_t size )
 {
@@ -143,15 +173,12 @@ void sendData( audio_fifo_data_t *data , size_t size )
     {
         b = write( s_client[countClients - 1] , data , size );
 
-//        b = send( s_client[countClients - 1] , data , size , 0 );
-
         if( b < 0 )
         {
             printf("Cannot write data to client.\n");
         }
         else
         {
-//            printf("Playing music...%d\n" , data->nsamples );
 
             fprintf( f, "Playing music...\n");
             fprintf( f, "Channels:\t %d\n" , data->channels );
@@ -186,16 +213,45 @@ void sendVoid( void *data , size_t size )
     if( s_client[countClients - 1] != 0 )
     {
 
-//        if( size == 8192 )
-//        {
-//            while( b != size )
-//                b += send( s_client[countClients - 1] , data + b , tmpSize , 0 );
-//        }
-//        else
-//        {
-            send( s_client[countClients - 1] , data , size , 0 );
+        send( s_client[countClients - 1] , data , size , 0 );
 
-//        }
     }
 
+}
+
+
+void sendDataMulticast( audio_fifo_data_t *data , size_t size )
+{
+    TRACE_2( STREAMINGSERVER , "sendDataMulticast()");
+
+    ssize_t b;
+
+    b = sendto( socketMulticast , data , size , 0 , ( struct sockaddr * )&addrMulticast , sizeof( addrMulticast ) );
+
+    if( b < 0 )
+        TRACE_WARNING( STREAMINGSERVER , "Fail to send data");
+}
+
+void sendControlMulticast( char *command )
+{
+    TRACE_2( STREAMINGSERVER , "sendControlMulticast()");
+
+    ssize_t b;
+
+    b = sendto( socketMulticast , command , 6 , 0 , ( struct sockaddr * )&addrMulticast , sizeof( addrMulticast ) );
+
+    if( b < 0 )
+        TRACE_WARNING( STREAMINGSERVER , "Fail to send command: %s" , command );
+}
+
+void sendVoidMulticast( void *data , size_t size )
+{
+    TRACE_2( STREAMINGSERVER , "sendVoidMulticast()");
+
+    ssize_t b;
+
+    b = sendto( socketMulticast , data , size , 0 , ( struct sockaddr * )&addrMulticast , sizeof( addrMulticast ) );
+
+    if( b < 0 )
+        TRACE_WARNING( STREAMINGSERVER , "Fail to send void* data");
 }

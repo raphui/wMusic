@@ -148,7 +148,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
     int16_t *data;
 
-    sendControl("START");
+    sendControlMulticast("START");
 
     // audio discontinuity, do nothing
 //    if( num_frames == 0 )
@@ -165,14 +165,14 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     afd = malloc( sizeof( *afd ) + s );
 
     afd->channels = format->channels;
-    sendVoid( &afd->channels , sizeof( int ) );
+    sendVoidMulticast( &afd->channels , sizeof( int ) );
 
     afd->rate = format->sample_rate;
-    sendVoid( &afd->rate , sizeof( int ) );
+    sendVoidMulticast( &afd->rate , sizeof( int ) );
 //    sendVoid( 44100 , sizeof( int ) );
 
     afd->nsamples = num_frames;
-    sendVoid( &afd->nsamples , sizeof( int ) );
+    sendVoidMulticast( &afd->nsamples , sizeof( int ) );
 
     memcpy( afd->samples , frames , s );
 
@@ -188,7 +188,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 //    strcat( ( char )&( afd->nsamples ) , data );
 //    strcat( ( char )afd->samples[0] , data );
 
-    sendVoid( data , s );
+    sendVoidMulticast( data , s );
 
 //    sendData( afd , s + sizeof( *afd ) );
 
@@ -198,7 +198,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 //    pthread_cond_signal( &af->cond );
 //    pthread_mutex_unlock( &af->mutex );
 
-    sendControl("STOP");
+    sendControlMulticast("STOP");
 
     return num_frames;
 }

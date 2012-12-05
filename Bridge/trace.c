@@ -13,6 +13,7 @@ trace_module trace_modules[] =
 {
     {"PLAYER"           ,   TRACE_LEVEL_DEFAULT },
     {"STREAMINGSERVER"  ,   TRACE_LEVEL_DEFAULT },
+    {"COMMANDERSERVER"  ,   TRACE_LEVEL_DEFAULT },
     {"THREADMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SPOTIFYMANAGER"   ,   TRACE_LEVEL_DEFAULT }
 

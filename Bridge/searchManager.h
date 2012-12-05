@@ -14,7 +14,10 @@
 
 
 void search( sp_session *session , char *query );
-void printTrack( sp_album *album );
+
+void printAlbum( sp_album *album );
 void printArtist( sp_artist *artist );
+void printTrack( sp_track *track );
+
 
 #endif // SEARCHMANAGER_H
