@@ -16,6 +16,6 @@ void logged_out( sp_session *session );
 
 int signin( sp_session *session , const char *username , const char *password );
 
-static int login;
+int login;
 
 #endif // ACCOUNTMANAGER_H

@@ -1,5 +1,7 @@
 #include "threadManager.h"
 
+static int countThreads = 0;
+
 void createThread( void *routine , void *arg )
 {
     TRACE_2( THREADMANAGER , "createThread()");

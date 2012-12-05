@@ -1,5 +1,7 @@
 #include "searchManager.h"
 
+static void searchComplete( sp_search *search , void *userdata );
+
 void search( sp_session *session , char *query )
 {
     pthread_mutex_lock( &mutexSession );

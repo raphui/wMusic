@@ -1,5 +1,11 @@
 #include "spotifyManager.h"
 
+static sp_session_callbacks spSessionCallbacks;
+
+
+static void notify_main_thread( sp_session *session );
+static void log_message( sp_session *session , const char *data );
+
 int launchSpotifyManager( void )
 {
     TRACE_2( SPOTIFYMANAGER , "launchSpotifyManager()");

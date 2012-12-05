@@ -9,6 +9,8 @@ int main( void )
 
     if( launchSpotifyManager() == CONNECTION_ERROR )
     {
+        printf("Connection to Spotify failed.\n");
+
         return PC_ERROR;
     }
 

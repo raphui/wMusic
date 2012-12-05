@@ -1,5 +1,11 @@
 #include "server.h"
 
+static int s_client[MAX_CLIENT];
+static int countClients;
+
+static pthread_t serverStreamerThread;
+static pthread_t serverCommanderThread;
+
 void launchServer( void )
 {
     TRACE_2( SPOTIFYMANAGER , "lanchServer()");
@@ -9,11 +15,11 @@ void launchServer( void )
 
     printf("Start server on port %d...\n" , portStreamer );
 
-    pthread_create( &serverStreamerThread , NULL , &createServer , portStreamer );
+    pthread_create( &serverStreamerThread , NULL , ( void * )&createServer , portStreamer );
 
     printf("Start server on port %d...\n" , portCommander );
 
-    pthread_create( &serverCommanderThread , NULL , &createServer , portCommander );
+    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , portCommander );
 }
 
 void createServer( int port )
@@ -57,7 +63,10 @@ void createServer( int port )
 
             printf("[!]New client connected.\n");
 
-            createThread( &receivingThread , &s_client[countClients] );
+
+            //Only port commander, accept to receive commands.
+            if( port == PORT_COMMANDER )
+                createThread( &receivingThread , &s_client[countClients] );
 
             countClients++;
         }
@@ -83,7 +92,7 @@ void receivingThread( void *socket )
 
     printf("[!]Receiving thread create !\n");
 
-    play( g_session , arg );
+//    play( g_session , arg );
 
     while( 1 )
     {
@@ -169,18 +178,24 @@ void sendControl( char *command )
 }
 
 
-void sendVoid( int16_t data , size_t size )
+void sendVoid( void *data , size_t size )
 {
-    static FILE *f;
-
-    f = fopen("/home/raphio/serv.txt" , "a" );
+    size_t b = 0;
+    size_t tmpSize = size / 8;
 
     if( s_client[countClients - 1] != 0 )
     {
-        send( s_client[countClients - 1] , &data , size , 0 );
 
-        fprintf( f, "%d\n" , data );
+//        if( size == 8192 )
+//        {
+//            while( b != size )
+//                b += send( s_client[countClients - 1] , data + b , tmpSize , 0 );
+//        }
+//        else
+//        {
+            send( s_client[countClients - 1] , data , size , 0 );
 
-        fclose( f );
+//        }
     }
+
 }

@@ -19,12 +19,7 @@ void end_of_track( sp_session *session );
 
 int play( sp_session *session , char *uri );
 
-static void playMusic( sp_session *sp , sp_track *track );
-
-static sp_track *track;
-static audio_fifo_t g_audiofifo;
-
-static int running;
-static int playing;
+int running;
+int playing;
 
 #endif // PLAYERMANAGER_H

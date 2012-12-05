@@ -29,26 +29,32 @@ int play( audio_fifo_data_t *data )
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
 
-    afd = ( audio_fifo_data_t * ) malloc( size );
+    afd = ( audio_fifo_data_t * )malloc( size );
 
-//    memcpy( afd , data , size );
+    memcpy( afd , data , size );
 
-    afd->channels = data->channels;
-    afd->rate = data->rate;
-    afd->nsamples = data->nsamples;
+//    afd->channels = data->channels;
+//    afd->rate = data->rate;
+//    afd->nsamples = data->nsamples;
 
-    memcpy( afd->samples , data->samples , DATA_SIZE );
+//    memcpy( afd->samples , data->samples , DATA_SIZE );
 
-    f = fopen("/home/raphio/client.txt" , "a" );
+    printf("Playing music...\n");
+    printf("Channels:\t %d\n" , afd->channels );
+    printf("Rate:\t\t %d\n" , afd->rate );
+    printf("NSamples:\t %d\n" , afd->nsamples );
+    printf("Samples:\t %d\n" , afd->samples[0] );
+
+//    f = fopen("/home/raphio/client.txt" , "a" );
 
 
-    fprintf( f, "Playing music...\n");
-    fprintf( f, "Channels:\t %d\n" , afd->channels );
-    fprintf( f, "Rate:\t\t %d\n" , afd->rate );
-    fprintf( f, "NSamples:\t %d\n" , afd->nsamples );
-    fprintf( f, "Samples:\t %d\n" , afd->samples[0] );
+//    fprintf( f, "Playing music...\n");
+//    fprintf( f, "Channels:\t %d\n" , afd->channels );
+//    fprintf( f, "Rate:\t\t %d\n" , afd->rate );
+//    fprintf( f, "NSamples:\t %d\n" , afd->nsamples );
+//    fprintf( f, "Samples:\t %d\n" , afd->samples[0] );
 
-    fclose( f );
+//    fclose( f );
 
     if( afd->nsamples == 0 )
     {
@@ -82,7 +88,7 @@ int main( void )
 
     audio_init( &g_audiofifo );
 
-    buff = ( audio_fifo_data_t * )malloc( DATA_SIZE + sizeof( *buff ) );
+    buff = ( audio_fifo_data_t * )malloc( size );
 
     sock = socket( AF_INET , SOCK_STREAM , 0 );
 
@@ -114,38 +120,38 @@ int main( void )
         memset( packetControl , 0 , 6 );
         memset( buff , 0 , size );
 
-        b = recv( sock , packetControl , sizeof( packetControl ) , 0 );
+        b = recv( sock , packetControl , sizeof( packetControl ) , MSG_WAITALL );
 
         if( strstr( packetControl , "START" ) != NULL )
         {
             printf("###################### %s #################\n" , packetControl );
 
-//            b = 0;
-//            while( b < size )
-//                b += recv( sock , datastr + b , size - b , 0 );
+            b = 0;
+
+//            while( b != size )
+//                b += recv( sock , buff + b , size - b , 0 );
 
 
-            b = recv( sock , &buff->channels , sizeof( int ) , 0 );
+            b = recv( sock , &buff->channels , sizeof( int ) , MSG_WAITALL );
 
-            buff->channels = 2;
+////            buff->channels = 2;
 
-            b = recv( sock , &buff->rate , sizeof( int ) , 0 );
+            b = recv( sock , &buff->rate , sizeof( int ) , MSG_WAITALL );
 
-            buff->rate = 44100;
+////            buff->rate = 44100;
 
-            b = recv( sock , &buff->nsamples , sizeof( int ) , 0 );
+            b = recv( sock , &buff->nsamples , sizeof( int ) , MSG_WAITALL );
 
-            buff->nsamples = 2048;
+////            buff->nsamples = 2048;
 
-            b = recv( sock , tmp , sizeof( int16_t ) , 0 );
+            b = 0;
+
+//            while( b != DATA_SIZE )
+//                b += recv( sock , tmp + b , DATA_SIZE - b , MSG_WAITALL );
+
+            b = recv( sock , tmp , DATA_SIZE , MSG_WAITALL );
 
             memcpy( buff->samples , tmp , DATA_SIZE );
-
-
-//            buff->channels = ( int *)strtok( datastr , ":");
-//            buff->rate = ( int *)strtok( datastr , ":");
-//            buff->nsamples = ( int *)strtok( datastr , ":");
-//            buff->samples[0] = ( int16_t )strtok( datastr , ":");
 
 //            f = fopen("/home/raphio/client.txt" , "a" );
 
@@ -170,7 +176,7 @@ int main( void )
 
                 countPackets++;
 
-                printf("######### %d packets received ! ######\n\t\t SIZE:%d\tBYTES:%d\n" , countPackets , DATA_SIZE + sizeof( *buff ) , b );
+                printf("######### %d packets received ! ######\n\t\t SIZE:%d\tBYTES:%d\n" , countPackets , size , b );
 
                 play( buff );
             }

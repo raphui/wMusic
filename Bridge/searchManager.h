@@ -11,7 +11,7 @@
 #include "trace.h"
 
 /* ############# CALLBACK functions ############# */
-static void searchComplete( sp_search *search , void *userdata );
+
 
 void search( sp_session *session , char *query );
 void printTrack( sp_album *album );
