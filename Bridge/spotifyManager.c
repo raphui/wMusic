@@ -13,9 +13,6 @@ int launchSpotifyManager( void )
     sp_session_config spconfig;
     sp_error error;
 
-    char username[] = USERNAME;
-    char password[] = PASSWORD;
-
     int next_timeout = 0;
 
     memset( &spconfig , 0 , sizeof( spconfig ) );
@@ -77,6 +74,8 @@ int launchSpotifyManager( void )
             return CONNECTION_ERROR;
         }
     }
+
+    return CONNECTION_OK;
 }
 
 static void notify_main_thread( sp_session *session )

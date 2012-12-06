@@ -2,7 +2,8 @@
 
 static networkCommand_t networkCmd[] = {
 
-    {   "PLAYER#PLAY"       ,   &play               },
+    {   "PLAYER#LOAD"       ,   &loadMusic          },
+    {   "PLAYER#PLAY"       ,   &playMusic          },
     {   "PLAYER#PAUSE"      ,   &pauseMusic         },
     {   "SEARCH#ARTIST"     ,   &search             },
     {   "SEARCH#ALBUM"      ,   &search             },

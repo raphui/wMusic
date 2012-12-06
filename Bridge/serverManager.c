@@ -1,4 +1,4 @@
-#include "server.h"
+#include "serverManager.h"
 
 static int socketMulticast;
 static int s_client[MAX_CLIENT];
@@ -9,7 +9,7 @@ static struct sockaddr_in addrMulticast;
 static pthread_t serverStreamerThread;
 static pthread_t serverCommanderThread;
 
-int initMulticastSocket()
+int initMulticastSocket( void )
 {
     TRACE_2( STREAMINGSERVER , "initMulticastSocket()");
 
@@ -31,11 +31,11 @@ int initMulticastSocket()
 
 void launchServer( void )
 {
-    TRACE_2( SPOTIFYMANAGER , "lanchServer()");
+    TRACE_2( SERVERMANAGER , "lanchServer()");
 
 //    int portCommander = 1338;
 
-    printf("Start server on port %d...\n" , PORT_COMMANDER );
+    TRACE_3( COMMANDERSERVER , "Start server on port %d...\n" , PORT_COMMANDER );
 
     pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , NULL );
 
@@ -46,9 +46,9 @@ void launchServer( void )
 
 
 /* Commander server */
-void createServer()
+void createServer( void )
 {
-    TRACE_2( STREAMINGSERVER , "createServer().");
+    TRACE_2( COMMANDERSERVER , "createServer().");
 
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
 
@@ -56,7 +56,7 @@ void createServer()
 
     if( s_server < 0 )
     {
-        printf("[-]Error to create socket.\n");
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to create socket.\n");
 
         pthread_exit( PC_ERROR );
     }
@@ -67,14 +67,14 @@ void createServer()
 
     if( bind( s_server , ( struct sockaddr* )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        printf("[-]Error to bind on port: %d.\n" , PORT_COMMANDER );
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d.\n" , PORT_COMMANDER );
 
         pthread_exit( PC_ERROR );
     }
 
     if( listen( s_server , 10 ) < 0 )
     {
-        printf("[-]Error to listen to 10 connection.\n");
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to listen to 10 connection.\n");
 
         pthread_exit( PC_ERROR );
     }
@@ -88,7 +88,7 @@ void createServer()
             if( s_client[countClients] > 0 )
             {
 
-                printf("[!]New client connected.\n");
+                TRACE_3( COMMANDERSERVER , "[!]New client connected.\n");
 
                 createThread( &receivingThread , &s_client[countClients] );
             }
@@ -115,7 +115,7 @@ void receivingThread( void *socket )
 
     countClients++;
 
-    printf("[!]Receiving thread create !\n");
+    TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !\n");
 
     while( 1 )
     {
@@ -125,7 +125,7 @@ void receivingThread( void *socket )
 
         if( ret > 0 )
         {
-            printf("[+]Data: %s\n" , buff );
+            TRACE_3( COMMANDERSERVER , "[+]Data: %s\n" , buff );
 
 /*            if( strstr( buff , "PLAYER:PLAY" ) != NULL )
             {
@@ -155,7 +155,7 @@ void receivingThread( void *socket )
 
     }
 
-    printf("[!]Quitting receiving thread !\n");
+    TRACE_3( COMMANDERSERVER , "[!]Quitting receiving thread !\n");
 
     pthread_exit( NULL );
 }
@@ -176,7 +176,7 @@ int disconnectClient( int *socket )
     {
         s_client[countClients] = 0;
 
-        TRACE_INFO( COMMANDERSERVER , "Client disconnect.");
+        TRACE_3( COMMANDERSERVER , "Client disconnect.");
     }
 
     return status;
@@ -194,7 +194,7 @@ void sendData( audio_fifo_data_t *data , size_t size )
 
         if( b < 0 )
         {
-            printf("Cannot write data to client.\n");
+            TRACE_WARNING( STREAMINGSERVER , "Cannot write data to client.\n");
         }
     }
 

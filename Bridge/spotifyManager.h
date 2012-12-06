@@ -9,7 +9,7 @@
 
 #include "types.h"
 #include "audio.h"
-#include "server.h"
+#include "serverManager.h"
 #include "trace.h"
 #include "threadManager.h"
 #include "accountManager.h"

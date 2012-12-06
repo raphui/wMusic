@@ -7,7 +7,7 @@
 
 #include "playerManager.h"
 #include "searchManager.h"
-#include "server.h"
+#include "serverManager.h"
 #include "types.h"
 #include "trace.h"
 

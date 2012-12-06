@@ -26,10 +26,10 @@
 #define MULTICAST_PORT  1337
 
 
-int initMulticastSocket();
+int initMulticastSocket( void );
 
 void launchServer( void );
-void createServer();
+void createServer( void );
 int closeServer( void );
 
 void receivingThread( void *socket );
