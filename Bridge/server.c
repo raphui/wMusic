@@ -82,11 +82,13 @@ void createServer( int port )
         {
             s_client[countClients] = accept( s_server , NULL , NULL );
 
-            printf("[!]New client connected.\n");
+            if( s_client[countClients] > 0 )
+            {
 
-            createThread( &receivingThread , &s_client[countClients] );
+                printf("[!]New client connected.\n");
 
-            countClients++;
+                createThread( &receivingThread , &s_client[countClients] );
+            }
         }
     }
 
@@ -107,6 +109,8 @@ void receivingThread( void *socket )
     char buff[BUFF_SIZE];
     char *arg;
     int ret;
+
+    countClients++;
 
     printf("[!]Receiving thread create !\n");
 
@@ -152,6 +156,8 @@ void receivingThread( void *socket )
 void disconnectClient( int *socket )
 {
     countClients--;
+
+    close( *socket );
 
     s_client[countClients] = 0;
 

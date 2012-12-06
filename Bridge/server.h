@@ -42,4 +42,6 @@ void sendDataMulticast( audio_fifo_data_t *data , size_t size );
 void sendControlMulticast( char *command );
 void sendVoidMulticast( void *data , size_t size );
 
+pthread_mutex_t mutex;
+
 #endif // SERVER_H
