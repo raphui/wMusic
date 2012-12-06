@@ -10,9 +10,6 @@
 #include "types.h"
 #include "trace.h"
 
-/* ############# CALLBACK functions ############# */
-
-
 void search( sp_session *session , char *query );
 
 void printAlbum( sp_album *album );
