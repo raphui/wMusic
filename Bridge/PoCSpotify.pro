@@ -12,7 +12,8 @@ SOURCES += main.c \
     accountManager.c \
     playerManager.c \
     searchManager.c \
-    playlistManager.c
+    playlistManager.c \
+    networkCommand.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound
@@ -28,7 +29,8 @@ HEADERS += \
     accountManager.h \
     playerManager.h \
     searchManager.h \
-    playlistManager.h
+    playlistManager.h \
+    networkCommand.h
 
 target.path = /home/pi/Development
 INSTALLS += target

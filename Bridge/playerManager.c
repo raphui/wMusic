@@ -11,13 +11,12 @@ int play( sp_session *session , char *uri )
 
     sp_link *link;
     sp_error error;
-    int next_timeout;
 
     printf("Creating URI : %s...\n" , uri );
 
 //    link = sp_link_create_from_string( uri );
 
-    link = sp_link_create_from_string("spotify:track:0hErXRUxNluo55B4djV9pU");
+        link = sp_link_create_from_string("spotify:track:0hErXRUxNluo55B4djV9pU");
 
     if( link == NULL )
     {
@@ -54,23 +53,18 @@ int play( sp_session *session , char *uri )
 
     sp_link_release( link );
 
-//    audio_init( &g_audiofifo );
+    audio_init( &g_audiofifo );
 
     running = 1;
     playing = 0;
 
-//    while( running )
-//    {
-//        sp_session_process_events( session , &next_timeout );
+    return PC_SUCCESS;
+}
 
-//        if( playing == 0 )
-//        {
-//            printf("Let's play the music !\n");
+int pauseMusic( sp_session *session , char *uri )
+{
 
-
-//            playing = 1;
-//        }
-//    }
+    sp_session_player_play( session , 0 );
 
     return PC_SUCCESS;
 }
@@ -140,9 +134,9 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 {
     TRACE_2( SPOTIFYMANAGER , "music_delivery().");
 
-//    printf("Playing music...%d\n" , num_frames );
+    printf("Playing music...%d\n" , num_frames );
 
-//    audio_fifo_t *af = &g_audiofifo;
+    audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
     size_t s;
 
@@ -151,15 +145,15 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     sendControlMulticast("START");
 
     // audio discontinuity, do nothing
-//    if( num_frames == 0 )
-//    {
-//        pthread_mutex_unlock( &af->mutex );
-//        return 0;
-//    }
+    if( num_frames == 0 )
+    {
+        pthread_mutex_unlock( &af->mutex );
+        return 0;
+    }
 
-//    // buffer one second of audio
-//    if( af->qlen > format->sample_rate )
-//        return 0;
+    // buffer one second of audio
+    if( af->qlen > format->sample_rate )
+        return 0;
 
     s = num_frames * sizeof( int16_t ) * format->channels;
     afd = malloc( sizeof( *afd ) + s );
@@ -169,7 +163,6 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
     afd->rate = format->sample_rate;
     sendVoidMulticast( &afd->rate , sizeof( int ) );
-//    sendVoid( 44100 , sizeof( int ) );
 
     afd->nsamples = num_frames;
     sendVoidMulticast( &afd->nsamples , sizeof( int ) );
@@ -179,24 +172,14 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     data = ( int16_t * )malloc( s );
 
     memcpy( data , afd->samples , s );
-//    sendVoid( *data , s );
-
-//    data = ( char * )malloc( sizeof( char ) * s );
-
-//    strcat( ( char )&( afd->channels ) , data );
-//    strcat( ( char )&( afd->rate ) , data );
-//    strcat( ( char )&( afd->nsamples ) , data );
-//    strcat( ( char )afd->samples[0] , data );
 
     sendVoidMulticast( data , s );
 
-//    sendData( afd , s + sizeof( *afd ) );
+    TAILQ_INSERT_TAIL( &af->q , afd , link );
+    af->qlen += num_frames;
 
-//    TAILQ_INSERT_TAIL( &af->q , afd , link );
-//    af->qlen += num_frames;
-
-//    pthread_cond_signal( &af->cond );
-//    pthread_mutex_unlock( &af->mutex );
+    pthread_cond_signal( &af->cond );
+    pthread_mutex_unlock( &af->mutex );
 
     sendControlMulticast("STOP");
 

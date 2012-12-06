@@ -18,6 +18,7 @@ void end_of_track( sp_session *session );
 
 
 int play( sp_session *session , char *uri );
+int pauseMusic( sp_session *session , char *uri );
 
 int running;
 int playing;

@@ -16,6 +16,7 @@
 #include "trace.h"
 #include "threadManager.h"
 #include "spotifyManager.h"
+#include "networkCommand.h"
 
 #define BUFF_SIZE       1024
 #define MAX_CLIENT      10
@@ -28,12 +29,12 @@
 int initMulticastSocket();
 
 void launchServer( void );
-void createServer( int port );
+void createServer();
 int closeServer( void );
 
 void receivingThread( void *socket );
 
-void disconnectClient( int *socket );
+int disconnectClient( int *socket );
 
 void sendData( audio_fifo_data_t *data , size_t size );
 void sendControl( char *command );

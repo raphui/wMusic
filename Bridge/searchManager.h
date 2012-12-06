@@ -10,7 +10,7 @@
 #include "types.h"
 #include "trace.h"
 
-void search( sp_session *session , char *query );
+int search( sp_session *session , char *query );
 
 void printAlbum( sp_album *album );
 void printArtist( sp_artist *artist );

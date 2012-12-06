@@ -26,7 +26,6 @@ int initMulticastSocket()
     addrMulticast.sin_addr.s_addr = inet_addr( MULTICAST_ADDR );
     addrMulticast.sin_port = htons( MULTICAST_PORT );
 
-
     return PC_SUCCESS;
 }
 
@@ -34,18 +33,22 @@ void launchServer( void )
 {
     TRACE_2( SPOTIFYMANAGER , "lanchServer()");
 
-    int portCommander = 1338;
+//    int portCommander = 1338;
 
-    printf("Start server on port %d...\n" , portCommander );
+    printf("Start server on port %d...\n" , PORT_COMMANDER );
 
-    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , portCommander );
+    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , NULL );
+
+//    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , ( void * )&portCommander );
 
     initMulticastSocket();
 }
 
-void createServer( int port )
+
+/* Commander server */
+void createServer()
 {
-    TRACE_2( STREAMINGSERVER , "createServer( %d )." , port );
+    TRACE_2( STREAMINGSERVER , "createServer().");
 
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
 
@@ -60,11 +63,11 @@ void createServer( int port )
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl( INADDR_ANY );
-    serv_addr.sin_port = htons( port );
+    serv_addr.sin_port = htons( PORT_COMMANDER );
 
     if( bind( s_server , ( struct sockaddr* )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        printf("[-]Error to bind on port: %d.\n" , port );
+        printf("[-]Error to bind on port: %d.\n" , PORT_COMMANDER );
 
         pthread_exit( PC_ERROR );
     }
@@ -124,7 +127,7 @@ void receivingThread( void *socket )
         {
             printf("[+]Data: %s\n" , buff );
 
-            if( strstr( buff , "PLAYER:PLAY" ) != NULL )
+/*            if( strstr( buff , "PLAYER:PLAY" ) != NULL )
             {
                 arg = strstr( buff , "spotify" );
 
@@ -136,14 +139,18 @@ void receivingThread( void *socket )
                 arg = strrchr( buff , ':' );
 
                 //g_session from spotifyManager.h
-                search( g_session , arg );
+//                search( g_session , arg );
+
             }
-            else if( strstr( buff , "DISC") != NULL )
+            else */
+            if( strstr( buff , "DISC") != NULL )
             {
                 disconnectClient( socket );
 
                 break;
             }
+
+            doAction( buff );
         }
 
     }
@@ -153,25 +160,31 @@ void receivingThread( void *socket )
     pthread_exit( NULL );
 }
 
-void disconnectClient( int *socket )
+int disconnectClient( int *socket )
 {
+    int status = PC_SUCCESS;
+
     countClients--;
 
-    close( *socket );
+    if( close( *socket ) < 0 )
+    {
+        TRACE_ERROR( COMMANDERSERVER , "Cannot close client socket.");
 
-    s_client[countClients] = 0;
+        status = PC_ERROR;
+    }
+    else
+    {
+        s_client[countClients] = 0;
 
-    TRACE_INFO( COMMANDERSERVER , "Client disconnect.");
+        TRACE_INFO( COMMANDERSERVER , "Client disconnect.");
+    }
+
+    return status;
 }
 
 void sendData( audio_fifo_data_t *data , size_t size )
 {
     TRACE_2( STREAMINGSERVER , "sendData().");
-
-    static int countPackets = 0;
-    static FILE *f;
-
-    f = fopen("/home/raphio/serv.txt" , "a" );
 
     ssize_t b;
 
@@ -182,21 +195,6 @@ void sendData( audio_fifo_data_t *data , size_t size )
         if( b < 0 )
         {
             printf("Cannot write data to client.\n");
-        }
-        else
-        {
-
-            fprintf( f, "Playing music...\n");
-            fprintf( f, "Channels:\t %d\n" , data->channels );
-            fprintf( f, "Rate:\t\t %d\n" , data->rate );
-            fprintf( f, "NSamples:\t %d\n" , data->nsamples );
-            fprintf( f, "Samples:\t %d\n" , data->samples[0] );
-
-            fclose( f );
-
-            countPackets++;
-
-            printf("######### %d packets sended ! ###### \t\t SIZE:%d\tBYTES:%d\n" , countPackets , size , b );
         }
     }
 
@@ -224,7 +222,6 @@ void sendVoid( void *data , size_t size )
     }
 
 }
-
 
 void sendDataMulticast( audio_fifo_data_t *data , size_t size )
 {
