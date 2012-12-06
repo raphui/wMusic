@@ -17,7 +17,7 @@ static void searchComplete( sp_search *search , void *userdata )
 
     if( sp_search_error( search ) == SP_ERROR_OK )
     {
-        printf("Query:      %s\n" , sp_search_query( search ) );
+        printf("Query:\t\t %s\n" , sp_search_query( search ) );
 
         for( i = 0 ; i < sp_search_num_artists( search ) ; i++ )
         {
@@ -28,12 +28,17 @@ static void searchComplete( sp_search *search , void *userdata )
     sp_search_release( search );
 }
 
-void printTrack( sp_album *album )
+void printAlbum( sp_album *album )
 {
+    printf("Album:\t\t %s\n" , sp_album_name( album ) );
+}
 
+void printTrack( sp_track *track )
+{
+    printf("Track:\t\t %s\n" , sp_track_name( track ) );
 }
 
 void printArtist( sp_artist *artist )
 {
-    printf("Artist:         %s\n" , sp_artist_name( artist ) );
+    printf("Artist:\t\t %s\n" , sp_artist_name( artist ) );
 }
