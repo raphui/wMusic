@@ -9,12 +9,12 @@ int main( void )
 
     if( launchSpotifyManager() == CONNECTION_ERROR )
     {
-        printf("Connection to Spotify failed.\n");
+        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
 
         return PC_ERROR;
     }
 
-    printf("\n");
+    printf("");
     return 0;
 }
 

@@ -36,11 +36,11 @@ int launchSpotifyManager( void )
 
     if( error != SP_ERROR_OK )
     {
-        printf("Fail to create session, reason: %s\n" , sp_error_message( error ) );
+        TRACE_ERROR( SPOTIFYMANAGER , "Fail to create session, reason: %s" , sp_error_message( error ) );
     }
     else
     {
-        printf("Success to create session\n");
+        TRACE_2( SPOTIFYMANAGER , "Success to create session");
     }
 
     if( g_session != NULL )
@@ -62,7 +62,9 @@ int launchSpotifyManager( void )
 
                 if( ( login == 1 ) && ( playing == 0 ) )
                 {
-                    printf("Let's play the music !\n");
+                    TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
+
+                    TRACE_3( SPOTIFYMANAGER , "Let's play the music !");
 
 
                     playing = 1;

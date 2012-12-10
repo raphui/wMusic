@@ -19,6 +19,7 @@ void end_of_track( sp_session *session );
 
 int play( sp_session *session , char *uri );
 
+int createTrackFromUrl( char *url );
 int createTrackFromUri( char *uri );
 int loadMusic( sp_session *session , char *uri );
 int playMusic( sp_session *session , char *uri );
@@ -26,5 +27,6 @@ int pauseMusic( sp_session *session , char *uri );
 
 int running;
 int playing;
+
 
 #endif // PLAYERMANAGER_H

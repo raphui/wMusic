@@ -6,7 +6,7 @@ int signin( sp_session *session , const char *username , const char *password )
 
     sp_error error;
 
-    TRACE_3( ACCOUNTMANAGER , "Trying to login....\n");
+    TRACE_3( ACCOUNTMANAGER , "Trying to login....");
 
     login = 0;
 
@@ -36,12 +36,12 @@ void logged_in( sp_session *session , sp_error error )
 
     if( error != SP_ERROR_OK )
     {
-        TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s.\n" ,  sp_error_message( error ) );
+        TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s." ,  sp_error_message( error ) );
 
         exit( 1 );
     }
 
-    TRACE_3( ACCOUNTMANAGER , "Success to login.\n");
+    TRACE_3( ACCOUNTMANAGER , "Success to login.");
 
     login = 1;
 }

@@ -2,16 +2,18 @@
 
 static networkCommand_t networkCmd[] = {
 
-    {   "PLAYER#LOAD"       ,   &loadMusic          },
-    {   "PLAYER#PLAY"       ,   &playMusic          },
-    {   "PLAYER#PAUSE"      ,   &pauseMusic         },
-    {   "SEARCH#ARTIST"     ,   &search             },
-    {   "SEARCH#ALBUM"      ,   &search             },
-    {   "SEARCH#TRACK"      ,   &search             }
+    {   "PLAYER#LOAD"       ,   &loadMusic      ,   NULL            },
+    {   "PLAYER#PLAY"       ,   &playMusic      ,   NULL            },
+    {   "PLAYER#PAUSE"      ,   &pauseMusic     ,   NULL            },
+    {   "SEARCH#BASIC"      ,   &search         ,   NULL            },
+    {   "SEARCH#ARTIST"     ,   &search         ,   "artist:"       },
+    {   "SEARCH#ALBUM"      ,   &search         ,   "album:"        },
+    {   "SEARCH#TRACK"      ,   &search         ,   "track:"        },
+    {   "SEARCH#WHATSNEW"   ,   &search         ,   "tag:new"       }
 };
 
 
-static int searchAction( char *command )
+static int searchAction( char *command , char *arg2 )
 {
     TRACE_2( NETWORKCOMMAND , "searchAction( %s )." , command );
 
@@ -23,6 +25,9 @@ static int searchAction( char *command )
         {
             TRACE_1( NETWORKCOMMAND , "Command found, id: %d" , i );
 
+            if( networkCmd[i].specificArg != NULL )
+                memcpy( arg2 , networkCmd[i].specificArg , strlen( networkCmd[i].specificArg ) );
+
             return networkCmd[i].executeCommand;
         }
     }
@@ -33,9 +38,27 @@ void doAction( char *command )
 {
     TRACE_2( NETWORKCOMMAND , "doAction( %s )." , command );
 
+    char query[MAX_QUERY_LENGTH];
+
     char *arg = strrchr( command , '#' );
+    char arg2[255];
 
-    int ( *execute )( sp_session* , char* ) = searchAction( command );
+    memset( query , 0 , MAX_QUERY_LENGTH );
+    memset( arg2 , 0 , 255 );
 
-    execute( g_session , arg + 1 );
+    int ( *execute )( sp_session* , char* ) = searchAction( command , arg2 );
+
+    if( arg2[0] != 0 )
+    {
+        strcat( query , arg2 );
+        strcat( query , arg + 1 );
+    }
+    else
+    {
+        strcat( query , arg + 1 );
+    }
+
+    TRACE_1( NETWORKCOMMAND , "Execute query : %s" , query );
+
+    execute( g_session , query );
 }

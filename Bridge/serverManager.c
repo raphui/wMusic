@@ -35,7 +35,7 @@ void launchServer( void )
 
 //    int portCommander = 1338;
 
-    TRACE_3( COMMANDERSERVER , "Start server on port %d...\n" , PORT_COMMANDER );
+    TRACE_3( COMMANDERSERVER , "Start server on port %d..." , PORT_COMMANDER );
 
     pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , NULL );
 
@@ -56,7 +56,7 @@ void createServer( void )
 
     if( s_server < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to create socket.\n");
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to create socket.");
 
         pthread_exit( PC_ERROR );
     }
@@ -67,14 +67,14 @@ void createServer( void )
 
     if( bind( s_server , ( struct sockaddr* )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d.\n" , PORT_COMMANDER );
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d." , PORT_COMMANDER );
 
         pthread_exit( PC_ERROR );
     }
 
     if( listen( s_server , 10 ) < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to listen to 10 connection.\n");
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to listen to 10 connection.");
 
         pthread_exit( PC_ERROR );
     }
@@ -88,7 +88,7 @@ void createServer( void )
             if( s_client[countClients] > 0 )
             {
 
-                TRACE_3( COMMANDERSERVER , "[!]New client connected.\n");
+                TRACE_3( COMMANDERSERVER , "[!]New client connected.");
 
                 createThread( &receivingThread , &s_client[countClients] );
             }
@@ -115,7 +115,7 @@ void receivingThread( void *socket )
 
     countClients++;
 
-    TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !\n");
+    TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !");
 
     while( 1 )
     {
@@ -125,7 +125,7 @@ void receivingThread( void *socket )
 
         if( ret > 0 )
         {
-            TRACE_3( COMMANDERSERVER , "[+]Data: %s\n" , buff );
+            TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
 
 /*            if( strstr( buff , "PLAYER:PLAY" ) != NULL )
             {
@@ -155,7 +155,7 @@ void receivingThread( void *socket )
 
     }
 
-    TRACE_3( COMMANDERSERVER , "[!]Quitting receiving thread !\n");
+    TRACE_3( COMMANDERSERVER , "[!]Quitting receiving thread !");
 
     pthread_exit( NULL );
 }
@@ -194,7 +194,7 @@ void sendData( audio_fifo_data_t *data , size_t size )
 
         if( b < 0 )
         {
-            TRACE_WARNING( STREAMINGSERVER , "Cannot write data to client.\n");
+            TRACE_WARNING( STREAMINGSERVER , "Cannot write data to client.");
         }
     }
 

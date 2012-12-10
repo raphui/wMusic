@@ -3,43 +3,66 @@
 static sp_track *track;
 static audio_fifo_t g_audiofifo;
 
-int createTrackFromUri( char *uri )
+static int loadTrack( sp_session *session , sp_track *track )
 {
-    TRACE_2( PLAYERMANAGER , "play( %s )" , uri );
+    TRACE_2( PLAYERMANAGER , "loadTrack().");
+
+    int status = PC_SUCCESS;
+
+    sp_error error;
+
+    error = sp_session_player_load( session , track );
+
+    if( error != SP_ERROR_OK )
+    {
+        TRACE_ERROR( PLAYERMANAGER , "Cannot load track, reason: %s" , sp_error_message( error ) );
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( PLAYERMANAGER , "Track loaded.");
+    }
+
+    return status;
+}
+
+
+int createTrackFromUrl( char *url )
+{
+    TRACE_2( PLAYERMANAGER , "createTrackFromUrl( %s )" , url );
 
     sp_link *link;
     sp_error error;
 
-    TRACE_1( PLAYERMANAGER , "Creating URI : %s...\n" , uri );
+    TRACE_1( PLAYERMANAGER , "Creating URL : %s..." , url );
 
-//    link = sp_link_create_from_string( uri );
-
-    link = sp_link_create_from_string("spotify:track:0RvMG0PBy3uMRz2nULfjsK");
+    link = sp_link_create_from_string( url );
 
     if( link == NULL )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Fail to create link.\n");
+        TRACE_ERROR( PLAYERMANAGER , "Fail to create link.");
 
         return PC_ERROR;
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Success to create link.\n");
+        TRACE_3( PLAYERMANAGER , "Success to create link.");
     }
 
-    TRACE_1( PLAYERMANAGER , "Construct track...\n");
+    TRACE_1( PLAYERMANAGER , "Construct track...");
 
     track = sp_link_as_track( link );
 
     if( track == NULL )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Fail to create track.\n");
+        TRACE_ERROR( PLAYERMANAGER , "Fail to create track.");
 
         return PC_ERROR;
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Success to create track.\n");
+        TRACE_3( PLAYERMANAGER , "Success to create track.");
     }
 
     error = sp_track_add_ref( track );
@@ -59,28 +82,60 @@ int createTrackFromUri( char *uri )
     return PC_SUCCESS;
 }
 
-static int loadTrack( sp_session *session , sp_track *track )
+int createTrackFromUri( char *uri )
 {
-    TRACE_2( PLAYERMANAGER , "loadTrack().");
+    TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s )" , uri );
 
-    int status = PC_SUCCESS;
-
+    sp_link *link;
     sp_error error;
 
-    error = sp_session_player_load( session , track );
+    TRACE_1( PLAYERMANAGER , "Creating URI : %s..." , uri );
 
-    if( error != SP_ERROR_OK )
+//    link = sp_link_create_from_string( uri );
+
+    link = sp_link_create_from_string("spotify:track:0RvMG0PBy3uMRz2nULfjsK");
+
+    if( link == NULL )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Cannot load track, reason: %s\n" , sp_error_message( error ) );
+        TRACE_ERROR( PLAYERMANAGER , "Fail to create link.");
 
-        status = PC_ERROR;
+        return PC_ERROR;
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Track loaded.\n");
+        TRACE_3( PLAYERMANAGER , "Success to create link.");
     }
 
-    return status;
+    TRACE_1( PLAYERMANAGER , "Construct track...");
+
+    track = sp_link_as_track( link );
+
+    if( track == NULL )
+    {
+        TRACE_ERROR( PLAYERMANAGER , "Fail to create track.");
+
+        return PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( PLAYERMANAGER , "Success to create track.");
+    }
+
+    error = sp_track_add_ref( track );
+
+    if( error != SP_ERROR_OK )
+    {
+        TRACE_ERROR( PLAYERMANAGER , "Cannot add ref track, reason: %s" , sp_error_message( error ) );
+    }
+
+    sp_link_release( link );
+
+    audio_init( &g_audiofifo );
+
+    running = 1;
+    playing = 0;
+
+    return PC_SUCCESS;
 }
 
 int loadMusic( sp_session *session, char *uri )
@@ -107,13 +162,13 @@ int playMusic( sp_session *session , char *uri )
 
     if( error != SP_ERROR_OK )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Cannot play track, reason: %s\n" , sp_error_message( error ) );
+        TRACE_ERROR( PLAYERMANAGER , "Cannot play track, reason: %s" , sp_error_message( error ) );
 
         status = PC_ERROR;
     }
     else
     {
-       TRACE_3( PLAYERMANAGER , "Success to play track.\n");
+       TRACE_3( PLAYERMANAGER , "Success to play track.");
     }
 
     return status;
@@ -131,13 +186,13 @@ int pauseMusic( sp_session *session , char *uri )
 
     if( error != SP_ERROR_OK )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Cannot pause track, reason: %s\n" , sp_error_message( error ) );
+        TRACE_ERROR( PLAYERMANAGER , "Cannot pause track, reason: %s" , sp_error_message( error ) );
 
         status = PC_ERROR;
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Success to pause track.\n")
+        TRACE_3( PLAYERMANAGER , "Success to pause track.")
     }
 
     return status;
@@ -150,7 +205,7 @@ void metadata_updated( sp_session *session )
 
     if( track != NULL )
     {
-        TRACE_3( PLAYERMANAGER , "Track name: %s\n" , sp_track_name( track ) );
+        TRACE_3( PLAYERMANAGER , "Track name: %s" , sp_track_name( track ) );
 
         loadTrack( session , track );
 
@@ -162,7 +217,7 @@ void end_of_track( sp_session *session )
 {
     TRACE_2( PLAYERMANAGER , "end_of_track().");
 
-    TRACE_3( PLAYERMANAGER , "End of track...\n");
+    TRACE_3( PLAYERMANAGER , "End of track...");
 
     audio_fifo_flush( &g_audiofifo );
     sp_session_player_play( session , 0 );
@@ -175,7 +230,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 {
     TRACE_2( PLAYERMANAGER , "music_delivery().");
 
-    TRACE_3( PLAYERMANAGER , "Playing music...%d\n" , num_frames );
+    TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
