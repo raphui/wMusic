@@ -127,22 +127,6 @@ void receivingThread( void *socket )
         {
             TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
 
-/*            if( strstr( buff , "PLAYER:PLAY" ) != NULL )
-            {
-                arg = strstr( buff , "spotify" );
-
-                //g_session from spotifyManager.h
-                play( g_session , arg );
-            }
-            else if( strstr( buff , "SEARCH:ARTIST") != NULL )
-            {
-                arg = strrchr( buff , ':' );
-
-                //g_session from spotifyManager.h
-//                search( g_session , arg );
-
-            }
-            else */
             if( strstr( buff , "DISC") != NULL )
             {
                 disconnectClient( socket );
@@ -257,4 +241,39 @@ void sendVoidMulticast( void *data , size_t size )
 
     if( b < 0 )
         TRACE_WARNING( STREAMINGSERVER , "Fail to send void* data");
+}
+
+void createFile( void )
+{
+    FILE *f = NULL;
+    FILE *h = NULL;
+    wavHeader_t wavH;
+
+    f = fopen("/home/raphio/test3.wav" , "wb+");
+    h = fopen("/home/raphio/music.wav" , "rb");
+
+    if( f == NULL || h == NULL )
+        return;
+
+    fread( &wavH , sizeof( wavH ) , 1 ,  h );
+
+    fwrite( &wavH , sizeof( wavH ) , 1 , f );
+
+    fclose( f );
+    fclose( h );
+}
+
+void writeFile( void *data )
+{
+    FILE *f = NULL;
+
+    f = fopen("/home/raphio/test3.wav" , "ab");
+
+    if( f == NULL )
+        return;
+
+    fwrite( data , 8192 , 1 , f );
+
+    fclose( f );
+
 }
