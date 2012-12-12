@@ -46,7 +46,6 @@ static void searchComplete( sp_search *search , void *userdata )
 
 void printAlbum( sp_album *album )
 {
-
     pthread_mutex_lock( &mutexSession );
 
     TRACE_3( SEARCHMANAGER , "Album:\t\t %s" , sp_album_name( album ) );
