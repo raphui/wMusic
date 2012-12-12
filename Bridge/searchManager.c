@@ -4,7 +4,7 @@ static void searchComplete( sp_search *search , void *userdata );
 
 void search( sp_session *session , char *query )
 {
-    TRACE_2( SEARCHMANAGER , "search( __session__ , %s )." ,query );
+    TRACE_2( SEARCHMANAGER , "search( __session__ , %s )." , query );
 
     pthread_mutex_lock( &mutexSession );
 
@@ -16,6 +16,8 @@ void search( sp_session *session , char *query )
 static void searchComplete( sp_search *search , void *userdata )
 {
     int i = 0;
+
+    pthread_mutex_lock( &mutexSession );
 
     if( sp_search_error( search ) == SP_ERROR_OK )
     {
@@ -38,19 +40,45 @@ static void searchComplete( sp_search *search , void *userdata )
     }
 
     sp_search_release( search );
+
+    pthread_mutex_unlock( &mutexSession );
 }
 
 void printAlbum( sp_album *album )
 {
+<<<<<<< HEAD
     TRACE_3( SEARCHMANAGER , "Album: %s" , sp_album_name( album ) );
+=======
+    pthread_mutex_lock( &mutexSession );
+
+    TRACE_3( SEARCHMANAGER , "Album:\t\t %s" , sp_album_name( album ) );
+
+    pthread_mutex_unlock( &mutexSession );
+>>>>>>> 315e86f4f6b77f597ce5042e3d2c2dec046fdb55
 }
 
 void printTrack( sp_track *track )
 {
+<<<<<<< HEAD
     TRACE_3( SEARCHMANAGER , "Track: %s" , sp_track_name( track ) );
+=======
+    pthread_mutex_lock( &mutexSession );
+
+    TRACE_3( SEARCHMANAGER , "Track:\t\t %s" , sp_track_name( track ) );
+
+    pthread_mutex_unlock( &mutexSession );
+>>>>>>> 315e86f4f6b77f597ce5042e3d2c2dec046fdb55
 }
 
 void printArtist( sp_artist *artist )
 {
+<<<<<<< HEAD
     TRACE_3( SEARCHMANAGER , "Artist: %s" , sp_artist_name( artist ) );
+=======
+    pthread_mutex_lock( &mutexSession );
+
+    TRACE_3( SEARCHMANAGER , "Artist:\t\t %s" , sp_artist_name( artist ) );
+
+    pthread_mutex_unlock( &mutexSession );
+>>>>>>> 315e86f4f6b77f597ce5042e3d2c2dec046fdb55
 }

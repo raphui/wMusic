@@ -17,9 +17,9 @@
 typedef struct networkCommand
 {
 
-    const char *command;
+    const char command[35];
     int ( *executeCommand )( sp_session *arg1 , char *arg2 );
-    char *specificArg;
+    char specificArg[35];
 
 }networkCommand_t;
 

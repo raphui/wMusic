@@ -3,7 +3,7 @@
 
 typedef struct trace_module
 {
-    char module[24];
+    char module[35];
     int level;
 
 }trace_module;
@@ -16,11 +16,11 @@ trace_module trace_modules[] =
     {"COMMANDERSERVER"  ,   TRACE_LEVEL_DEFAULT },
     {"THREADMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SPOTIFYMANAGER"   ,   TRACE_LEVEL_DEFAULT },
-    {"NETWORKCOMMAND"   ,   TRACE_LEVEL_ALL },
+    {"NETWORKCOMMAND"   ,   TRACE_LEVEL_DEFAULT },
     {"PLAYERMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"ACCOUNTMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"PLAYLISTMANAGER"  ,   TRACE_LEVEL_DEFAULT },
-    {"SEARCHMANAGER"    ,   TRACE_LEVEL_ALL },
+    {"SEARCHMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SERVERMANAGER"    ,   TRACE_LEVEL_DEFAULT }
 
 };
