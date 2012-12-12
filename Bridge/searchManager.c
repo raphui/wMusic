@@ -46,39 +46,28 @@ static void searchComplete( sp_search *search , void *userdata )
 
 void printAlbum( sp_album *album )
 {
-<<<<<<< HEAD
-    TRACE_3( SEARCHMANAGER , "Album: %s" , sp_album_name( album ) );
-=======
+
     pthread_mutex_lock( &mutexSession );
 
     TRACE_3( SEARCHMANAGER , "Album:\t\t %s" , sp_album_name( album ) );
 
     pthread_mutex_unlock( &mutexSession );
->>>>>>> 315e86f4f6b77f597ce5042e3d2c2dec046fdb55
 }
 
 void printTrack( sp_track *track )
 {
-<<<<<<< HEAD
-    TRACE_3( SEARCHMANAGER , "Track: %s" , sp_track_name( track ) );
-=======
     pthread_mutex_lock( &mutexSession );
 
     TRACE_3( SEARCHMANAGER , "Track:\t\t %s" , sp_track_name( track ) );
 
     pthread_mutex_unlock( &mutexSession );
->>>>>>> 315e86f4f6b77f597ce5042e3d2c2dec046fdb55
 }
 
 void printArtist( sp_artist *artist )
 {
-<<<<<<< HEAD
-    TRACE_3( SEARCHMANAGER , "Artist: %s" , sp_artist_name( artist ) );
-=======
     pthread_mutex_lock( &mutexSession );
 
     TRACE_3( SEARCHMANAGER , "Artist:\t\t %s" , sp_artist_name( artist ) );
 
     pthread_mutex_unlock( &mutexSession );
->>>>>>> 315e86f4f6b77f597ce5042e3d2c2dec046fdb55
 }
