@@ -14,7 +14,7 @@ int main( void )
         return PC_ERROR;
     }
 
-    printf("");
+    printf("\n");
     return 0;
 }
 

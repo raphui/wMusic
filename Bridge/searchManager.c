@@ -19,7 +19,17 @@ static void searchComplete( sp_search *search , void *userdata )
 
     if( sp_search_error( search ) == SP_ERROR_OK )
     {
-        TRACE_3( SEARCHMANAGER , "Query:\t\t %s" , sp_search_query( search ) );
+        TRACE_3( SEARCHMANAGER , "Query: %s" , sp_search_query( search ) );
+
+        for( i = 0 ; i < sp_search_num_tracks( search ) ; i++ )
+        {
+            printTrack( sp_search_track( search , i ) );
+        }
+
+        for( i = 0 ; i < sp_search_num_albums( search ) ; i++ )
+        {
+            printAlbum( sp_search_album( search , i ) );
+        }
 
         for( i = 0 ; i < sp_search_num_artists( search ) ; i++ )
         {
@@ -32,15 +42,15 @@ static void searchComplete( sp_search *search , void *userdata )
 
 void printAlbum( sp_album *album )
 {
-    TRACE_3( SEARCHMANAGER , "Album:\t\t %s" , sp_album_name( album ) );
+    TRACE_3( SEARCHMANAGER , "Album: %s" , sp_album_name( album ) );
 }
 
 void printTrack( sp_track *track )
 {
-    TRACE_3( SEARCHMANAGER , "Track:\t\t %s" , sp_track_name( track ) );
+    TRACE_3( SEARCHMANAGER , "Track: %s" , sp_track_name( track ) );
 }
 
 void printArtist( sp_artist *artist )
 {
-    TRACE_3( SEARCHMANAGER , "Artist:\t\t %s" , sp_artist_name( artist ) );
+    TRACE_3( SEARCHMANAGER , "Artist: %s" , sp_artist_name( artist ) );
 }

@@ -33,13 +33,9 @@ void launchServer( void )
 {
     TRACE_2( SERVERMANAGER , "lanchServer()");
 
-//    int portCommander = 1338;
-
     TRACE_3( COMMANDERSERVER , "Start server on port %d..." , PORT_COMMANDER );
 
     pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , NULL );
-
-//    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , ( void * )&portCommander );
 
     initMulticastSocket();
 }
