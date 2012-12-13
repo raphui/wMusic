@@ -13,10 +13,11 @@ SOURCES += main.c \
     searchManager.c \
     playlistManager.c \
     networkCommand.c \
-    serverManager.c
+    serverManager.c \
+    vlcManager.c
 
 
-unix:!macx:!symbian: LIBS += -lspotify -lasound
+unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
 
 HEADERS += \
     queue.h \
@@ -30,7 +31,8 @@ HEADERS += \
     searchManager.h \
     playlistManager.h \
     networkCommand.h \
-    serverManager.h
+    serverManager.h \
+    vlcManager.h
 
 target.path = /home/pi/Development
 INSTALLS += target

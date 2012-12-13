@@ -21,7 +21,17 @@ static void searchComplete( sp_search *search , void *userdata )
 
     if( sp_search_error( search ) == SP_ERROR_OK )
     {
-        TRACE_3( SEARCHMANAGER , "Query:\t\t %s" , sp_search_query( search ) );
+        TRACE_3( SEARCHMANAGER , "Query: %s" , sp_search_query( search ) );
+
+        for( i = 0 ; i < sp_search_num_tracks( search ) ; i++ )
+        {
+            printTrack( sp_search_track( search , i ) );
+        }
+
+        for( i = 0 ; i < sp_search_num_albums( search ) ; i++ )
+        {
+            printAlbum( sp_search_album( search , i ) );
+        }
 
         for( i = 0 ; i < sp_search_num_artists( search ) ; i++ )
         {
