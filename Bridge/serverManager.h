@@ -17,6 +17,7 @@
 #include "threadManager.h"
 #include "spotifyManager.h"
 #include "networkCommand.h"
+#include "vlcManager.h"
 
 #define BUFF_SIZE       1024
 #define MAX_CLIENT      10

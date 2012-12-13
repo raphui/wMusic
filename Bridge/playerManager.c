@@ -162,6 +162,8 @@ int playMusic( sp_session *session , char *uri )
 {
     TRACE_2( PLAYERMANAGER , "playMusic().");
 
+    static int firstTime = 0;
+
     int status = PC_SUCCESS;
 
     sp_error error;
@@ -169,6 +171,9 @@ int playMusic( sp_session *session , char *uri )
     pthread_mutex_lock( &mutexSession );
 
     error = sp_session_player_play( session , 1 );
+
+    if( firstTime++ != 0 )
+        playStream("rtpStreaming");
 
     if( error != SP_ERROR_OK )
     {
@@ -195,6 +200,8 @@ int pauseMusic( sp_session *session , char *uri )
     pthread_mutex_lock( &mutexSession );
 
     sp_error error;
+
+    pauseStream("rtpStreaming");
 
     error = sp_session_player_play( session , 0 );
 

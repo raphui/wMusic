@@ -257,10 +257,13 @@ void createFile( void )
 
     fclose( f );
     fclose( h );
+
 }
 
 void writeFile( void *data )
 {
+    static int firstTime = 0;
+
     FILE *f = NULL;
 
     f = fopen("/home/raphio/test3.wav" , "ab");
@@ -272,4 +275,6 @@ void writeFile( void *data )
 
     fclose( f );
 
+    if( firstTime++ == 0 )
+        streamFile("/home/raphio/test3.wav");
 }

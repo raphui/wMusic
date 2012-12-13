@@ -10,6 +10,7 @@
 #include "types.h"
 #include "trace.h"
 #include "serverManager.h"
+#include "vlcManager.h"
 
 /* ############# CALLBACK functions ############# */
 void metadata_updated( sp_session *session );

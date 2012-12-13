@@ -8,8 +8,9 @@
 #include "trace.h"
 #include "types.h"
 
-int initVlc( void );
 int streamFile( const char *filename );
 int destroyVlc( void );
+int playStream( const char *name );
+int pauseStream( const char *name );
 
 #endif // VLCMANAGER_H
