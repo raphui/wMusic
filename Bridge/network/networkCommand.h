@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "playerManager.h"
-#include "searchManager.h"
-#include "serverManager.h"
-#include "types.h"
-#include "trace.h"
+#include "spotify/playerManager.h"
+#include "spotify/searchManager.h"
+#include "network/serverManager.h"
+#include "utils/types.h"
+#include "utils/trace.h"
 
 #define COUNT_COMMAND       8
 #define MAX_QUERY_LENGTH    1024

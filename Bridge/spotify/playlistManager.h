@@ -6,7 +6,7 @@
 #include <string.h>
 #include <libspotify/api.h>
 
-#include "types.h"
-#include "trace.h"
+#include "utils/types.h"
+#include "utils/trace.h"
 
 #endif // PLAYLISTMANAGER_H

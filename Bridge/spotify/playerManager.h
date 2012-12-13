@@ -6,11 +6,12 @@
 #include <string.h>
 #include <libspotify/api.h>
 
-#include "audio.h"
-#include "types.h"
-#include "trace.h"
-#include "serverManager.h"
-#include "vlcManager.h"
+#include "audio/audio.h"
+#include "utils/types.h"
+#include "utils/trace.h"
+#include "network/serverManager.h"
+#include "vlc/vlcManager.h"
+#include "file/fileManager.h"
 
 /* ############# CALLBACK functions ############# */
 void metadata_updated( sp_session *session );

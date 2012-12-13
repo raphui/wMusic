@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <vlc/vlc.h>
 
-#include "trace.h"
-#include "types.h"
+#include "utils/trace.h"
+#include "utils/types.h"
 
 int streamFile( const char *filename );
 int destroyVlc( void );

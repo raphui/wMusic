@@ -22,7 +22,8 @@ trace_module trace_modules[] =
     {"PLAYLISTMANAGER"  ,   TRACE_LEVEL_DEFAULT },
     {"SEARCHMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SERVERMANAGER"    ,   TRACE_LEVEL_DEFAULT },
-    {"VLCMANAGER"       ,   TRACE_LEVEL_DEFAULT }
+    {"VLCMANAGER"       ,   TRACE_LEVEL_DEFAULT },
+    {"FILEMANAGER"      ,   TRACE_LEVEL_DEFAULT }
 
 };
 

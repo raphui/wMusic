@@ -9,8 +9,8 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-#include "types.h"
-#include "trace.h"
+#include "utils/types.h"
+#include "utils/trace.h"
 
 void createThread( void *routine , void *arg );
 

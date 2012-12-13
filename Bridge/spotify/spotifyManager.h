@@ -7,14 +7,14 @@
 #include <pthread.h>
 #include <libspotify/api.h>
 
-#include "types.h"
-#include "audio.h"
-#include "serverManager.h"
-#include "trace.h"
-#include "threadManager.h"
-#include "accountManager.h"
-#include "playerManager.h"
-#include "searchManager.h"
+#include "utils/types.h"
+#include "audio/audio.h"
+#include "network/serverManager.h"
+#include "utils/trace.h"
+#include "utils/threadManager.h"
+#include "spotify/accountManager.h"
+#include "spotify/playerManager.h"
+#include "spotify/searchManager.h"
 
 #define USERNAME "othane"
 #define PASSWORD "TestRaphio"

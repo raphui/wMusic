@@ -7,8 +7,8 @@
 #include <pthread.h>
 #include <libspotify/api.h>
 
-#include "types.h"
-#include "trace.h"
+#include "utils/types.h"
+#include "utils/trace.h"
 
 void search( sp_session *session , char *query );
 

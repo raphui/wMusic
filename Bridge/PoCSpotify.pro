@@ -3,36 +3,38 @@ CONFIG += console
 CONFIG -= qt
 
 SOURCES += main.c \
-    audio.c \
-    alsa-audio.c \
-    trace.c \
-    threadManager.c \
-    spotifyManager.c \
-    accountManager.c \
-    playerManager.c \
-    searchManager.c \
-    playlistManager.c \
-    networkCommand.c \
-    serverManager.c \
-    vlcManager.c
+    audio/audio.c \
+    audio/alsa-audio.c \
+    file/fileManager.c \
+    network/serverManager.c \
+    network/networkCommand.c \
+    spotify/spotifyManager.c \
+    spotify/searchManager.c \
+    spotify/playlistManager.c \
+    spotify/playerManager.c \
+    spotify/accountManager.c \
+    utils/trace.c \
+    utils/threadManager.c \
+    vlc/vlcManager.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
 
 HEADERS += \
-    queue.h \
-    audio.h \
-    types.h \
-    trace.h \
-    threadManager.h \
-    spotifyManager.h \
-    accountManager.h \
-    playerManager.h \
-    searchManager.h \
-    playlistManager.h \
-    networkCommand.h \
-    serverManager.h \
-    vlcManager.h
+    audio/queue.h \
+    audio/audio.h \
+    file/fileManager.h \
+    network/serverManager.h \
+    network/networkCommand.h \
+    spotify/spotifyManager.h \
+    spotify/searchManager.h \
+    spotify/playlistManager.h \
+    spotify/playerManager.h \
+    spotify/accountManager.h \
+    utils/types.h \
+    utils/trace.h \
+    utils/threadManager.h \
+    vlc/vlcManager.h
 
 target.path = /home/pi/Development
 INSTALLS += target

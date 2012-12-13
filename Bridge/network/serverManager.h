@@ -11,13 +11,13 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-#include "audio.h"
-#include "types.h"
-#include "trace.h"
-#include "threadManager.h"
-#include "spotifyManager.h"
-#include "networkCommand.h"
-#include "vlcManager.h"
+#include "audio/audio.h"
+#include "utils/types.h"
+#include "utils/trace.h"
+#include "utils/threadManager.h"
+#include "spotify/spotifyManager.h"
+#include "network/networkCommand.h"
+#include "vlc/vlcManager.h"
 
 #define BUFF_SIZE       1024
 #define MAX_CLIENT      10
@@ -43,9 +43,6 @@ void sendVoid( void *data , size_t size );
 void sendDataMulticast( audio_fifo_data_t *data , size_t size );
 void sendControlMulticast( char *command );
 void sendVoidMulticast( void *data , size_t size );
-
-void createFile( void );
-void writeFile( void *data );
 
 pthread_mutex_t mutex;
 

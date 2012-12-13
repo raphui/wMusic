@@ -6,8 +6,8 @@
 #include <string.h>
 #include <libspotify/api.h>
 
-#include "types.h"
-#include "trace.h"
+#include "utils/types.h"
+#include "utils/trace.h"
 
 /* ############# CALLBACK functions ############# */
 void logged_in( sp_session *session , sp_error error);
