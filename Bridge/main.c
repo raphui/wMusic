@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "spotifyManager.h"
-#include "types.h"
+#include "spotify/spotifyManager.h"
+#include "utils/types.h"
 
 int main( void )
 {
