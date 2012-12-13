@@ -87,6 +87,8 @@ void createServer( void )
                 TRACE_3( COMMANDERSERVER , "[!]New client connected.");
 
                 createThread( &receivingThread , &s_client[countClients] );
+
+                countClients++;
             }
         }
     }
@@ -105,11 +107,13 @@ int closeServer( void )
 
 void receivingThread( void *socket )
 {
+    TRACE_2( COMMANDERSERVER , "receivingThread()");
+
     char buff[BUFF_SIZE];
     char *arg;
     int ret;
 
-    countClients++;
+//    countClients++;
 
     TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !");
 
@@ -142,6 +146,8 @@ void receivingThread( void *socket )
 
 int disconnectClient( int *socket )
 {
+    TRACE_2( COMMANDERSERVER , "disconnectClient()");
+
     int status = PC_SUCCESS;
 
     countClients--;
@@ -164,7 +170,7 @@ int disconnectClient( int *socket )
 
 void sendData( audio_fifo_data_t *data , size_t size )
 {
-    TRACE_2( STREAMINGSERVER , "sendData().");
+    TRACE_2( COMMANDERSERVER , "sendData().");
 
     ssize_t b;
 
@@ -182,6 +188,8 @@ void sendData( audio_fifo_data_t *data , size_t size )
 
 void sendControl( char *command )
 {
+    TRACE_2( COMMANDERSERVER , "sendControl( %s )." , command );
+
     if( s_client[countClients - 1] != 0 )
     {
         send( s_client[countClients - 1] , command , 6 , 0 );
@@ -191,14 +199,16 @@ void sendControl( char *command )
 
 void sendVoid( void *data , size_t size )
 {
-    size_t b = 0;
-    size_t tmpSize = size / 8;
+    TRACE_2( COMMANDERSERVER , "sendDataMulticast()");
+
+    ssize_t b = 0;
 
     if( s_client[countClients - 1] != 0 )
     {
+        b = send( s_client[countClients - 1] , data , size , 0 );
 
-        send( s_client[countClients - 1] , data , size , 0 );
-
+        if( b < 0 )
+            TRACE_WARNING( COMMANDERSERVER , "Fail to send data");
     }
 
 }

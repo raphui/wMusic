@@ -9,12 +9,15 @@
 
 #include "utils/types.h"
 #include "utils/trace.h"
+#include "network/serverManager.h"
 
 void search( sp_session *session , char *query );
 
-void printAlbum( sp_album *album );
-void printArtist( sp_artist *artist );
-void printTrack( sp_track *track );
+char *printAlbum( sp_album *album );
+char *printArtist( sp_artist *artist );
+char *printTrack( sp_track *track );
+int trackDuration( sp_track *track );
+char *trackUri( sp_track *track );
 
 
 #endif // SEARCHMANAGER_H
