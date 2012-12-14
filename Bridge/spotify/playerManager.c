@@ -196,6 +196,8 @@ int playMusic( sp_session *session , char *uri )
     else
     {
        TRACE_3( PLAYERMANAGER , "Success to play track.");
+
+       playing = 1;
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -262,7 +264,7 @@ void end_of_track( sp_session *session )
 
     pthread_mutex_lock( &mutexSession );
 
-    sp_session_player_play( session , 0 );
+//    sp_session_player_play( session , 0 );
     sp_session_player_unload( session );
 
     pthread_mutex_unlock( &mutexSession );
