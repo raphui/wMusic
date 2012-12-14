@@ -11,13 +11,12 @@ typedef struct trace_module
 
 trace_module trace_modules[] =
 {
-    {"PLAYER"           ,   TRACE_LEVEL_DEFAULT },
     {"STREAMINGSERVER"  ,   TRACE_LEVEL_DEFAULT },
     {"COMMANDERSERVER"  ,   TRACE_LEVEL_DEFAULT },
     {"THREADMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SPOTIFYMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"NETWORKCOMMAND"   ,   TRACE_LEVEL_DEFAULT },
-    {"PLAYERMANAGER"    ,   TRACE_LEVEL_DEFAULT },
+    {"PLAYERMANAGER"    ,   TRACE_LEVEL_ALL },
     {"ACCOUNTMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"PLAYLISTMANAGER"  ,   TRACE_LEVEL_DEFAULT },
     {"SEARCHMANAGER"    ,   TRACE_LEVEL_ALL },
@@ -35,9 +34,16 @@ void Traces_printOnly(unsigned int level, unsigned int module, const char *funct
 void Traces_print( const char *file , const int line , const char *function , unsigned int level , unsigned int module ,  const char *format , ... )
 {
 
+    va_list args;
+    time_t rawtime;
+    struct tm *timeinfo;
+
+    time( &rawtime );
+
+    timeinfo = localtime( &rawtime );
+
     if( ( trace_modules[module].level & level ) == level )
     {
-        va_list args;
         va_start( args , format );
 
         char buff[255];
@@ -45,6 +51,8 @@ void Traces_print( const char *file , const int line , const char *function , un
         memset( buff , 0 , 255 );
 
         const char *tmp = strrchr( file , '/');
+
+        printf("%s" , asctime( timeinfo ) );
 
         if( level == TRACE_LEVEL_WARN )
         {

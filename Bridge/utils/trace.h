@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <time.h>
 
 #define TRACE_LEVEL_ERR    ( 1 << 0 )
 #define TRACE_LEVEL_WARN   ( 1 << 1 )
@@ -47,7 +48,6 @@ extern int Traces_enable( unsigned int module , unsigned int level );
 
 enum {
 
-    PLAYER,
     STREAMINGSERVER,
     COMMANDERSERVER,
     THREADMANAGER,

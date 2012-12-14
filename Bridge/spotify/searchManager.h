@@ -13,9 +13,9 @@
 
 void search( sp_session *session , char *query );
 
-char *printAlbum( sp_album *album );
-char *printArtist( sp_artist *artist );
-char *printTrack( sp_track *track );
+const char *printAlbum( sp_album *album );
+const char *printArtist( sp_artist *artist );
+const char *printTrack( sp_track *track );
 int trackDuration( sp_track *track );
 char *trackUri( sp_track *track );
 

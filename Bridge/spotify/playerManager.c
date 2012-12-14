@@ -11,6 +11,8 @@ static int loadTrack( sp_session *session , sp_track *track )
 
     sp_error error;
 
+//    pthread_mutex_lock( &mutexSession );
+
     error = sp_session_player_load( session , track );
 
     if( error != SP_ERROR_OK )
@@ -24,6 +26,8 @@ static int loadTrack( sp_session *session , sp_track *track )
         TRACE_3( PLAYERMANAGER , "Track loaded.");
     }
 
+//    pthread_mutex_unlock( &mutexSession );
+
     return status;
 }
 
@@ -36,6 +40,8 @@ int createTrackFromUrl( char *url )
     sp_error error;
 
     TRACE_1( PLAYERMANAGER , "Creating URL : %s..." , url );
+
+//    pthread_mutex_lock( &mutexSession );
 
     link = sp_link_create_from_string( url );
 
@@ -74,6 +80,8 @@ int createTrackFromUrl( char *url )
 
     sp_link_release( link );
 
+//    pthread_mutex_unlock( &mutexSession );
+
     audio_init( &g_audiofifo );
 
     running = 1;
@@ -91,7 +99,9 @@ int createTrackFromUri( char *uri )
 
     createFile();
 
-    TRACE_1( PLAYERMANAGER , "Creating URI : %s..." , uri );
+    TRACE_1( PLAYERMANAGER , "Creating URI : %s" , uri );
+
+//    pthread_mutex_lock( &mutexSession );
 
 //    link = sp_link_create_from_string( uri );
 
@@ -133,6 +143,8 @@ int createTrackFromUri( char *uri )
     }
 
     sp_link_release( link );
+
+//    pthread_mutex_unlock( &mutexSession );
 
     audio_init( &g_audiofifo );
 
@@ -228,7 +240,11 @@ void metadata_updated( sp_session *session )
 
     if( track != NULL )
     {
+//        pthread_mutex_lock( &mutexSession );
+
         TRACE_3( PLAYERMANAGER , "Track name: %s" , sp_track_name( track ) );
+
+//        pthread_mutex_unlock( &mutexSession );
 
         loadTrack( session , track );
 
@@ -244,8 +260,12 @@ void end_of_track( sp_session *session )
 
     audio_fifo_flush( &g_audiofifo );
 
+    pthread_mutex_lock( &mutexSession );
+
     sp_session_player_play( session , 0 );
     sp_session_player_unload( session );
+
+    pthread_mutex_unlock( &mutexSession );
 
     playing = 0;
 }
@@ -259,10 +279,6 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
     size_t s;
-
-    int16_t *data;
-
-//    sendControlMulticast("START");
 
     // audio discontinuity, do nothing
     if( num_frames == 0 )
@@ -279,21 +295,12 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     afd = malloc( sizeof( *afd ) + s );
 
     afd->channels = format->channels;
-//    sendVoidMulticast( &afd->channels , sizeof( int ) );
 
     afd->rate = format->sample_rate;
-//    sendVoidMulticast( &afd->rate , sizeof( int ) );
 
     afd->nsamples = num_frames;
-//    sendVoidMulticast( &afd->nsamples , sizeof( int ) );
 
     memcpy( afd->samples , frames , s );
-
-    data = ( int16_t * )malloc( s );
-
-    memcpy( data , afd->samples , s );
-
-//    sendVoidMulticast( data , s );
 
     TAILQ_INSERT_TAIL( &af->q , afd , link );
     af->qlen += num_frames;
@@ -303,8 +310,6 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
 
     writeFile( &afd->samples );
-
-//    sendControlMulticast("STOP");
 
     return num_frames;
 }
