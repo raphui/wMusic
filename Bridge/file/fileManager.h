@@ -7,6 +7,7 @@
 
 #include "utils/trace.h"
 #include "utils/types.h"
+#include "vlc/vlcManager.h"
 
 
 int createFile( void );

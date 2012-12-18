@@ -2,7 +2,7 @@
 
 static libvlc_instance_t *vlcInstance = NULL;
 static libvlc_media_t *vlcMedia = NULL;
-static libvlc_media_player_t *vlcMediaPlayer = NULL;
+//static libvlc_media_player_t *vlcMediaPlayer = NULL;
 
 static int initVlc( void )
 {
@@ -28,7 +28,7 @@ int streamFile( const char *filename )
 
     int status = PC_SUCCESS;
 //    char opt[] = ":sout= #transcode{vcodec=none,acodec=vorb,ab=128,channels=2,samplerate=44100}:rtp{dst=244.2.2.2,port=1337,mux=ts,ttl=1} :sout-all :sout-keep";
-    char opt[] = "--sout '#rtp{dst=224.2.2.2,port=1337,ttl=1}'";
+//    char opt[] = "#transcode{vcodec=none,acodec=vorb,ab=128,channels=2,samplerate=44100}";
 
     if( vlcInstance == NULL )
         initVlc();
@@ -38,7 +38,7 @@ int streamFile( const char *filename )
     if( vlcMedia != NULL )
     {
 
-        libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , "#rtp{dst=224.2.2.2,port=1337,ttl=1}" ,0 , NULL , 1 , 0 );
+        libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , "#rtp{dst=224.2.2.2,port=1337,ttl=10}" , 0 , NULL , 1 , 0 );
 
 
         libvlc_vlm_play_media( vlcInstance , "rtpStreaming");

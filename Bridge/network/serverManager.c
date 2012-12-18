@@ -6,7 +6,7 @@ static int countClients;
 
 static struct sockaddr_in addrMulticast;
 
-static pthread_t serverStreamerThread;
+//static pthread_t serverStreamerThread;
 static pthread_t serverCommanderThread;
 
 int initMulticastSocket( void )
@@ -110,7 +110,6 @@ void receivingThread( void *socket )
     TRACE_2( COMMANDERSERVER , "receivingThread()");
 
     char buff[BUFF_SIZE];
-    char *arg;
     int ret;
 
 //    countClients++;

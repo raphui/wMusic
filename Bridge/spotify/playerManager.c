@@ -31,65 +31,6 @@ static int loadTrack( sp_session *session , sp_track *track )
     return status;
 }
 
-
-int createTrackFromUrl( char *url )
-{
-    TRACE_2( PLAYERMANAGER , "createTrackFromUrl( %s )" , url );
-
-    sp_link *link;
-    sp_error error;
-
-    TRACE_1( PLAYERMANAGER , "Creating URL : %s..." , url );
-
-//    pthread_mutex_lock( &mutexSession );
-
-    link = sp_link_create_from_string( url );
-
-    if( link == NULL )
-    {
-        TRACE_ERROR( PLAYERMANAGER , "Fail to create link.");
-
-        return PC_ERROR;
-    }
-    else
-    {
-        TRACE_3( PLAYERMANAGER , "Success to create link.");
-    }
-
-    TRACE_1( PLAYERMANAGER , "Construct track...");
-
-    track = sp_link_as_track( link );
-
-    if( track == NULL )
-    {
-        TRACE_ERROR( PLAYERMANAGER , "Fail to create track.");
-
-        return PC_ERROR;
-    }
-    else
-    {
-        TRACE_3( PLAYERMANAGER , "Success to create track.");
-    }
-
-    error = sp_track_add_ref( track );
-
-    if( error != SP_ERROR_OK )
-    {
-        TRACE_ERROR( PLAYERMANAGER , "Cannot add ref track, reason: %s" , sp_error_message( error ) );
-    }
-
-    sp_link_release( link );
-
-//    pthread_mutex_unlock( &mutexSession );
-
-    audio_init( &g_audiofifo );
-
-    running = 1;
-    playing = 0;
-
-    return PC_SUCCESS;
-}
-
 int createTrackFromUri( char *uri )
 {
     TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s )" , uri );
@@ -165,6 +106,8 @@ int loadMusic( sp_session *session, char *uri )
     if( createTrackFromUri( uri ) == PC_ERROR )
         status = PC_ERROR;
 
+    addTracksMainPlaylist( session , track );
+
     pthread_mutex_unlock( &mutexSession );
 
     return status;
@@ -181,6 +124,8 @@ int playMusic( sp_session *session , char *uri )
     sp_error error;
 
     pthread_mutex_lock( &mutexSession );
+
+    loadTrack( session , getNextTrack() );
 
     error = sp_session_player_play( session , 1 );
 
@@ -248,7 +193,9 @@ void metadata_updated( sp_session *session )
 
 //        pthread_mutex_unlock( &mutexSession );
 
-        loadTrack( session , track );
+//        addTracksMainPlaylist( session , track );
+
+//        loadTrack( session , getNextTrack() );
 
     }
 }

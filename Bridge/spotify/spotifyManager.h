@@ -15,6 +15,7 @@
 #include "spotify/accountManager.h"
 #include "spotify/playerManager.h"
 #include "spotify/searchManager.h"
+#include "spotify/playlistManager.h"
 
 #define USERNAME "othane"
 #define PASSWORD "TestRaphio"

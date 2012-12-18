@@ -12,6 +12,7 @@
 #include "network/serverManager.h"
 #include "vlc/vlcManager.h"
 #include "file/fileManager.h"
+#include "spotify/playlistManager.h"
 
 /* ############# CALLBACK functions ############# */
 void metadata_updated( sp_session *session );
@@ -21,7 +22,6 @@ void end_of_track( sp_session *session );
 
 int play( sp_session *session , char *uri );
 
-int createTrackFromUrl( char *url );
 int createTrackFromUri( char *uri );
 int loadMusic( sp_session *session , char *uri );
 int playMusic( sp_session *session , char *uri );

@@ -2,20 +2,33 @@
 
 static sp_playlistcontainer *plc;
 static sp_playlist *mainPlaylist;
+static sp_session *currentSession;
+
+static int countTrack = 0;
 
 void tracks_added( sp_playlist *pl , sp_track *const *tracks , int num_tracks , int position , void *userdata )
 {
     TRACE_2( PLAYLISTMANAGER , "track_added()");
+
+    sp_playlist_add_tracks( pl , tracks , num_tracks , position , currentSession );
+
+    countTrack++;
 }
 
 void tracks_moved( sp_playlist *pl , const int *tracks , int num_tracks , int new_position , void *userdata )
 {
     TRACE_2( PLAYLISTMANAGER , "tracks_moved()");
+
+    sp_playlist_reorder_tracks( pl , tracks , num_tracks , new_position );
 }
 
 void tracks_removed( sp_playlist *pl , const int *tracks , int num_tracks , void *userdata )
 {
     TRACE_2( PLAYLISTMANAGER , "tracks_removed()");
+
+    sp_playlist_remove_tracks( pl , tracks , num_tracks );
+
+    countTrack--;
 }
 
 void playlist_metadata_updated( sp_playlist *pl , void *userdata )
@@ -42,6 +55,8 @@ int getPlaylistContainer( sp_session *session )
     else
     {
         TRACE_3( PLAYLISTMANAGER , "Success to retrieve the playlistcontainer");
+
+        currentSession = session;
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -83,13 +98,13 @@ int addTracksMainPlaylist( sp_session *session , sp_track *track )
 
     sp_error error;
 
-    pthread_mutex_lock( &mutexSession );
+//    pthread_mutex_lock( &mutexSession );
 
-    error = sp_playlist_add_tracks( mainPlaylist , track , 1 , 2 , session );
+    error = sp_playlist_add_tracks( mainPlaylist , &track , 1 , countTrack , session );
 
     if( error != SP_ERROR_OK )
     {
-        TRACE_ERROR( PLAYLISTMANAGER , "Fail to add track to the main playlist.");
+        TRACE_ERROR( PLAYLISTMANAGER , "Fail to add track to the main playlist : %s." , sp_error_message( error ) );
 
         status = PC_ERROR;
     }
@@ -98,7 +113,17 @@ int addTracksMainPlaylist( sp_session *session , sp_track *track )
         TRACE_3( PLAYLISTMANAGER , "Success to add track to the main playlist.");
     }
 
-    pthread_mutex_unlock( &mutexSession );
+//    pthread_mutex_unlock( &mutexSession );
+
+
+    countTrack++;
 
     return status;
+}
+
+sp_track *getNextTrack( void )
+{
+    TRACE_2( PLAYLISTMANAGER , "getNextTrack().");
+
+    return sp_playlist_track( mainPlaylist , 0 );
 }

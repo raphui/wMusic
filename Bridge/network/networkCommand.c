@@ -1,19 +1,20 @@
 #include "networkCommand.h"
 
-static networkCommand_t networkCmd[] = {
+static networkCommand_t networkCmd[] =
+{
 
-    {   "PLAYER#LOAD"       ,   &loadMusic      ,   NULL            },
-    {   "PLAYER#PLAY"       ,   &playMusic      ,   NULL            },
-    {   "PLAYER#PAUSE"      ,   &pauseMusic     ,   NULL            },
-    {   "SEARCH#BASIC"      ,   &search         ,   NULL            },
-    {   "SEARCH#ARTIST"     ,   &search         ,   "artist:"       },
-    {   "SEARCH#ALBUM"      ,   &search         ,   "album:"        },
-    {   "SEARCH#TRACK"      ,   &search         ,   "track:"        },
-    {   "SEARCH#WHATSNEW"   ,   &search         ,   "tag:new"       }
+    {"PLAYER#LOAD"       ,   &loadMusic      ,   NULL           },
+    {"PLAYER#PLAY"       ,   &playMusic      ,   NULL           },
+    {"PLAYER#PAUSE"      ,   &pauseMusic     ,   NULL           },
+    {"SEARCH#BASIC"      ,   &search         ,   NULL           },
+    {"SEARCH#ARTIST"     ,   &search         ,   "artist:"      },
+    {"SEARCH#ALBUM"      ,   &search         ,   "album:"       },
+    {"SEARCH#TRACK"      ,   &search         ,   "track:"       },
+    {"SEARCH#WHATSNEW"   ,   &search         ,   "tag:new"      }
 };
 
 
-static int searchAction( char *command , char *arg2 )
+static int *searchAction( char *command , char *arg2 )
 {
     TRACE_2( NETWORKCOMMAND , "searchAction( %s )." , command );
 
@@ -31,6 +32,8 @@ static int searchAction( char *command , char *arg2 )
             return networkCmd[i].executeCommand;
         }
     }
+
+    return -1;
 }
 
 
@@ -47,6 +50,13 @@ void doAction( char *command )
     memset( arg2 , 0 , 255 );
 
     int ( *execute )( sp_session* , char* ) = searchAction( command , arg2 );
+
+    if( *execute == -1 )
+    {
+        TRACE_ERROR( NETWORKCOMMAND , "Command is not supported.");
+
+        return;
+    }
 
     if( arg2[0] != 0 )
     {

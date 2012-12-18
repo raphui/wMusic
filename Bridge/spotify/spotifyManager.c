@@ -5,6 +5,7 @@ static sp_session_callbacks spSessionCallbacks;
 
 static void notify_main_thread( sp_session *session );
 static void log_message( sp_session *session , const char *data );
+static int initPlaylist( void );
 
 int launchSpotifyManager( void )
 {
@@ -29,7 +30,7 @@ int launchSpotifyManager( void )
     spconfig.settings_location = "/home/raphio/tmp";
     spconfig.application_key = g_appkey;
     spconfig.application_key_size = g_appkey_size;
-    spconfig.user_agent = "spotify-poc";
+    spconfig.user_agent = "wmusic";
     spconfig.callbacks = &spSessionCallbacks;
 
     error = sp_session_create( &spconfig , &g_session );
@@ -48,6 +49,7 @@ int launchSpotifyManager( void )
         if( signin( g_session , USERNAME , PASSWORD ) == CONNECTION_OK )
         {
             launchServer();
+            initPlaylist();
 
             running = 1;
             playing = 0;
@@ -65,7 +67,6 @@ int launchSpotifyManager( void )
                     TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
 
                     TRACE_3( SPOTIFYMANAGER , "Let's play the music !");
-
 
                     playing = 1;
                 }
@@ -88,4 +89,30 @@ static void notify_main_thread( sp_session *session )
 static void log_message( sp_session *session , const char *data )
 {
     TRACE_2( SPOTIFYMANAGER , "log_message().");
+}
+
+static int initPlaylist( void )
+{
+    TRACE_2( SPOTIFYMANAGER , "initPlaylist().");
+
+    int status = PC_SUCCESS;
+
+    if( getPlaylistContainer( g_session ) == PC_ERROR )
+    {
+        TRACE_ERROR( SPOTIFYMANAGER , "Fail to get the playlist container.");
+
+        status = PC_ERROR;
+    }
+    else if( createPlaylist("mainPlaylist") == PC_ERROR )
+    {
+        TRACE_ERROR( SPOTIFYMANAGER , "Fail to create the playlist.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( SPOTIFYMANAGER , "Success to initialize the playlist manager.");
+    }
+
+    return status;
 }

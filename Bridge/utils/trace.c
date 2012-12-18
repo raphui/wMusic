@@ -16,10 +16,10 @@ trace_module trace_modules[] =
     {"THREADMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SPOTIFYMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"NETWORKCOMMAND"   ,   TRACE_LEVEL_DEFAULT },
-    {"PLAYERMANAGER"    ,   TRACE_LEVEL_ALL },
+    {"PLAYERMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"ACCOUNTMANAGER"   ,   TRACE_LEVEL_DEFAULT },
-    {"PLAYLISTMANAGER"  ,   TRACE_LEVEL_DEFAULT },
-    {"SEARCHMANAGER"    ,   TRACE_LEVEL_ALL },
+    {"PLAYLISTMANAGER"  ,   TRACE_LEVEL_ALL     },
+    {"SEARCHMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"SERVERMANAGER"    ,   TRACE_LEVEL_DEFAULT },
     {"VLCMANAGER"       ,   TRACE_LEVEL_DEFAULT },
     {"FILEMANAGER"      ,   TRACE_LEVEL_DEFAULT }
@@ -38,6 +38,9 @@ void Traces_print( const char *file , const int line , const char *function , un
     time_t rawtime;
     struct tm *timeinfo;
 
+    int i = 1;
+    char *timestr = NULL;
+
     time( &rawtime );
 
     timeinfo = localtime( &rawtime );
@@ -52,7 +55,16 @@ void Traces_print( const char *file , const int line , const char *function , un
 
         const char *tmp = strrchr( file , '/');
 
-        printf("%s" , asctime( timeinfo ) );
+        timestr = asctime( timeinfo );
+
+        strtok( timestr , " ");
+
+        while( i++ != 3 )
+            strtok( NULL , " ");
+
+        timestr = strtok( NULL , " ");
+
+        printf("%s" , timestr );
 
         if( level == TRACE_LEVEL_WARN )
         {
