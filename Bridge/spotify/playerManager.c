@@ -44,9 +44,9 @@ int createTrackFromUri( char *uri )
 
 //    pthread_mutex_lock( &mutexSession );
 
-//    link = sp_link_create_from_string( uri );
+    link = sp_link_create_from_string( uri );
 
-    link = sp_link_create_from_string("spotify:track:0RvMG0PBy3uMRz2nULfjsK");
+//    link = sp_link_create_from_string("spotify:track:0RvMG0PBy3uMRz2nULfjsK");
 
 //    link = sp_link_create_from_string("spotify:track:1mzn6CQ71eUmgCSfbVmicN");
 

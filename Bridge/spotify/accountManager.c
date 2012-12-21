@@ -2,6 +2,8 @@
 
 int signin( sp_session *session , const char *username , const char *password )
 {
+    TRACE_2( ACCOUNTMANAGER , "signin().");
+
     int next_timeout = 0;
 
     sp_error error;
@@ -16,7 +18,11 @@ int signin( sp_session *session , const char *username , const char *password )
     {
         TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s" , sp_error_message( error ) );
 
-        return -1;
+        return CONNECTION_ERROR;
+    }
+    else
+    {
+        TRACE_2( ACCOUNTMANAGER , "Connection ok !");
     }
 
     while( login != 1 )
@@ -32,7 +38,7 @@ int signin( sp_session *session , const char *username , const char *password )
 void logged_in( sp_session *session , sp_error error )
 {
 
-    TRACE_2( SPOTIFYMANAGER , "logged_in()");
+    TRACE_2( ACCOUNTMANAGER , "logged_in()");
 
     if( error != SP_ERROR_OK )
     {

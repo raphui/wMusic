@@ -18,8 +18,6 @@ static void searchComplete( sp_search *search , void *userdata )
     TRACE_2( SEARCHMANAGER , "searchComplete()");
 
     int i = 0;
-    int j = 0;
-    int k = 0;
     int trackDur;
     int searchCount;
     int sizeToBeSend;
@@ -52,8 +50,8 @@ static void searchComplete( sp_search *search , void *userdata )
         for( i = 0 ; i <  searchCount ; i++ )
         {
             currentTrack = sp_search_track( search , i );
-            currentArtist = sp_search_artist( search , j );
-            currentAlbum = sp_search_album( search , k );
+            currentArtist = sp_search_artist( search , i );
+            currentAlbum = sp_search_album( search , i );
 
             if( ( currentTrack == NULL )
                     || ( currentArtist == NULL )
@@ -82,9 +80,6 @@ static void searchComplete( sp_search *search , void *userdata )
             strcat( toBeSend , "</album>");
 
             strcat( toBeSend , "</result>");
-
-            j++;
-            k++;
 
         }
 

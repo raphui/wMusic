@@ -33,7 +33,7 @@ static int *searchAction( char *command , char *arg2 )
         }
     }
 
-    return -1;
+    return PC_ERROR;
 }
 
 
