@@ -15,7 +15,8 @@ SOURCES += main.c \
     spotify/accountManager.c \
     utils/trace.c \
     utils/threadManager.c \
-    vlc/vlcManager.c
+    vlc/vlcManager.c \
+    system/environmentManager.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
@@ -34,7 +35,8 @@ HEADERS += \
     utils/types.h \
     utils/trace.h \
     utils/threadManager.h \
-    vlc/vlcManager.h
+    vlc/vlcManager.h \
+    system/environmentManager.h
 
 target.path = /home/pi/Development
 INSTALLS += target

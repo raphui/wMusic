@@ -7,6 +7,12 @@
 #define PC_ERROR    -1
 
 
+/**** Environment settings ****/
+#define SET_ENV 0
+#define ESSID   "wMusic"
+#define KEY     "azert"
+
+
 pthread_mutex_t mutexSession;
 
 enum accountManagerState
