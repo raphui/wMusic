@@ -15,4 +15,6 @@ void setAdhoc( char *essidName , char *key )
     strcat( cmd , key );
 
     system( cmd );
+
+    TRACE_3( ENVIRONMENTMANAGER , "Command executed.");
 }

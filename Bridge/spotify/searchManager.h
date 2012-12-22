@@ -11,6 +11,8 @@
 #include "utils/trace.h"
 #include "network/serverManager.h"
 
+#define MAX_SEARCH_COUNT    100
+
 void search( sp_session *session , char *query );
 
 const char *printAlbum( sp_album *album );

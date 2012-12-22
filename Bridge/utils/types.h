@@ -6,6 +6,9 @@
 #define PC_SUCCESS  0
 #define PC_ERROR    -1
 
+#define TRUE    1
+#define FALSE   0
+
 
 /**** Environment settings ****/
 #define SET_ENV 0

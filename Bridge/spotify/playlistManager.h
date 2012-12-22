@@ -18,5 +18,6 @@ int getPlaylistContainer( sp_session *session );
 int createPlaylist( const char *name );
 int addTracksMainPlaylist( sp_session *session , sp_track *track );
 sp_track *getNextTrack( void );
+int hasNextTrack( void );
 
 #endif // PLAYLISTMANAGER_H

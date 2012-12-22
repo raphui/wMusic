@@ -5,6 +5,7 @@ static sp_playlist *mainPlaylist;
 static sp_session *currentSession;
 
 static int countTrack = 0;
+static int countMusicPlayed = 0;
 
 void tracks_added( sp_playlist *pl , sp_track *const *tracks , int num_tracks , int position , void *userdata )
 {
@@ -111,12 +112,11 @@ int addTracksMainPlaylist( sp_session *session , sp_track *track )
     else
     {
         TRACE_3( PLAYLISTMANAGER , "Success to add track to the main playlist.");
+
+        countTrack++;
     }
 
 //    pthread_mutex_unlock( &mutexSession );
-
-
-    countTrack++;
 
     return status;
 }
@@ -125,5 +125,26 @@ sp_track *getNextTrack( void )
 {
     TRACE_2( PLAYLISTMANAGER , "getNextTrack().");
 
-    return sp_playlist_track( mainPlaylist , 0 );
+    static int index = 0;
+
+    if( index > countTrack )
+    {
+        TRACE_WARNING( PLAYLISTMANAGER , "Cannot get the next track ( no more track ).");
+
+        index = 0;
+
+        return NULL;
+    }
+
+    countMusicPlayed++;
+
+    return sp_playlist_track( mainPlaylist , index++ );
+}
+
+int hasNextTrack( void )
+{
+    if( countMusicPlayed == countTrack )
+        return FALSE;
+    else
+        return TRUE;
 }

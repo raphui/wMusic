@@ -1,6 +1,6 @@
 #include "playerManager.h"
 
-static sp_track *track;
+static sp_track *currentTrack;
 static audio_fifo_t g_audiofifo;
 
 static int loadTrack( sp_session *session , sp_track *track )
@@ -31,16 +31,16 @@ static int loadTrack( sp_session *session , sp_track *track )
     return status;
 }
 
-int createTrackFromUri( char *uri )
+int createTrackFromUri( char *uri , sp_track *track )
 {
-    TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s )" , uri );
+    TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s , __track__ )" , uri );
 
     sp_link *link;
     sp_error error;
 
     createFile();
 
-    TRACE_1( PLAYERMANAGER , "Creating URI : %s" , uri );
+    TRACE_3( PLAYERMANAGER , "Creating URI : %s" , uri );
 
 //    pthread_mutex_lock( &mutexSession );
 
@@ -61,11 +61,11 @@ int createTrackFromUri( char *uri )
         TRACE_3( PLAYERMANAGER , "Success to create link.");
     }
 
-    TRACE_1( PLAYERMANAGER , "Construct track...");
+    TRACE_3( PLAYERMANAGER , "Construct track...");
 
-    track = sp_link_as_track( link );
+    currentTrack = sp_link_as_track( link );
 
-    if( track == NULL )
+    if( currentTrack == NULL )
     {
         TRACE_ERROR( PLAYERMANAGER , "Fail to create track.");
 
@@ -76,11 +76,13 @@ int createTrackFromUri( char *uri )
         TRACE_3( PLAYERMANAGER , "Success to create track.");
     }
 
-    error = sp_track_add_ref( track );
+    error = sp_track_add_ref( currentTrack );
 
     if( error != SP_ERROR_OK )
     {
         TRACE_ERROR( PLAYERMANAGER , "Cannot add ref track, reason: %s" , sp_error_message( error ) );
+
+        return PC_ERROR;
     }
 
     sp_link_release( link );
@@ -103,10 +105,25 @@ int loadMusic( sp_session *session, char *uri )
 
     pthread_mutex_lock( &mutexSession );
 
-    if( createTrackFromUri( uri ) == PC_ERROR )
+    sp_track *track = NULL;
+
+    currentTrack = track;
+
+    if( createTrackFromUri( uri , currentTrack ) == PC_ERROR )
         status = PC_ERROR;
 
-    addTracksMainPlaylist( session , track );
+    if( currentTrack != NULL)
+    {
+        TRACE_3( PLAYERMANAGER , "Adding track to the playlist.");
+
+        addTracksMainPlaylist( session , currentTrack );
+    }
+    else
+    {
+        TRACE_ERROR( PLAYERMANAGER , "Cannot add track to the playlist because track is NULL.");
+
+        status = PC_ERROR;
+    }
 
     pthread_mutex_unlock( &mutexSession );
 
@@ -123,7 +140,9 @@ int playMusic( sp_session *session , char *uri )
 
     sp_error error;
 
-    pthread_mutex_lock( &mutexSession );
+//    pthread_mutex_lock( &mutexSession );
+
+    TRACE_3( PLAYERMANAGER , "Getting the track.");
 
     loadTrack( session , getNextTrack() );
 
@@ -145,7 +164,8 @@ int playMusic( sp_session *session , char *uri )
        playing = 1;
     }
 
-    pthread_mutex_unlock( &mutexSession );
+//    pthread_mutex_unlock( &mutexSession );
+
 
     return status;
 }
@@ -185,19 +205,19 @@ void metadata_updated( sp_session *session )
 {
     TRACE_2( PLAYERMANAGER , "metadata_updated().");
 
-    if( track != NULL )
-    {
-//        pthread_mutex_lock( &mutexSession );
+//    if( track != NULL )
+//    {
+////        pthread_mutex_lock( &mutexSession );
 
-        TRACE_3( PLAYERMANAGER , "Track name: %s" , sp_track_name( track ) );
+//        TRACE_3( PLAYERMANAGER , "Track name: %s" , sp_track_name( track ) );
 
-//        pthread_mutex_unlock( &mutexSession );
+////        pthread_mutex_unlock( &mutexSession );
 
-//        addTracksMainPlaylist( session , track );
+////        addTracksMainPlaylist( session , track );
 
-//        loadTrack( session , getNextTrack() );
+////        loadTrack( session , getNextTrack() );
 
-    }
+//    }
 }
 
 
@@ -209,21 +229,35 @@ void end_of_track( sp_session *session )
 
     audio_fifo_flush( &g_audiofifo );
 
-    pthread_mutex_lock( &mutexSession );
+//    pthread_mutex_lock( &mutexSession );
+
+    if( hasNextTrack() == TRUE )
+    {
+        TRACE_2( PLAYERMANAGER , "Load next music !");
+
+        playMusic( session , "" );
+    }
+    else
+    {
+        TRACE_WARNING( PLAYERMANAGER , "No more music in the mainplaylist");
+
+        sp_session_player_play( session , 0 );
+        sp_session_player_unload( session );
+    }
 
 //    sp_session_player_play( session , 0 );
-    sp_session_player_unload( session );
+//    sp_session_player_unload( session
 
-    pthread_mutex_unlock( &mutexSession );
+//    pthread_mutex_unlock( &mutexSession );
 
     playing = 0;
 }
 
 int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames )
 {
-    TRACE_2( PLAYERMANAGER , "music_delivery().");
+//    TRACE_2( PLAYERMANAGER , "music_delivery().");
 
-    TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
+//    TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
