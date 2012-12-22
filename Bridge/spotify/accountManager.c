@@ -27,7 +27,7 @@ int signin( sp_session *session , const char *username , const char *password )
 
     while( login != 1 )
     {
-        usleep( next_timeout * 1000 );
+//        usleep( next_timeout * 1000 );
 
         sp_session_process_events( session , &next_timeout );
     }
