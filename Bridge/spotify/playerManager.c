@@ -35,6 +35,8 @@ int createTrackFromUri( char *uri , sp_track *track )
 {
     TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s , __track__ )" , uri );
 
+    static int firstime = 0;
+
     sp_link *link;
     sp_error error;
 
@@ -89,7 +91,8 @@ int createTrackFromUri( char *uri , sp_track *track )
 
 //    pthread_mutex_unlock( &mutexSession );
 
-    audio_init( &g_audiofifo );
+    if( firstime++ == 0 )
+        audio_init( &g_audiofifo );
 
     running = 1;
     playing = 0;

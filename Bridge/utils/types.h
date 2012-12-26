@@ -3,17 +3,17 @@
 
 #include <pthread.h>
 
-#define PC_SUCCESS  0
-#define PC_ERROR    -1
+#define PC_SUCCESS      0
+#define PC_ERROR        -1
 
-#define TRUE    1
-#define FALSE   0
+#define TRUE            1
+#define FALSE           0
 
 
 /**** Environment settings ****/
-#define SET_ENV 0
-#define ESSID   "wMusic"
-#define KEY     "azert"
+#define SET_ENV         0
+#define ESSID           "wMusic"
+#define KEY             "azert"
 
 
 pthread_mutex_t mutexSession;

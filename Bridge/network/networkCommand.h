@@ -14,15 +14,14 @@
 #define COUNT_COMMAND       8
 #define MAX_QUERY_LENGTH    1024
 
-typedef struct networkCommand
+typedef struct spotifytNetworkCommand
 {
 
     char command[35];
     int ( *executeCommand )( sp_session *arg1 , char *arg2 );
     char specificArg[35];
 
-}networkCommand_t;
-
+}spotifytNetworkCommand_t;
 
 void doAction( char *command );
 

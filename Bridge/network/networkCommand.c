@@ -1,6 +1,6 @@
 #include "networkCommand.h"
 
-static networkCommand_t networkCmd[] =
+static spotifytNetworkCommand_t spotifyNetworkCmd[] =
 {
 
     {"PLAYER#LOAD"       ,   &loadMusic      ,   NULL           },
@@ -22,14 +22,14 @@ static int *searchAction( char *command , char *arg2 )
 
     for( i = 0 ; i < COUNT_COMMAND ; i++ )
     {
-        if( strstr( command , networkCmd[i].command ) != NULL )
+        if( strstr( command , spotifyNetworkCmd[i].command ) != NULL )
         {
             TRACE_1( NETWORKCOMMAND , "Command found, id: %d" , i );
 
-            if( networkCmd[i].specificArg != NULL )
-                memcpy( arg2 , networkCmd[i].specificArg , strlen( networkCmd[i].specificArg ) );
+            if( spotifyNetworkCmd[i].specificArg != NULL )
+                memcpy( arg2 , spotifyNetworkCmd[i].specificArg , strlen( spotifyNetworkCmd[i].specificArg ) );
 
-            return networkCmd[i].executeCommand;
+            return spotifyNetworkCmd[i].executeCommand;
         }
     }
 
