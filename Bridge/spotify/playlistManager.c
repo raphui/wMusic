@@ -91,60 +91,62 @@ int createPlaylist( const char *name )
     return status;
 }
 
-int addTracksMainPlaylist( sp_session *session , sp_track *track )
-{
-    TRACE_2( PLAYLISTMANAGER , "addTracksMainPlaylist()");
+//int addTracksMainPlaylist( sp_session *session , sp_track *track )
+//{
+//    TRACE_2( PLAYLISTMANAGER , "addTracksMainPlaylist()");
 
-    int status = PC_SUCCESS;
+//    int status = PC_SUCCESS;
 
-    sp_error error;
+//    sp_error error;
 
-//    pthread_mutex_lock( &mutexSession );
+////    pthread_mutex_lock( &mutexSession );
 
-    error = sp_playlist_add_tracks( mainPlaylist , &track , 1 , countTrack , session );
+//    error = sp_playlist_add_tracks( mainPlaylist , &track , 1 , countTrack , session );
 
-    if( error != SP_ERROR_OK )
-    {
-        TRACE_ERROR( PLAYLISTMANAGER , "Fail to add track to the main playlist : %s." , sp_error_message( error ) );
+//    if( error != SP_ERROR_OK )
+//    {
+//        TRACE_ERROR( PLAYLISTMANAGER , "Fail to add track to the main playlist : %s." , sp_error_message( error ) );
 
-        status = PC_ERROR;
-    }
-    else
-    {
-        TRACE_3( PLAYLISTMANAGER , "Success to add track to the main playlist.");
+//        status = PC_ERROR;
+//    }
+//    else
+//    {
+//        TRACE_3( PLAYLISTMANAGER , "Success to add track to the main playlist.");
 
-        countTrack++;
-    }
+//        countTrack++;
+//    }
 
-//    pthread_mutex_unlock( &mutexSession );
+////    pthread_mutex_unlock( &mutexSession );
 
-    return status;
-}
+//    return status;
+//}
 
-sp_track *getNextTrack( void )
-{
-    TRACE_2( PLAYLISTMANAGER , "getNextTrack().");
+//sp_track *getNextTrack( void )
+//{
+//    TRACE_2( PLAYLISTMANAGER , "getNextTrack().");
 
-    static int index = 0;
+//    static int index = 0;
 
-    if( index > countTrack )
-    {
-        TRACE_WARNING( PLAYLISTMANAGER , "Cannot get the next track ( no more track ).");
+//    if( index > countTrack )
+//    {
+//        TRACE_WARNING( PLAYLISTMANAGER , "Cannot get the next track ( no more track ).");
 
-        index = 0;
+//        index = 0;
 
-        return NULL;
-    }
+//        return NULL;
+//    }
 
-    countMusicPlayed++;
+//    countMusicPlayed++;
 
-    return sp_playlist_track( mainPlaylist , index++ );
-}
+//    return sp_playlist_track( mainPlaylist , index++ );
+//}
 
-int hasNextTrack( void )
-{
-    if( countMusicPlayed == countTrack )
-        return FALSE;
-    else
-        return TRUE;
-}
+//int hasNextTrack( void )
+//{
+//    TRACE_2( PLAYLISTMANAGER , "hasNextTrack().");
+
+//    if( countMusicPlayed == countTrack )
+//        return FALSE;
+//    else
+//        return TRUE;
+//}

@@ -92,7 +92,10 @@ int createTrackFromUri( char *uri , sp_track *track )
 //    pthread_mutex_unlock( &mutexSession );
 
     if( firstime++ == 0 )
+    {
         audio_init( &g_audiofifo );
+        initPlayqueue();
+    }
 
     running = 1;
     playing = 0;
@@ -119,7 +122,8 @@ int loadMusic( sp_session *session, char *uri )
     {
         TRACE_3( PLAYERMANAGER , "Adding track to the playlist.");
 
-        addTracksMainPlaylist( session , currentTrack );
+        addTracksPlayqueue( currentTrack );
+
     }
     else
     {

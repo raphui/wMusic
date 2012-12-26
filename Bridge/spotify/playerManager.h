@@ -13,6 +13,7 @@
 #include "vlc/vlcManager.h"
 #include "file/fileManager.h"
 #include "spotify/playlistManager.h"
+#include "spotify/playQueueManager.h"
 
 /* ############# CALLBACK functions ############# */
 void metadata_updated( sp_session *session );

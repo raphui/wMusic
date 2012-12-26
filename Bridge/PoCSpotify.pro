@@ -16,13 +16,14 @@ SOURCES += main.c \
     utils/trace.c \
     utils/threadManager.c \
     vlc/vlcManager.c \
-    system/environmentManager.c
+    system/environmentManager.c \
+    spotify/playQueue.c \
+    spotify/playQueueManager.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
 
 HEADERS += \
-    audio/queue.h \
     audio/audio.h \
     file/fileManager.h \
     network/serverManager.h \
@@ -36,7 +37,9 @@ HEADERS += \
     utils/trace.h \
     utils/threadManager.h \
     vlc/vlcManager.h \
-    system/environmentManager.h
+    system/environmentManager.h \
+    spotify/playQueue.h \
+    spotify/playQueueManager.h
 
 target.path = /home/pi/Development
 INSTALLS += target
