@@ -14,7 +14,7 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
 };
 
 
-static int *searchAction( char *command , char *arg2 )
+static int searchAction( char *command , char *arg2 )
 {
     TRACE_2( NETWORKCOMMAND , "searchAction( %s )." , command );
 
@@ -29,7 +29,7 @@ static int *searchAction( char *command , char *arg2 )
             if( spotifyNetworkCmd[i].specificArg != NULL )
                 memcpy( arg2 , spotifyNetworkCmd[i].specificArg , strlen( spotifyNetworkCmd[i].specificArg ) );
 
-            return spotifyNetworkCmd[i].executeCommand;
+            return ( int )spotifyNetworkCmd[i].executeCommand;
         }
     }
 

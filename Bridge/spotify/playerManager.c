@@ -3,6 +3,7 @@
 static sp_track *currentTrack;
 static audio_fifo_t g_audiofifo;
 
+
 static void initPlayerEnv( void )
 {
     TRACE_2( PLAYERMANAGER , "initPlayerEnv().");
@@ -145,7 +146,13 @@ int playMusic( sp_session *session , char *uri )
 
     TRACE_3( PLAYERMANAGER , "Test if a music is playing or not");
 
-    if( playing == TRUE )
+    if( currentTrack == NULL )
+    {
+        TRACE_WARNING( PLAYERMANAGER , "Cannot play track because no track has been loaded.");
+
+        status = PC_ERROR;
+    }
+    else if( playing == TRUE )
     {
         TRACE_3( PLAYERMANAGER , "A music is playing, we just have to unpause it.");
 

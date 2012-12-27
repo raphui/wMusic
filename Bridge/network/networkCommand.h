@@ -17,9 +17,9 @@
 typedef struct spotifytNetworkCommand
 {
 
-    char command[35];
+    char *command;
     int ( *executeCommand )( sp_session *arg1 , char *arg2 );
-    char specificArg[35];
+    char *specificArg;
 
 }spotifytNetworkCommand_t;
 

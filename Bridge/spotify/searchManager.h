@@ -19,7 +19,7 @@ const char *printAlbum( sp_album *album );
 const char *printArtist( sp_artist *artist );
 const char *printTrack( sp_track *track );
 int trackDuration( sp_track *track );
-char *trackUri( sp_track *track );
+char *trackUri( sp_track *track , char *uri );
 
 
 #endif // SEARCHMANAGER_H

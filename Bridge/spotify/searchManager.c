@@ -17,24 +17,25 @@ static void searchComplete( sp_search *search , void *userdata )
 {
     TRACE_2( SEARCHMANAGER , "searchComplete()");
 
-    int i = 0;
+    int i = 0;/*
     int j = 0;
-    int k = 0;
-    int trackDur;
+    int k = 0;*/
+    int trackDur;/*
     int numTracks;
     int numArtists;
-    int numAlbums;
+    int numAlbums;*/
     int searchCount;
     int sizeToBeSend;
 
     char duration[32];
+    char uri[255];
     char start[] = "<results>";
     char stop[] = "</results>";
     char *toBeSend;
 
-    sp_track *currentTrack;
+    sp_track *currentTrack;/*
     sp_artist *currentArtist;
-    sp_album *currentAlbum;
+    sp_album *currentAlbum;*/
 
 //    pthread_mutex_lock( &mutexSession );
 
@@ -75,7 +76,7 @@ static void searchComplete( sp_search *search , void *userdata )
 
             strcat( toBeSend , "<result><uri>");
 
-            strcat( toBeSend , trackUri( currentTrack ) );
+            strcat( toBeSend , trackUri( currentTrack , uri ) );
             strcat( toBeSend , "</uri><track>");
             strcat( toBeSend , printTrack( currentTrack ) );
             strcat( toBeSend , "</track><artist>");
@@ -168,15 +169,11 @@ int trackDuration( sp_track *track )
     return duration;
 }
 
-char *trackUri( sp_track *track )
+char *trackUri( sp_track *track , char *uri )
 {
     TRACE_2( SEARCHMANAGER , "trackUri()");
 
 //    pthread_mutex_lock( &mutexSession );
-
-    char uri[255];
-
-    memset( uri , 0 , 255 );
 
     sp_link_as_string( sp_link_create_from_track( track , 0 ) , uri , 255 );
 
