@@ -12,7 +12,7 @@ int signin( sp_session *session , const char *username , const char *password )
 
     login = FALSE;
 
-    error = sp_session_login( session , username , password , 0 , NULL );
+    error = sp_session_login( session , username , password , REMEMBER_LOGIN , NULL );
 
     if( error != SP_ERROR_OK )
     {
@@ -27,8 +27,6 @@ int signin( sp_session *session , const char *username , const char *password )
 
     while( login != TRUE )
     {
-//        usleep( next_timeout * 1000 );
-
         sp_session_process_events( session , &next_timeout );
     }
 

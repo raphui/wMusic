@@ -37,14 +37,24 @@ sp_track *getNextTrack( void )
     TRACE_2( PLAYQUEUEMANAGER , "getNextTrack().");
 
     playqueue_data_t *pldata;
+    sp_track *ret = NULL;
 
     pldata = TAILQ_FIRST( &plfifo->q );
 
-    TAILQ_REMOVE( &plfifo->q , pldata , link );
+    if( pldata == NULL )
+    {
+        TRACE_WARNING( PLAYQUEUEMANAGER , "Cannot get the next track, because the queue might be empty.");
+    }
+    else
+    {
+        TAILQ_REMOVE( &plfifo->q , pldata , link );
 
-    TRACE_3( PLAYQUEUEMANAGER , "Track has been retrieve.");
+        TRACE_3( PLAYQUEUEMANAGER , "Track has been retrieve.");
 
-    return pldata->track;
+        ret = pldata->track;
+    }
+
+    return ret;
 }
 
 int hasNextTrack( void )

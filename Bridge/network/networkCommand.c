@@ -51,7 +51,7 @@ void doAction( char *command )
 
     int ( *execute )( sp_session* , char* ) = searchAction( command , arg2 );
 
-    if( *execute == -1 )
+    if( *execute == PC_ERROR )
     {
         TRACE_ERROR( NETWORKCOMMAND , "Command is not supported.");
 

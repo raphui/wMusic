@@ -54,6 +54,8 @@ int launchSpotifyManager( void )
             running = TRUE;
             playing = FALSE;
 
+            TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
+
             while( running )
             {
                 pthread_mutex_lock( &mutexSession );

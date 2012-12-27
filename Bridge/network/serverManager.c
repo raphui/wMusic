@@ -54,7 +54,7 @@ void createServer( void )
     {
         TRACE_ERROR( COMMANDERSERVER , "[-]Error to create socket.");
 
-        pthread_exit( PC_ERROR );
+        pthread_exit( ( void * )PC_ERROR );
     }
 
     serv_addr.sin_family = AF_INET;
@@ -65,14 +65,14 @@ void createServer( void )
     {
         TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d." , PORT_COMMANDER );
 
-        pthread_exit( PC_ERROR );
+        pthread_exit( ( void * )PC_ERROR );
     }
 
     if( listen( s_server , 10 ) < 0 )
     {
         TRACE_ERROR( COMMANDERSERVER , "[-]Error to listen to 10 connection.");
 
-        pthread_exit( PC_ERROR );
+        pthread_exit( ( void * )PC_ERROR );
     }
 
     while( 1 )
@@ -94,7 +94,7 @@ void createServer( void )
     }
 
 
-    pthread_exit( PC_SUCCESS );
+    pthread_exit( ( void * )PC_SUCCESS );
 }
 
 
@@ -198,7 +198,7 @@ void sendControl( char *command )
 
 void sendVoid( void *data , size_t size )
 {
-    TRACE_2( COMMANDERSERVER , "sendDataMulticast()");
+    TRACE_2( COMMANDERSERVER , "sendVoid()");
 
     ssize_t b = 0;
 

@@ -6,7 +6,7 @@ static libvlc_media_t *vlcMedia = NULL;
 
 static int initVlc( void )
 {
-    TRACE_2( VLCMANAGER , "initVlc");
+    TRACE_2( VLCMANAGER , "initVlc()");
 
     int status = PC_SUCCESS;
 

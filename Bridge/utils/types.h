@@ -3,17 +3,21 @@
 
 #include <pthread.h>
 
-#define PC_SUCCESS      0
-#define PC_ERROR        -1
+#define PC_SUCCESS          0
+#define PC_ERROR            -1
 
-#define TRUE            1
-#define FALSE           0
+#define TRUE                1
+#define FALSE               0
+
+/**** Spotify Envrironment settins ****/
+#define REMEMBER_LOGIN      0
+#define CREDENTIAL_STORAGE  "/home/raphio/cred.txt"
 
 
-/**** Environment settings ****/
-#define SET_ENV         0
-#define ESSID           "wMusic"
-#define KEY             "azert"
+/**** System Environment settings ****/
+#define SET_ENV             0
+#define ESSID               "wMusic"
+#define KEY                 "azert"
 
 
 pthread_mutex_t mutexSession;
