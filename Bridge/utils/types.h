@@ -12,6 +12,9 @@
 /**** Spotify Envrironment settins ****/
 #define REMEMBER_LOGIN      0
 #define CREDENTIAL_STORAGE  "/home/raphio/cred.txt"
+#define SETTINGS_LOCATION   "/home/raphio/tmp"
+#define CACHE_LOCATION      "/home/raphio/tmp"
+#define SPOTIFY_USER_AGENT  "wmusic"
 
 
 /**** System Environment settings ****/

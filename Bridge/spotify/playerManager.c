@@ -19,8 +19,6 @@ static int loadTrack( sp_session *session , sp_track *track )
 
     sp_error error;
 
-//    pthread_mutex_lock( &mutexSession );
-
     error = sp_session_player_load( session , track );
 
     if( error != SP_ERROR_OK )
@@ -33,8 +31,6 @@ static int loadTrack( sp_session *session , sp_track *track )
     {
         TRACE_3( PLAYERMANAGER , "Track loaded.");
     }
-
-//    pthread_mutex_unlock( &mutexSession );
 
     return status;
 }
@@ -49,8 +45,6 @@ int createTrackFromUri( char *uri , sp_track *track )
     createFile();
 
     TRACE_3( PLAYERMANAGER , "Creating URI : %s" , uri );
-
-//    pthread_mutex_lock( &mutexSession );
 
     link = sp_link_create_from_string( uri );
 
@@ -90,8 +84,6 @@ int createTrackFromUri( char *uri , sp_track *track )
     }
 
     sp_link_release( link );
-
-//    pthread_mutex_unlock( &mutexSession );
 
     running = TRUE;
     playing = FALSE;

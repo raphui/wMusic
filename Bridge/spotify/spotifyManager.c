@@ -26,11 +26,11 @@ int launchSpotifyManager( void )
     spSessionCallbacks.metadata_updated = &metadata_updated;
 
     spconfig.api_version = SPOTIFY_API_VERSION;
-    spconfig.cache_location = "/home/raphio/tmp";
-    spconfig.settings_location = "/home/raphio/tmp";
+    spconfig.cache_location = CACHE_LOCATION;
+    spconfig.settings_location = SETTINGS_LOCATION;
     spconfig.application_key = g_appkey;
     spconfig.application_key_size = g_appkey_size;
-    spconfig.user_agent = "wmusic";
+    spconfig.user_agent = SPOTIFY_USER_AGENT;
     spconfig.callbacks = &spSessionCallbacks;
 
     error = sp_session_create( &spconfig , &g_session );
@@ -49,7 +49,7 @@ int launchSpotifyManager( void )
         if( signin( g_session , USERNAME , PASSWORD ) == CONNECTION_OK )
         {
             launchServer();
-            initPlaylist();
+//            initPlaylist();
 
             running = TRUE;
             playing = FALSE;
@@ -64,14 +64,6 @@ int launchSpotifyManager( void )
 
                 pthread_mutex_unlock( &mutexSession );
 
-//                if( ( login == TRUE ) && ( playing == FALSE ) )
-//                {
-//                    TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
-
-//                    TRACE_3( SPOTIFYMANAGER , "Let's play the music !");
-
-//                    playing = TRUE;
-//                }
             }
         }
         else

@@ -91,6 +91,28 @@ int createPlaylist( const char *name )
     return status;
 }
 
+sp_playlist *getPlaylist( int index )
+{
+    TRACE_2( PLAYLISTMANAGER , "getPlaylist( %d )" , index );
+
+    sp_playlist *pl;
+
+    if( ( 0 < index ) && ( index < sp_playlistcontainer_num_playlists( plc ) ) )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "The index : %d , it's not valid." , index );
+
+        pl = NULL;
+    }
+    else
+    {
+        pl = sp_playlistcontainer_playlist( plc , index );
+
+        TRACE_3( PLAYLISTMANAGER , "Playlist at index : %d , has been retrieved." , index );
+    }
+
+    return pl;
+}
+
 //int addTracksMainPlaylist( sp_session *session , sp_track *track )
 //{
 //    TRACE_2( PLAYLISTMANAGER , "addTracksMainPlaylist()");
