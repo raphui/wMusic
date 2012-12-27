@@ -51,8 +51,8 @@ int launchSpotifyManager( void )
             launchServer();
             initPlaylist();
 
-            running = 1;
-            playing = 0;
+            running = TRUE;
+            playing = FALSE;
 
             while( running )
             {
@@ -62,14 +62,14 @@ int launchSpotifyManager( void )
 
                 pthread_mutex_unlock( &mutexSession );
 
-                if( ( login == 1 ) && ( playing == 0 ) )
-                {
-                    TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
+//                if( ( login == TRUE ) && ( playing == FALSE ) )
+//                {
+//                    TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
 
-                    TRACE_3( SPOTIFYMANAGER , "Let's play the music !");
+//                    TRACE_3( SPOTIFYMANAGER , "Let's play the music !");
 
-                    playing = 1;
-                }
+//                    playing = TRUE;
+//                }
             }
         }
         else

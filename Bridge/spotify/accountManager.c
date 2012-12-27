@@ -10,7 +10,7 @@ int signin( sp_session *session , const char *username , const char *password )
 
     TRACE_3( ACCOUNTMANAGER , "Trying to login....");
 
-    login = 0;
+    login = FALSE;
 
     error = sp_session_login( session , username , password , 0 , NULL );
 
@@ -25,7 +25,7 @@ int signin( sp_session *session , const char *username , const char *password )
         TRACE_2( ACCOUNTMANAGER , "Connection ok !");
     }
 
-    while( login != 1 )
+    while( login != TRUE )
     {
 //        usleep( next_timeout * 1000 );
 
@@ -49,7 +49,7 @@ void logged_in( sp_session *session , sp_error error )
 
     TRACE_3( ACCOUNTMANAGER , "Success to login.");
 
-    login = 1;
+    login = TRUE;
 }
 
 void logged_out( sp_session *session )

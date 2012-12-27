@@ -3,6 +3,14 @@
 static sp_track *currentTrack;
 static audio_fifo_t g_audiofifo;
 
+static void initPlayerEnv( void )
+{
+    TRACE_2( PLAYERMANAGER , "initPlayerEnv().");
+
+    audio_init( &g_audiofifo );
+    initPlayqueue();
+}
+
 static int loadTrack( sp_session *session , sp_track *track )
 {
     TRACE_2( PLAYERMANAGER , "loadTrack().");
@@ -35,8 +43,6 @@ int createTrackFromUri( char *uri , sp_track *track )
 {
     TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s , __track__ )" , uri );
 
-    static int firstime = 0;
-
     sp_link *link;
     sp_error error;
 
@@ -47,10 +53,6 @@ int createTrackFromUri( char *uri , sp_track *track )
 //    pthread_mutex_lock( &mutexSession );
 
     link = sp_link_create_from_string( uri );
-
-//    link = sp_link_create_from_string("spotify:track:0RvMG0PBy3uMRz2nULfjsK");
-
-//    link = sp_link_create_from_string("spotify:track:1mzn6CQ71eUmgCSfbVmicN");
 
     if( link == NULL )
     {
@@ -91,14 +93,8 @@ int createTrackFromUri( char *uri , sp_track *track )
 
 //    pthread_mutex_unlock( &mutexSession );
 
-    if( firstime++ == 0 )
-    {
-        audio_init( &g_audiofifo );
-        initPlayqueue();
-    }
-
-    running = 1;
-    playing = 0;
+    running = TRUE;
+    playing = FALSE;
 
     return PC_SUCCESS;
 }
@@ -107,7 +103,13 @@ int loadMusic( sp_session *session, char *uri )
 {
     TRACE_2( PLAYERMANAGER , "loadMusic().");
 
+    static int firstTime = 0;
+
     int status = PC_SUCCESS;
+
+    /* If it's the first time we load a track, we have to init the audio driver and the playqueue */
+    if( firstTime++ == 0 )
+        initPlayerEnv();
 
     pthread_mutex_lock( &mutexSession );
 
@@ -147,31 +149,42 @@ int playMusic( sp_session *session , char *uri )
 
     sp_error error;
 
-//    pthread_mutex_lock( &mutexSession );
+    pthread_mutex_lock( &mutexSession );
 
-    TRACE_3( PLAYERMANAGER , "Getting the track.");
+    TRACE_3( PLAYERMANAGER , "Test if a music is playing or not");
 
-    loadTrack( session , getNextTrack() );
-
-    error = sp_session_player_play( session , 1 );
-
-    if( firstTime++ != 0 )
-        playStream("rtpStreaming");
-
-    if( error != SP_ERROR_OK )
+    if( playing == TRUE )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Cannot play track, reason: %s" , sp_error_message( error ) );
+        TRACE_3( PLAYERMANAGER , "A music is playing, we just have to unpause it.");
 
-        status = PC_ERROR;
+        sp_session_player_play( session , 1 );
     }
     else
     {
-       TRACE_3( PLAYERMANAGER , "Success to play track.");
+        TRACE_3( PLAYERMANAGER , "Getting the track.");
 
-       playing = 1;
+        loadTrack( session , getNextTrack() );
+
+        error = sp_session_player_play( session , 1 );
+
+        if( firstTime++ != 0 )
+            playStream("rtpStreaming");
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYERMANAGER , "Cannot play track, reason: %s" , sp_error_message( error ) );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+           TRACE_3( PLAYERMANAGER , "Success to play track.");
+
+           playing = TRUE;
+        }
     }
 
-//    pthread_mutex_unlock( &mutexSession );
+    pthread_mutex_unlock( &mutexSession );
 
 
     return status;
@@ -212,19 +225,6 @@ void metadata_updated( sp_session *session )
 {
     TRACE_2( PLAYERMANAGER , "metadata_updated().");
 
-//    if( track != NULL )
-//    {
-////        pthread_mutex_lock( &mutexSession );
-
-//        TRACE_3( PLAYERMANAGER , "Track name: %s" , sp_track_name( track ) );
-
-////        pthread_mutex_unlock( &mutexSession );
-
-////        addTracksMainPlaylist( session , track );
-
-////        loadTrack( session , getNextTrack() );
-
-//    }
 }
 
 
@@ -236,7 +236,7 @@ void end_of_track( sp_session *session )
 
     audio_fifo_flush( &g_audiofifo );
 
-//    pthread_mutex_lock( &mutexSession );
+    pthread_mutex_lock( &mutexSession );
 
     if( hasNextTrack() == TRUE )
     {
@@ -250,21 +250,19 @@ void end_of_track( sp_session *session )
 
         sp_session_player_play( session , 0 );
         sp_session_player_unload( session );
+
+        playing = FALSE;
     }
 
-//    sp_session_player_play( session , 0 );
-//    sp_session_player_unload( session
+    pthread_mutex_unlock( &mutexSession );
 
-//    pthread_mutex_unlock( &mutexSession );
-
-    playing = 0;
 }
 
 int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames )
 {
-//    TRACE_2( PLAYERMANAGER , "music_delivery().");
+    TRACE_2( PLAYERMANAGER , "music_delivery().");
 
-//    TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
+    TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
