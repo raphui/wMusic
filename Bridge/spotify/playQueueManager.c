@@ -21,7 +21,7 @@ int addTracksPlayqueue( sp_track *track )
 
     playqueue_data_t *pldata;
 
-    pldata = ( playqueue_data_t * )malloc( 1024 );
+    pldata = ( playqueue_data_t * )zmalloc( 1024 );
 
     pldata->track = track;
 

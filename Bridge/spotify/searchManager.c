@@ -49,7 +49,7 @@ static void searchComplete( sp_search *search , void *userdata )
 
         sizeToBeSend = 512 * searchCount;
 
-        toBeSend = ( char * )malloc( sizeToBeSend );
+        toBeSend = ( char * )zmalloc( sizeToBeSend );
 
         memset( toBeSend , 0 , sizeToBeSend );
 

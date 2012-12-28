@@ -9,6 +9,7 @@
 
 #include "utils/types.h"
 #include "utils/trace.h"
+#include "utils/zmalloc.h"
 #include "spotify/playQueue.h"
 
 

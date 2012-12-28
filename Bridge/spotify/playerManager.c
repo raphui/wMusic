@@ -237,9 +237,13 @@ void end_of_track( sp_session *session )
 
     pthread_mutex_lock( &mutexSession );
 
+    TRACE_3( PLAYERMANAGER , "Removing the track which have been played.");
+
+    sp_track_release( currentTrack );
+
     if( hasNextTrack() == TRUE )
     {
-        TRACE_2( PLAYERMANAGER , "Load next music !");
+        TRACE_3( PLAYERMANAGER , "Load next music !");
 
         playMusic( session , "" );
     }
@@ -279,7 +283,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
         return 0;
 
     s = num_frames * sizeof( int16_t ) * format->channels;
-    afd = malloc( sizeof( *afd ) + s );
+    afd = zmalloc( sizeof( *afd ) + s );
 
     afd->channels = format->channels;
 

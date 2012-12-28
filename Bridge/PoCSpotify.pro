@@ -18,7 +18,8 @@ SOURCES += main.c \
     vlc/vlcManager.c \
     system/environmentManager.c \
     spotify/playQueue.c \
-    spotify/playQueueManager.c
+    spotify/playQueueManager.c \
+    utils/zmalloc.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
@@ -39,7 +40,8 @@ HEADERS += \
     vlc/vlcManager.h \
     system/environmentManager.h \
     spotify/playQueue.h \
-    spotify/playQueueManager.h
+    spotify/playQueueManager.h \
+    utils/zmalloc.h
 
 target.path = /home/pi/Development
 INSTALLS += target
