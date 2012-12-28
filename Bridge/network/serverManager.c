@@ -4,10 +4,14 @@ static int socketMulticast;
 static int s_client[MAX_CLIENT];
 static int countClients;
 
+static int portCommander = PORT_COMMANDER;
+static int portCli = PORT_CLI;
+
 static struct sockaddr_in addrMulticast;
 
 //static pthread_t serverStreamerThread;
 static pthread_t serverCommanderThread;
+static pthread_t serverCliThread;
 
 int initMulticastSocket( void )
 {
@@ -33,22 +37,35 @@ void launchServer( void )
 {
     TRACE_2( SERVERMANAGER , "lanchServer()");
 
-    TRACE_3( COMMANDERSERVER , "Start server on port %d..." , PORT_COMMANDER );
+    TRACE_3( SERVERMANAGER , "Start server on port %d..." , portCommander );
 
-    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , NULL );
+//    port = PORT_COMMANDER;
+
+//    createThread( &createServer , ( void * )&portCommander );
+
+    pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , &portCommander );
+
+    TRACE_3( SERVERMANAGER , "Start server on port %d..." , portCli );
+
+//    port = PORT_CLI;
+
+    pthread_create( &serverCliThread , NULL , ( void * )&createServer , &portCli );
+
+//    createThread( &createServer , ( void * )&portCli );
 
     initMulticastSocket();
 }
 
 
 /* Commander server */
-void createServer( void )
+void createServer( void *port )
 {
-    TRACE_2( COMMANDERSERVER , "createServer().");
+    TRACE_2( COMMANDERSERVER , "createServer( %d )." , *( int * )port );
 
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
 
     struct sockaddr_in serv_addr;
+    argumentReceivingThread_t *args;
 
     if( s_server < 0 )
     {
@@ -59,11 +76,11 @@ void createServer( void )
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl( INADDR_ANY );
-    serv_addr.sin_port = htons( PORT_COMMANDER );
+    serv_addr.sin_port = htons( *( int * )port );
 
     if( bind( s_server , ( struct sockaddr* )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d." , PORT_COMMANDER );
+        TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d." , *( int * )port );
 
         pthread_exit( ( void * )PC_ERROR );
     }
@@ -86,7 +103,12 @@ void createServer( void )
 
                 TRACE_3( COMMANDERSERVER , "[!]New client connected.");
 
-                createThread( &receivingThread , &s_client[countClients] );
+                args = ( argumentReceivingThread_t * )zmalloc( sizeof( argumentReceivingThread_t ) );
+
+                args->socket = s_client[countClients];
+                args->port = *( int * )port;
+
+                createThread( &receivingThread , args );
 
                 countClients++;
             }
@@ -106,14 +128,22 @@ int closeServer( void )
     return PC_SUCCESS;
 }
 
-void receivingThread( void *socket )
+
+/* void *arg is a argumentReceivingThread_t type */
+void receivingThread( void *arg )
 {
     TRACE_2( COMMANDERSERVER , "receivingThread()");
 
     char buff[BUFF_SIZE];
     int ret;
+    int cliRet;
+
+    argumentReceivingThread_t *arguments = ( argumentReceivingThread_t * )arg;
+
+    TRACE_3( COMMANDERSERVER , "Thread argument: socket: %d , port: %d" , arguments->socket , arguments->port );
 
 //    countClients++;
+
 
     TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !");
 
@@ -121,20 +151,33 @@ void receivingThread( void *socket )
     {
         memset( buff , 0 , BUFF_SIZE );
 
-        ret = recv( *( int *)socket , buff , BUFF_SIZE , 0 );
+        ret = recv( arguments->socket , buff , BUFF_SIZE , 0 );
 
         if( ret > 0 )
         {
-            TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
 
-            if( strstr( buff , "DISC") != NULL )
+            if( arguments->port == PORT_COMMANDER )
             {
-                disconnectClient( socket );
+                TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
 
-                break;
+                if( strstr( buff , "DISC") != NULL )
+                {
+                    disconnectClient( &arguments->socket );
+
+                    break;
+                }
+
+                doAction( buff );
             }
+            else if( arguments->port == PORT_CLI )
+            {
+                TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
 
-            doAction( buff );
+                cliRet = doCommand( buff );
+
+                if( cliRet != PC_ERROR )
+                    sendVoid( &cliRet , sizeof( cliRet ) );
+            }
         }
 
     }
