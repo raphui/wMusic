@@ -97,7 +97,7 @@ static void searchComplete( sp_search *search , void *userdata )
 
         sendVoid( toBeSend , sizeToBeSend );
 
-        free( toBeSend );
+        zfree( toBeSend );
     }
 
     sp_search_release( search );

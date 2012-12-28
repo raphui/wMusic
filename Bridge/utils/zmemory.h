@@ -7,6 +7,7 @@
 #include "utils/trace.h"
 
 void *zmalloc( size_t size );
+void zfree( void *ptr );
 int getMemoryCount( void );
 
 #endif // ZMALLOC_H

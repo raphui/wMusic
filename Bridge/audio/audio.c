@@ -28,6 +28,8 @@
 #include "audio.h"
 #include <stdlib.h>
 
+#include "utils/zmemory.h"
+
 audio_fifo_data_t* audio_get(audio_fifo_t *af)
 {
     audio_fifo_data_t *afd;
@@ -52,7 +54,7 @@ void audio_fifo_flush(audio_fifo_t *af)
 
     while((afd = TAILQ_FIRST(&af->q))) {
 	TAILQ_REMOVE(&af->q, afd, link);
-	free(afd);
+    zfree(afd);
     }
 
     af->qlen = 0;
