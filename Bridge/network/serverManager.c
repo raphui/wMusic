@@ -17,6 +17,8 @@ int initMulticastSocket( void )
 {
     TRACE_2( STREAMINGSERVER , "initMulticastSocket()");
 
+    char multicastAddr[14];
+
     socketMulticast = socket( AF_INET , SOCK_DGRAM , 0 );
 
     if( socketMulticast < 0 )
@@ -26,9 +28,22 @@ int initMulticastSocket( void )
         return PC_ERROR;
     }
 
-    addrMulticast.sin_family = AF_INET;
-    addrMulticast.sin_addr.s_addr = inet_addr( MULTICAST_ADDR );
-    addrMulticast.sin_port = htons( MULTICAST_PORT );
+    getNextMulticastAddr( multicastAddr );
+
+    if( multicastAddr == NULL )
+    {
+        TRACE_ERROR( STREAMINGSERVER , "Cannot retrieve a multicast address");
+
+        return PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( STREAMINGSERVER , "Multicast address got: %s" , multicastAddr );
+
+        addrMulticast.sin_family = AF_INET;
+        addrMulticast.sin_addr.s_addr = inet_addr( multicastAddr );
+        addrMulticast.sin_port = htons( MULTICAST_PORT );
+    }
 
     return PC_SUCCESS;
 }

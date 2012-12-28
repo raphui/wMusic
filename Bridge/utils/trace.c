@@ -11,7 +11,7 @@ typedef struct trace_module
 
 trace_module trace_modules[] =
 {
-    {"STREAMINGSERVER"      ,   TRACE_LEVEL_DEFAULT },
+    {"STREAMINGSERVER"      ,   TRACE_LEVEL_ALL },
     {"COMMANDERSERVER"      ,   TRACE_LEVEL_DEFAULT },
     {"THREADMANAGER"        ,   TRACE_LEVEL_DEFAULT },
     {"SPOTIFYMANAGER"       ,   TRACE_LEVEL_DEFAULT },
@@ -27,7 +27,8 @@ trace_module trace_modules[] =
     {"PLAYQUEUE"            ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUEMANAGER"     ,   TRACE_LEVEL_DEFAULT },
     {"ZMEMORY"              ,   TRACE_LEVEL_DEFAULT },
-    {"CLI"                  ,   TRACE_LEVEL_DEFAULT }
+    {"CLI"                  ,   TRACE_LEVEL_DEFAULT },
+    {"MULTICASTADDRMANAGER" ,   TRACE_LEVEL_ALL }
 
 };
 

@@ -67,7 +67,8 @@ enum {
     PLAYQUEUE,
     PLAYQUEUEMANAGER,
     ZMEMORY,
-    CLI
+    CLI,
+    MULTICASTADDRMANAGER
 };
 
 

@@ -20,7 +20,8 @@ SOURCES += main.c \
     spotify/playQueue.c \
     spotify/playQueueManager.c \
     system/cli.c \
-    utils/zmemory.c
+    utils/zmemory.c \
+    network/multicastAddrManager.c
 
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
@@ -43,7 +44,8 @@ HEADERS += \
     spotify/playQueue.h \
     spotify/playQueueManager.h \
     system/cli.h \
-    utils/zmemory.h
+    utils/zmemory.h \
+    network/multicastAddrManager.h
 
 target.path = /home/pi/Development
 INSTALLS += target

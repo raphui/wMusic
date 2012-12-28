@@ -17,6 +17,7 @@
 #include "utils/threadManager.h"
 #include "spotify/spotifyManager.h"
 #include "network/networkCommand.h"
+#include "network/multicastAddrManager.h"
 #include "system/cli.h"
 #include "vlc/vlcManager.h"
 
@@ -36,13 +37,10 @@ typedef struct argumentReceivingThread
 }argumentReceivingThread_t;
 
 int initMulticastSocket( void );
-
 void launchServer( void );
 void createServer( void *port );
 int closeServer( void );
-
 void receivingThread( void *arg );
-
 int disconnectClient( int *socket );
 
 void sendData( audio_fifo_data_t *data , size_t size );
