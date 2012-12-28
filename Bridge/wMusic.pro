@@ -17,7 +17,6 @@ SOURCES += main.c \
     utils/threadManager.c \
     vlc/vlcManager.c \
     system/environmentManager.c \
-    spotify/playQueue.c \
     spotify/playQueueManager.c \
     system/cli.c \
     utils/zmemory.c \
