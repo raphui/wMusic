@@ -110,3 +110,15 @@ int Traces_enable(unsigned int module, unsigned int level )
     }
 }
 
+
+void setTraceLevel( unsigned int module , unsigned int level )
+{
+    if( ( trace_modules[module].level & level ) == level )
+    {
+        /* Do nothing */
+    }
+    else
+    {
+        trace_modules[module].level = level;
+    }
+}
