@@ -151,7 +151,7 @@ void receivingThread( void *arg )
 
     char buff[BUFF_SIZE];
     int ret;
-    int cliRet;
+    void *cliRet;
 
     argumentReceivingThread_t *arguments = ( argumentReceivingThread_t * )arg;
 
@@ -190,8 +190,10 @@ void receivingThread( void *arg )
 
                 cliRet = doCommand( buff );
 
-                if( cliRet != PC_ERROR )
-                    sendVoid( &cliRet , sizeof( cliRet ) );
+                if( cliRet != NULL )
+                {
+                    sendVoid( cliRet , 1024 );
+                }
             }
         }
 

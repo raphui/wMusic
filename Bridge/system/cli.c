@@ -3,7 +3,8 @@
 static cliCommand_t cliCmd[] =
 {
     {"MEMORY_COUNT"     ,   &getMemoryCount },
-    {"THREAD_COUNT"     ,   &getThreadCount }
+    {"THREAD_COUNT"     ,   &getThreadCount },
+    {"DUMP_TRACE_LEVEL" ,   &dumpTrace      }
 };
 
 static int searchAction( const char *cmd )
@@ -26,11 +27,11 @@ static int searchAction( const char *cmd )
 }
 
 
-int doCommand( const char *cmd )
+void *doCommand( const char *cmd )
 {
     TRACE_2( CLI , "doCommand( %s )." , cmd );
 
-    int ret = 0;
+    void *ret = NULL;
 
     int ( *func )( void ) = searchAction( cmd );
 
@@ -38,7 +39,7 @@ int doCommand( const char *cmd )
     {
         TRACE_ERROR( CLI , "Command is not supported.");
 
-        ret = PC_ERROR;
+//        ret = PC_ERROR;
     }
     else
     {

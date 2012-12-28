@@ -10,6 +10,8 @@
 #include <stdarg.h>
 #include <time.h>
 
+#define MODULE_COUNT    18
+
 #define TRACE_LEVEL_ERR    ( 1 << 0 )
 #define TRACE_LEVEL_WARN   ( 1 << 1 )
 #define TRACE_LEVEL_INFO   ( 1 << 2 )
@@ -47,7 +49,7 @@ extern void Traces_printOnly( unsigned int level, unsigned int module, const cha
 extern void Traces_print( const char *file , const int line , const char *function , unsigned int level , unsigned int module ,  const char *format , ... );
 extern int Traces_enable( unsigned int module , unsigned int level );
 extern void setTraceLevel( unsigned int module , unsigned int level );
-
+extern char *dumpTrace( void );
 
 enum {
 

@@ -1,6 +1,8 @@
 #include "trace.h"
 
 
+static char *traceLevelToChar( unsigned int level );
+
 typedef struct trace_module
 {
     char module[35];
@@ -122,4 +124,33 @@ void setTraceLevel( unsigned int module , unsigned int level )
     {
         trace_modules[module].level = level;
     }
+}
+
+static char *traceLevelToChar( unsigned int level )
+{
+    switch( level )
+    {
+        case TRACE_LEVEL_DEFAULT:
+            return "DEFAULT";
+        case TRACE_LEVEL_ALL:
+            return "ALL";
+    }
+
+    return NULL;
+}
+
+char *dumpTrace( void )
+{
+    static char buff[1024];
+    int i = 0;
+
+    /* memset to clean the buff, because he is static */
+    memset( buff , 0 , 1024 );
+
+    for( i = 0 ; i < MODULE_COUNT ; i++ )
+    {
+        sprintf( buff + strlen( buff ) , "%s\t\t\t%s\n" , trace_modules[i].module , traceLevelToChar( trace_modules[i].level ) );
+    }
+
+    return buff;
 }
