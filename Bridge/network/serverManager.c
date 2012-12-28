@@ -93,6 +93,7 @@ void createServer( void )
         }
     }
 
+    releaseThread();
 
     pthread_exit( ( void * )PC_SUCCESS );
 }
@@ -139,6 +140,8 @@ void receivingThread( void *socket )
     }
 
     TRACE_3( COMMANDERSERVER , "[!]Quitting receiving thread !");
+
+    releaseThread();
 
     pthread_exit( NULL );
 }

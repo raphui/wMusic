@@ -17,6 +17,9 @@ void playlist_metadata_updated( sp_playlist *pl , void *userdata );
 int getPlaylistContainer( sp_session *session );
 int createPlaylist( const char *name );
 sp_playlist *getPlaylist( int index );
+sp_playlist *getPlaylistByName( const char *name );
+int addTrackPlaylistByName( sp_track *track , const char *name , int position );
+int addTrackPlaylist( sp_track *track , int index , int position );
 
 //int addTracksMainPlaylist( sp_session *session , sp_track *track );
 //sp_track *getNextTrack( void );

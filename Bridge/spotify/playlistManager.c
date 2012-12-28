@@ -11,25 +11,25 @@ void tracks_added( sp_playlist *pl , sp_track *const *tracks , int num_tracks , 
 {
     TRACE_2( PLAYLISTMANAGER , "track_added()");
 
-    sp_playlist_add_tracks( pl , tracks , num_tracks , position , currentSession );
+//    sp_playlist_add_tracks( pl , tracks , num_tracks , position , currentSession );
 
-    countTrack++;
+//    countTrack++;
 }
 
 void tracks_moved( sp_playlist *pl , const int *tracks , int num_tracks , int new_position , void *userdata )
 {
     TRACE_2( PLAYLISTMANAGER , "tracks_moved()");
 
-    sp_playlist_reorder_tracks( pl , tracks , num_tracks , new_position );
+//    sp_playlist_reorder_tracks( pl , tracks , num_tracks , new_position );
 }
 
 void tracks_removed( sp_playlist *pl , const int *tracks , int num_tracks , void *userdata )
 {
     TRACE_2( PLAYLISTMANAGER , "tracks_removed()");
 
-    sp_playlist_remove_tracks( pl , tracks , num_tracks );
+//    sp_playlist_remove_tracks( pl , tracks , num_tracks );
 
-    countTrack--;
+//    countTrack--;
 }
 
 void playlist_metadata_updated( sp_playlist *pl , void *userdata )
@@ -97,6 +97,8 @@ sp_playlist *getPlaylist( int index )
 
     sp_playlist *pl;
 
+    pthread_mutex_lock( &mutexSession );
+
     if( ( 0 < index ) && ( index < sp_playlistcontainer_num_playlists( plc ) ) )
     {
         TRACE_ERROR( PLAYLISTMANAGER , "The index : %d , it's not valid." , index );
@@ -110,8 +112,122 @@ sp_playlist *getPlaylist( int index )
         TRACE_3( PLAYLISTMANAGER , "Playlist at index : %d , has been retrieved." , index );
     }
 
+    pthread_mutex_unlock( &mutexSession );
+
     return pl;
 }
+
+sp_playlist *getPlaylistByName( const char *name )
+{
+    TRACE_2( PLAYLISTMANAGER , "getPlaylistByName( %s )." , name );
+
+    int i = 0;
+
+    sp_playlist *pl = NULL;
+
+    pthread_mutex_lock( &mutexSession );
+
+    for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
+    {
+        pl = getPlaylist( i );
+
+        if( strcmp( sp_playlist_name( pl ) , name ) == 0 )
+        {
+            TRACE_3( PLAYLISTMANAGER , "Playlist have been founded");
+
+            return pl;
+        }
+    }
+
+    TRACE_3( PLAYLISTMANAGER , "Playlist have not been founded, return a NULL sp_playlist.");
+
+    pl = NULL;
+
+    pthread_mutex_unlock( &mutexSession );
+
+    return pl;
+}
+
+int addTrackPlaylistByName( sp_track *track , const char *name , int position )
+{
+    TRACE_2( PLAYLISTMANAGER , "addTrackPlaylistByName( __track__ , %s , %d )." , name , position );
+
+    int status = PC_SUCCESS;
+
+    sp_error error;
+    sp_playlist *pl = NULL;
+
+    pthread_mutex_lock( &mutexSession );
+
+    pl = getPlaylistByName( name );
+
+    if( pl == NULL )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Cannot add track to the playlist, because playlist have not been founded.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        error = sp_playlist_add_tracks( pl , &track , 1 , position , currentSession );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYLISTMANAGER , "Cannot add track to the playlist, reason: %s" , sp_error_message( error ) );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_3( PLAYLISTMANAGER , "Track have been added !");
+        }
+    }
+
+    pthread_mutex_unlock( &mutexSession );
+
+    return status;
+}
+
+int addTrackPlaylist( sp_track *track , int index , int position )
+{
+    TRACE_2( PLAYLISTMANAGER , "addTrackPlaylist( __track__ , %d , %d )." , index , position );
+
+    int status = PC_SUCCESS;
+
+    sp_error error;
+    sp_playlist *pl = NULL;
+
+    pthread_mutex_lock( &mutexSession );
+
+    pl = getPlaylist( index );
+
+    if( pl == NULL )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Cannot add track to the playlist, because playlist have not been founded.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        error = sp_playlist_add_tracks( pl , &track , 1 , position , currentSession );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYLISTMANAGER , "Cannot add track to the playlist, reason: %s" , sp_error_message( error ) );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_3( PLAYLISTMANAGER , "Track have been added !");
+        }
+    }
+
+    pthread_mutex_unlock( &mutexSession );
+
+    return status;
+}
+
 
 //int addTracksMainPlaylist( sp_session *session , sp_track *track )
 //{

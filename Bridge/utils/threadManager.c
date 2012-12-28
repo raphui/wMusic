@@ -23,3 +23,17 @@ void createThread( void *routine , void *arg )
 
     TRACE_1( THREADMANAGER , "Current number of threads: %d." , countThreads );
 }
+
+int getThreadCount( void )
+{
+    TRACE_2( THREADMANAGER , "getThreadCount().");
+
+    return countThreads;
+}
+
+void releaseThread( void )
+{
+    TRACE_2( THREADMANAGER , "releaseThread().");
+
+    countThreads--;
+}

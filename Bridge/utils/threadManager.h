@@ -13,5 +13,7 @@
 #include "utils/trace.h"
 
 void createThread( void *routine , void *arg );
+int getThreadCount( void );
+void releaseThread( void );
 
 #endif // THREADMANAGER_H
