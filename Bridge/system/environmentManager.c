@@ -8,11 +8,13 @@ void setAdhoc( char *essidName , char *key )
 
     TRACE_3( ENVIRONMENTMANAGER , "Starting construct the command.");
 
-    strcat( cmd , SET_AHDOC_SCRIPT );
-    strcat( cmd , " ");
-    strcat( cmd , essidName );
-    strcat( cmd , " ");
-    strcat( cmd , key );
+    sprintf( cmd , "%s %s %s" , SET_AHDOC_SCRIPT , essidName , key );
+
+//    strcat( cmd , SET_AHDOC_SCRIPT );
+//    strcat( cmd , " ");
+//    strcat( cmd , essidName );
+//    strcat( cmd , " ");
+//    strcat( cmd , key );
 
     system( cmd );
 

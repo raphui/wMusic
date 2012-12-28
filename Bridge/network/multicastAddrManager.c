@@ -1,6 +1,6 @@
 #include "multicastAddrManager.h"
 
-static const char addrUsed[MAX_ADDR_IN_USED][14];
+static char addrUsed[MAX_ADDR_IN_USED][14];
 
 static int countAddrUsed = 0;
 static int firstDigit = 224;
@@ -61,6 +61,11 @@ int checkAddr( const char *addr )
     TRACE_2( MULTICASTADDRMANAGER , "checkAddr( %s )." , addr );
 
     int i = 0;
+    int ret = ADDR_OK;
 
-    return ADDR_OK;
+    for( i = 0 ; i < MAX_ADDR_IN_USED ; i++ )
+        if( strcmp( addrUsed[i] , addr ) == 0 )
+            ret = ADDR_ALREADY_USED;
+
+    return ret;
 }
