@@ -20,7 +20,7 @@ static int searchAction( char *command , char *arg2 )
 
     int i = 0;
 
-    for( i = 0 ; i < COUNT_COMMAND ; i++ )
+    for( i = 0 ; i < NETWORK_COUNT_COMMAND ; i++ )
     {
         if( strstr( command , spotifyNetworkCmd[i].command ) != NULL )
         {

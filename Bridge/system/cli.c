@@ -12,7 +12,7 @@ static int searchAction( const char *cmd )
 
     int i = 0;
 
-    for( i = 0 ; i < COUNT_COMMAND ; i++ )
+    for( i = 0 ; i < CLI_COUNT_COMMAND ; i++ )
     {
         if( strstr( cmd , cliCmd[i].command ) != NULL )
         {

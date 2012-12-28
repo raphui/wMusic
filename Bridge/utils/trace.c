@@ -26,7 +26,7 @@ trace_module trace_modules[] =
     {"ENVIRONMENTMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUE"            ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUEMANAGER"     ,   TRACE_LEVEL_DEFAULT },
-    {"ZMALLOC"              ,   TRACE_LEVEL_DEFAULT },
+    {"ZMEMORY"              ,   TRACE_LEVEL_DEFAULT },
     {"CLI"                  ,   TRACE_LEVEL_ALL }
 
 };

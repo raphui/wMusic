@@ -9,7 +9,7 @@
 
 #include "utils/types.h"
 #include "utils/trace.h"
-#include "utils/zmalloc.h"
+#include "utils/zmemory.h"
 #include "network/serverManager.h"
 
 #define MAX_SEARCH_COUNT    100

@@ -9,7 +9,7 @@
 #include "audio/audio.h"
 #include "utils/types.h"
 #include "utils/trace.h"
-#include "utils/zmalloc.h"
+#include "utils/zmemory.h"
 #include "network/serverManager.h"
 #include "vlc/vlcManager.h"
 #include "file/fileManager.h"

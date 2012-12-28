@@ -66,7 +66,7 @@ enum {
     ENVIRONMENTMANAGER,
     PLAYQUEUE,
     PLAYQUEUEMANAGER,
-    ZMALLOC,
+    ZMEMORY,
     CLI
 };
 

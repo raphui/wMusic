@@ -7,11 +7,11 @@
 
 #include "utils/trace.h"
 #include "utils/types.h"
-#include "utils/zmalloc.h"
+#include "utils/zmemory.h"
 #include "utils/threadManager.h"
 #include "network/serverManager.h"
 
-#define COUNT_COMMAND   2
+#define CLI_COUNT_COMMAND   2
 
 typedef struct cliCommand
 {

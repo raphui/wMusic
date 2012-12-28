@@ -1,10 +1,10 @@
-#include "zmalloc.h"
+#include "zmemory.h"
 
 static int memoryAllocate = 0;
 
 void *zmalloc( size_t size )
 {
-    TRACE_2( ZMALLOC , "zmalloc( %d )." , size );
+    TRACE_2( ZMEMORY , "zmalloc( %d )." , size );
 
     memoryAllocate += size;
 
@@ -13,7 +13,7 @@ void *zmalloc( size_t size )
 
 int getMemoryCount( void )
 {
-    TRACE_2( ZMALLOC , "getMemoryCount().");
+    TRACE_2( ZMEMORY , "getMemoryCount().");
 
     return memoryAllocate;
 }
