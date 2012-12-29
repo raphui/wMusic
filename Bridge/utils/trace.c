@@ -148,8 +148,6 @@ char *dumpTrace( void )
     /* memset to clean the buff, because he is static */
     memset( buff , 0 , 1024 );
 
-    sprintf( buff + strlen( buff ) , "\n");
-
     for( i = 0 ; i < MODULE_COUNT ; i++ )
     {
         sprintf( buff + strlen( buff ) , "%d:%s\t\t\t%d:%s\n" , i , trace_modules[i].module , trace_modules[i].level , traceLevelToChar( trace_modules[i].level ) );

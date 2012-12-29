@@ -152,10 +152,10 @@ void receivingThread( void *arg )
 
     TRACE_3( COMMANDERSERVER , "Thread argument: socket: %d , port: %d" , arguments->socket , arguments->port );
 
-//    countClients++;
-
-
     TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !");
+
+    if( arguments->port == PORT_CLI )
+        sendVoidSocket( arguments->socket , input , sizeof( input ) );
 
     while( 1 )
     {

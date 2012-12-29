@@ -2,9 +2,9 @@
 
 static cliCommand_t cliCmd[] =
 {
-    {"MEMORY_COUNT"     ,   &getMemoryCount },
-    {"THREAD_COUNT"     ,   &getThreadCount },
-    {"DUMP_TRACE_LEVEL" ,   &dumpTrace      }
+    {"memory_count"     ,   &getMemoryCount },
+    {"thread_count"     ,   &getThreadCount },
+    {"dump_trace_level" ,   &dumpTrace      }
 };
 
 static int searchAction( const char *cmd )
@@ -33,13 +33,21 @@ void *doCommand( const char *cmd )
 
     void *ret = NULL;
 
+    /* Dynamic allocation, because after send the response throught the socket, free() is called. (If it's declare like -char errorMsg[]="zedze"- this will be crash for sure. */
+    char *errorMsg = ( char * )zmalloc( 1024 * sizeof( char ) );
+
+    memset( errorMsg , 0 , 1024 );
+
     int ( *func )( void ) = searchAction( cmd );
 
     if( *func == PC_ERROR )
     {
         TRACE_ERROR( CLI , "Command is not supported.");
 
-//        ret = PC_ERROR;
+        sprintf( errorMsg , "Command is not supported.\n");
+
+        ret = ( void * )errorMsg;
+
     }
     else
     {

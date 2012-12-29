@@ -40,7 +40,7 @@ char *getMemoryCount( void )
 
     memset( buff , 0 , 1024 );
 
-    sprintf( buff , "\nTotal memory allocate : %d\n" , memoryAllocate );
+    sprintf( buff , "Total memory allocate : %d\n" , memoryAllocate );
     sprintf( buff + strlen( buff ), "Total memory free : %d\n" , memoryFree );
 
     return buff;

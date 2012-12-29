@@ -39,7 +39,7 @@ char *getThreadCount( void )
 
     memset( buff , 0 , 1024 );
 
-    sprintf( buff , "\nTotal thread running : %d\n" , countThreads );
+    sprintf( buff , "Total thread running : %d\n" , countThreads );
 
     return buff;
 }
