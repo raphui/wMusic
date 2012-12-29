@@ -1,3 +1,10 @@
+# IDE generated files #
+#######################
+Bridge/*.pro.user*
+Bridge/*.pro.user
 *.pro.user*
 *.pro.user
+
+# Build directory #
+###################
 wMusic-build-*
