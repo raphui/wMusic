@@ -96,28 +96,5 @@ void *doCommand( char *cmd )
         ret = ( void * )errorMsg;
     }
 
-//    if( strstr( cmd , "set_") == NULL )
-//        idFuncptr = searchCliCmd( cmd );
-//    else
-//        idFuncptr = searchSetCliCmd( cmd );
-
-//    if( idFuncptr == PC_ERROR )
-//    {
-//        TRACE_ERROR( CLI , "Command is not supported.");
-
-//        sprintf( errorMsg , "Command is not supported.\n");
-
-//        ret = ( void * )errorMsg;
-
-//    }
-//    else
-//    {
-//        TRACE_1( CLI , "Execute function.");
-
-//        ret = ( void * )cliCmd[idFuncptr].func();
-
-//        TRACE_1( CLI , "Function return: %d" , ret );
-//    }
-
     return ret;
 }
