@@ -36,9 +36,9 @@ char *getMemoryCount( void )
 {
     TRACE_2( ZMEMORY , "getMemoryCount().");
 
-    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
+    char *buff = ( char * )zmalloc( 248 * sizeof( char ) );
 
-    memset( buff , 0 , 1024 );
+    memset( buff , 0 , 248 );
 
     sprintf( buff , "Total memory allocate : %d\n" , memoryAllocate );
     sprintf( buff + strlen( buff ), "Total memory free : %d\n" , memoryFree );

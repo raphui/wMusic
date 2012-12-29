@@ -22,12 +22,12 @@ int getNextMulticastAddr( char *addr )
 
     if( ret < 0 )
     {
-        TRACE_ERROR( MULTICASTADDRMANAGER , "Cannot generate the new multicast addr , sprintf failed.");
+        TRACE_ERROR( MULTICASTADDRMANAGER , "Cannot generate the new multicast address , sprintf failed.");
 
         return PC_ERROR;
     }
 
-    TRACE_3( MULTICASTADDRMANAGER , "Verify if the addr is already used.");
+    TRACE_3( MULTICASTADDRMANAGER , "Verify if the address is already used.");
 
     ret = checkAddr( addr );
 
@@ -40,7 +40,7 @@ int getNextMulticastAddr( char *addr )
         TRACE_3( MULTICASTADDRMANAGER , "The address can be used !");
     }
 
-    TRACE_3( MULTICASTADDRMANAGER , "Saving the addr in the address currently used.");
+    TRACE_3( MULTICASTADDRMANAGER , "Saving the address in the address currently used.");
 
     saveAddr( addr );
 

@@ -33,10 +33,10 @@ void *doCommand( const char *cmd )
 
     void *ret = NULL;
 
-    /* Dynamic allocation, because after send the response throught the socket, free() is called. (If it's declare like -char errorMsg[]="zedze"- this will be crash for sure. */
-    char *errorMsg = ( char * )zmalloc( 1024 * sizeof( char ) );
+    /* Dynamic allocation, because after send the response throught the socket, free() is called. (If it's declare like -char errorMsg[]="zedze"- this will crash for sure. */
+    char *errorMsg = ( char * )zmalloc( 28 * sizeof( char ) );
 
-    memset( errorMsg , 0 , 1024 );
+    memset( errorMsg , 0 , 28 );
 
     int ( *func )( void ) = searchAction( cmd );
 

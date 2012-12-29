@@ -35,9 +35,9 @@ char *getThreadCount( void )
 {
     TRACE_2( THREADMANAGER , "getThreadCount().");
 
-    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
+    char *buff = ( char * )zmalloc( 40 * sizeof( char ) );
 
-    memset( buff , 0 , 1024 );
+    memset( buff , 0 , 40 );
 
     sprintf( buff , "Total thread running : %d\n" , countThreads );
 

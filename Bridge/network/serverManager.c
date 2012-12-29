@@ -187,7 +187,7 @@ void receivingThread( void *arg )
 
                 if( cliRet != NULL )
                 {
-                    sendVoidSocket( arguments->socket , cliRet , 1024 );
+                    sendVoidSocket( arguments->socket , cliRet , strlen( ( const char * )cliRet ) );
 
                     zfree( cliRet );
 

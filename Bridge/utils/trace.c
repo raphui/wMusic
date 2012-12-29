@@ -136,16 +136,16 @@ static char *traceLevelToChar( unsigned int level )
             return "ALL";
     }
 
-    return NULL;
+    return "UNKNOWN";
 }
 
 char *dumpTrace( void )
 {
-    char *buff = ( char * )zmalloc( 1027 * sizeof( char ) );
+    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
 
     int i = 0;
 
-    /* memset to clean the buff, because he is static */
+    /* memset to clean the buff, because not all the buff will be fill.*/
     memset( buff , 0 , 1024 );
 
     for( i = 0 ; i < MODULE_COUNT ; i++ )
