@@ -68,6 +68,9 @@ void launchServer( void )
 
 //    createThread( &createServer , ( void * )&portCli );
 
+    /* We have to increment the thread count by 2. */
+    incrementThreadCount( 2 );
+
     initMulticastSocket();
 }
 
@@ -150,6 +153,7 @@ void receivingThread( void *arg )
     TRACE_2( COMMANDERSERVER , "receivingThread()");
 
     char buff[BUFF_SIZE];
+    char input[] = "wMusic~>";
     int ret;
     void *cliRet;
 
@@ -192,7 +196,11 @@ void receivingThread( void *arg )
 
                 if( cliRet != NULL )
                 {
-                    sendVoid( cliRet , 1024 );
+                    sendVoidSocket( arguments->socket , cliRet , 1024 );
+
+                    zfree( cliRet );
+
+                    sendVoidSocket( arguments->socket , input , sizeof( input ) );
                 }
             }
         }
@@ -273,6 +281,21 @@ void sendVoid( void *data , size_t size )
             TRACE_WARNING( COMMANDERSERVER , "Fail to send data");
     }
 
+}
+
+void sendVoidSocket( int socket , void *data , size_t size )
+{
+    TRACE_2( COMMANDERSERVER , "sendVoidSocket()");
+
+    ssize_t b = 0;
+
+    if( s_client[countClients - 1] != 0 )
+    {
+        b = send( socket , data , size , 0 );
+
+        if( b < 0 )
+            TRACE_WARNING( COMMANDERSERVER , "Fail to send data");
+    }
 }
 
 void sendDataMulticast( audio_fifo_data_t *data , size_t size )

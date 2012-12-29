@@ -15,19 +15,31 @@ void zfree( void *ptr )
 {
     TRACE_2( ZMEMORY , "zfree().");
 
+    void *realptr;
+    size_t sizeptr;
+
     if( ptr == NULL )
         return;
 
-    size_t sizePtr = *( ( size_t * )ptr );
+    realptr = ( char * )ptr - sizeof( size_t );
+    sizeptr = *( ( size_t * )realptr );
 
-    memoryAllocate -= sizePtr;
+    TRACE_3( ZMEMORY , "Size to be free : %d." , sizeptr );
+
+    memoryAllocate -= sizeptr;
 
     free( ptr );
 }
 
-int getMemoryCount( void )
+char *getMemoryCount( void )
 {
     TRACE_2( ZMEMORY , "getMemoryCount().");
 
-    return memoryAllocate;
+    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
+
+    memset( buff , 0 , 1024 );
+
+    sprintf( buff , "\nTotal memory allocate : %d\n" , memoryAllocate );
+
+    return buff;
 }

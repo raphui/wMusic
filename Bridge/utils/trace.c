@@ -141,15 +141,18 @@ static char *traceLevelToChar( unsigned int level )
 
 char *dumpTrace( void )
 {
-    static char buff[1024];
+    char *buff = ( char * )zmalloc( 1027 * sizeof( char ) );
+
     int i = 0;
 
     /* memset to clean the buff, because he is static */
     memset( buff , 0 , 1024 );
 
+    sprintf( buff + strlen( buff ) , "\n");
+
     for( i = 0 ; i < MODULE_COUNT ; i++ )
     {
-        sprintf( buff + strlen( buff ) , "%s\t\t\t%s\n" , trace_modules[i].module , traceLevelToChar( trace_modules[i].level ) );
+        sprintf( buff + strlen( buff ) , "%d:%s\t\t\t%d:%s\n" , i , trace_modules[i].module , trace_modules[i].level , traceLevelToChar( trace_modules[i].level ) );
     }
 
     return buff;

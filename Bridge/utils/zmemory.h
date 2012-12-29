@@ -8,6 +8,6 @@
 
 void *zmalloc( size_t size );
 void zfree( void *ptr );
-int getMemoryCount( void );
+char *getMemoryCount( void );
 
 #endif // ZMALLOC_H

@@ -46,6 +46,7 @@ int disconnectClient( int *socket );
 void sendData( audio_fifo_data_t *data , size_t size );
 void sendControl( char *command );
 void sendVoid( void *data , size_t size );
+void sendVoidSocket( int socket , void *data , size_t size );
 
 void sendDataMulticast( audio_fifo_data_t *data , size_t size );
 void sendControlMulticast( char *command );

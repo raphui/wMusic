@@ -24,11 +24,24 @@ void createThread( void *routine , void *arg )
     TRACE_1( THREADMANAGER , "Current number of threads: %d." , countThreads );
 }
 
-int getThreadCount( void )
+void incrementThreadCount( int n )
+{
+    TRACE_2( THREADMANAGER , "incrementThreadCount( %d )." , n );
+
+    countThreads += n;
+}
+
+char *getThreadCount( void )
 {
     TRACE_2( THREADMANAGER , "getThreadCount().");
 
-    return countThreads;
+    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
+
+    memset( buff , 0 , 1024 );
+
+    sprintf( buff , "\nTotal thread running : %d\n" , countThreads );
+
+    return buff;
 }
 
 void releaseThread( void )

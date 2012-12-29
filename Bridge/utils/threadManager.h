@@ -11,9 +11,11 @@
 
 #include "utils/types.h"
 #include "utils/trace.h"
+#include "utils/zmemory.h"
 
 void createThread( void *routine , void *arg );
-int getThreadCount( void );
+void incrementThreadCount( int n );
+char *getThreadCount( void );
 void releaseThread( void );
 
 #endif // THREADMANAGER_H

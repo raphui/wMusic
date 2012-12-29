@@ -10,6 +10,8 @@
 #include <stdarg.h>
 #include <time.h>
 
+#include "utils/zmemory.h"
+
 #define MODULE_COUNT    18
 
 #define TRACE_LEVEL_ERR    ( 1 << 0 )
