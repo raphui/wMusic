@@ -1,3 +1,4 @@
-./Bridge/*.pro.user
-./Connector/*.pro.user
+Bridge/*.pro.user
+Connector/*.pro.user
+*.pro.user
 wMusic-build-*
