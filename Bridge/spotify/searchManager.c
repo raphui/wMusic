@@ -17,25 +17,17 @@ static void searchComplete( sp_search *search , void *userdata )
 {
     TRACE_2( SEARCHMANAGER , "searchComplete()");
 
-    int i = 0;/*
-    int j = 0;
-    int k = 0;*/
-    int trackDur;/*
-    int numTracks;
-    int numArtists;
-    int numAlbums;*/
+    int i = 0;
+    int trackDur;
     int searchCount;
     int sizeToBeSend;
 
-    char duration[32];
     char uri[255];
     char start[] = "<results>";
     char stop[] = "</results>";
     char *toBeSend;
 
-    sp_track *currentTrack;/*
-    sp_artist *currentArtist;
-    sp_album *currentAlbum;*/
+    sp_track *currentTrack;
 
 //    pthread_mutex_lock( &mutexSession );
 
@@ -44,8 +36,6 @@ static void searchComplete( sp_search *search , void *userdata )
         TRACE_3( SEARCHMANAGER , "Query: %s" , sp_search_query( search ) );
 
         searchCount = sp_search_num_tracks( search );
-
-//        searchCount = MAX_SEARCH_COUNT;
 
         sizeToBeSend = 512 * searchCount;
 
@@ -57,13 +47,9 @@ static void searchComplete( sp_search *search , void *userdata )
 
         for( i = 0 ; i <  searchCount ; i++ )
         {
-            currentTrack = sp_search_track( search , i );/*
-            currentArtist = sp_search_artist( search , j );
-            currentAlbum = sp_search_album( search , k );*/
+            currentTrack = sp_search_track( search , i );
 
-            if( ( currentTrack == NULL )/*
-                    || ( currentArtist == NULL )
-                    || ( currentAlbum == NULL )*/ )
+            if( ( currentTrack == NULL ) )
             {
                 TRACE_WARNING( SEARCHMANAGER , "currentTrack or currentArtist or currentAlbum is NULL.");
 
@@ -72,25 +58,12 @@ static void searchComplete( sp_search *search , void *userdata )
 
             trackDur = trackDuration( currentTrack );
 
-            sprintf( duration , "%d" , trackDur );
-
-            strcat( toBeSend , "<result><uri>");
-
-            strcat( toBeSend , trackUri( currentTrack , uri ) );
-            strcat( toBeSend , "</uri><track>");
-            strcat( toBeSend , printTrack( currentTrack ) );
-            strcat( toBeSend , "</track><artist>");
-            strcat( toBeSend , sp_artist_name( sp_track_artist( currentTrack , 0 ) ) );
-//            strcat( toBeSend , printArtist( currentArtist ) );
-            strcat( toBeSend , "</artist><time>");
-            strcat( toBeSend , duration );
-            strcat( toBeSend , "</time><album>");
-            strcat( toBeSend , sp_album_name( sp_track_album( currentTrack ) ) );
-//            strcat( toBeSend , printAlbum( currentAlbum ) );
-            strcat( toBeSend , "</album>");
-
-            strcat( toBeSend , "</result>");
-
+            sprintf( toBeSend + strlen( toBeSend ) , "<result><uri>%s</uri><track>%s</track><artist>%s</artist><time>%d</time><album>%s</album></result>"
+                                , trackUri( currentTrack , uri )
+                                , printTrack( currentTrack )
+                                , sp_artist_name( sp_track_artist( currentTrack , 0 ) )
+                                , trackDur
+                                , sp_album_name( sp_track_album( currentTrack ) ) );
         }
 
         strcat( toBeSend , stop );
