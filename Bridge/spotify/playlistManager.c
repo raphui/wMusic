@@ -1,7 +1,6 @@
 #include "playlistManager.h"
 
 static sp_playlistcontainer *plc;
-static sp_playlist *mainPlaylist;
 static sp_session *currentSession;
 
 static int countTrack = 0;
@@ -71,11 +70,13 @@ int createPlaylist( const char *name )
 
     int status = PC_SUCCESS;
 
+    sp_playlist *pl = NULL;
+
     pthread_mutex_lock( &mutexSession );
 
-    mainPlaylist = sp_playlistcontainer_add_new_playlist( plc , name );
+    pl = sp_playlistcontainer_add_new_playlist( plc , name );
 
-    if( mainPlaylist == NULL )
+    if( pl == NULL )
     {
         TRACE_ERROR( PLAYLISTMANAGER , "Fail to create the new playlist : %s" , name );
 
