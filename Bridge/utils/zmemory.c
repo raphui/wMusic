@@ -1,6 +1,7 @@
 #include "zmemory.h"
 
 static int memoryAllocate = 0;
+static int memoryFree = 0;
 
 void *zmalloc( size_t size )
 {
@@ -26,7 +27,7 @@ void zfree( void *ptr )
 
     TRACE_3( ZMEMORY , "Size to be free : %d." , sizeptr );
 
-    memoryAllocate -= sizeptr;
+    memoryFree += sizeptr;
 
     free( ptr );
 }
@@ -40,6 +41,7 @@ char *getMemoryCount( void )
     memset( buff , 0 , 1024 );
 
     sprintf( buff , "\nTotal memory allocate : %d\n" , memoryAllocate );
+    sprintf( buff + strlen( buff ), "Total memory free : %d\n" , memoryFree );
 
     return buff;
 }
