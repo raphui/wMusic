@@ -14,7 +14,7 @@
 
 #define MAX_SEARCH_COUNT    100
 
-void search( sp_session *session , char *query );
+int search( sp_session *session , char *query );
 
 const char *printAlbum( sp_album *album );
 const char *printArtist( sp_artist *artist );

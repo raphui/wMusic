@@ -16,7 +16,7 @@
 typedef struct cliCommand
 {
     char *command;
-    void *( *func )( void );
+    char *( *func )( void );
 
 }cliCommand_t;
 

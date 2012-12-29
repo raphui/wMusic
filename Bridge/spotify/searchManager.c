@@ -2,7 +2,7 @@
 
 static void searchComplete( sp_search *search , void *userdata );
 
-void search( sp_session *session , char *query )
+int search( sp_session *session , char *query )
 {
     TRACE_2( SEARCHMANAGER , "search( __session__ , %s )." , query );
 
@@ -11,6 +11,8 @@ void search( sp_session *session , char *query )
     sp_search_create( session , query , 0 , MAX_SEARCH_COUNT , 0 , MAX_SEARCH_COUNT , 0 , MAX_SEARCH_COUNT , 0 , MAX_SEARCH_COUNT , SP_SEARCH_STANDARD , &searchComplete , NULL );
 
     pthread_mutex_unlock( &mutexSession );
+
+    return PC_SUCCESS;
 }
 
 static void searchComplete( sp_search *search , void *userdata )

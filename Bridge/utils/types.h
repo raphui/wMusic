@@ -9,7 +9,7 @@
 #define TRUE                1
 #define FALSE               0
 
-/**** Spotify Envrironment settins ****/
+/**** Spotify Envrironment settings ****/
 #define REMEMBER_LOGIN      0
 #define CREDENTIAL_STORAGE  "/home/raphio/cred.txt"
 #define SETTINGS_LOCATION   "/home/raphio/tmp"

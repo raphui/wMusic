@@ -29,7 +29,7 @@ static int searchAction( char *command , char *arg2 )
             if( spotifyNetworkCmd[i].specificArg != NULL )
                 memcpy( arg2 , spotifyNetworkCmd[i].specificArg , strlen( spotifyNetworkCmd[i].specificArg ) );
 
-            return ( int )spotifyNetworkCmd[i].executeCommand;
+            return i;
         }
     }
 
@@ -41,6 +41,8 @@ void doAction( char *command )
 {
     TRACE_2( NETWORKCOMMAND , "doAction( %s )." , command );
 
+    int idFuncptr;
+
     char query[MAX_QUERY_LENGTH];
 
     char *arg = strrchr( command , '#' );
@@ -49,9 +51,9 @@ void doAction( char *command )
     memset( query , 0 , MAX_QUERY_LENGTH );
     memset( arg2 , 0 , 255 );
 
-    int ( *execute )( sp_session* , char* ) = searchAction( command , arg2 );
+    idFuncptr = searchAction( command , arg2 );
 
-    if( *execute == PC_ERROR )
+    if( idFuncptr == PC_ERROR )
     {
         TRACE_ERROR( NETWORKCOMMAND , "Command is not supported.");
 
@@ -70,5 +72,7 @@ void doAction( char *command )
 
     TRACE_1( NETWORKCOMMAND , "Execute query : %s" , query );
 
-    execute( g_session , query );
+//    execute( g_session , query );
+
+    spotifyNetworkCmd[idFuncptr].executeCommand( g_session , query );
 }

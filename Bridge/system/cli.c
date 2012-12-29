@@ -19,7 +19,9 @@ static int searchAction( const char *cmd )
         {
             TRACE_1( CLI , "Command found, id: %d" , i );
 
-            return ( int )cliCmd[i].func;
+//            return ( int )cliCmd[i].func;
+
+            return i;
         }
     }
 
@@ -31,6 +33,7 @@ void *doCommand( const char *cmd )
 {
     TRACE_2( CLI , "doCommand( %s )." , cmd );
 
+    int idFuncptr;
     void *ret = NULL;
 
     /* Dynamic allocation, because after send the response throught the socket, free() is called. (If it's declare like -char errorMsg[]="zedze"- this will crash for sure. */
@@ -38,9 +41,9 @@ void *doCommand( const char *cmd )
 
     memset( errorMsg , 0 , 28 );
 
-    int ( *func )( void ) = searchAction( cmd );
+    idFuncptr = searchAction( cmd );
 
-    if( *func == PC_ERROR )
+    if( idFuncptr == PC_ERROR )
     {
         TRACE_ERROR( CLI , "Command is not supported.");
 
@@ -53,7 +56,7 @@ void *doCommand( const char *cmd )
     {
         TRACE_1( CLI , "Execute function.");
 
-        ret = func();
+        ret = ( void * )cliCmd[idFuncptr].func();
 
         TRACE_1( CLI , "Function return: %d" , ret );
     }
