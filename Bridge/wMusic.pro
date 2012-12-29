@@ -48,3 +48,5 @@ HEADERS += \
 
 target.path = /home/pi/Development
 INSTALLS += target
+
+OTHER_FILES +=
