@@ -27,8 +27,6 @@ int streamFile( const char *filename )
     TRACE_2( VLCMANAGER , "streamFile( %s )" , filename );
 
     int status = PC_SUCCESS;
-//    char opt[] = ":sout= #transcode{vcodec=none,acodec=vorb,ab=128,channels=2,samplerate=44100}:rtp{dst=244.2.2.2,port=1337,mux=ts,ttl=1} :sout-all :sout-keep";
-//    char opt[] = "#transcode{vcodec=none,acodec=vorb,ab=128,channels=2,samplerate=44100}";
 
     if( vlcInstance == NULL )
         initVlc();
@@ -44,23 +42,6 @@ int streamFile( const char *filename )
         libvlc_vlm_play_media( vlcInstance , "rtpStreaming");
 
         TRACE_1( VLCMANAGER , "Start diffuse the stream.");
-
-//        libvlc_media_add_option( vlcMedia , opt );
-
-//        vlcMediaPlayer = libvlc_media_player_new_from_media( vlcMedia );
-
-//        if( vlcMediaPlayer != NULL )
-//        {
-//            libvlc_media_release( vlcMedia );
-////            libvlc_media_player_play( vlcMediaPlayer );
-
-//            TRACE_1( VLCMANAGER , "Start diffuse the stream.");
-//        }
-//        else
-//        {
-//            TRACE_ERROR( VLCMANAGER , "Fail to start the stream diffusion.");
-//        }
-
     }
     else
     {

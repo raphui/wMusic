@@ -54,28 +54,19 @@ void launchServer( void )
 
     TRACE_3( SERVERMANAGER , "Start server on port %d..." , portCommander );
 
-//    port = PORT_COMMANDER;
-
-//    createThread( &createServer , ( void * )&portCommander );
-
     pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , &portCommander );
 
     TRACE_3( SERVERMANAGER , "Start server on port %d..." , portCli );
 
-//    port = PORT_CLI;
-
     pthread_create( &serverCliThread , NULL , ( void * )&createServer , &portCli );
 
-//    createThread( &createServer , ( void * )&portCli );
-
-    /* We have to increment the thread count by 2. */
+    /* We have to increment the thread count by 2, because we don't use createThread() function. */
     incrementThreadCount( 2 );
 
     initMulticastSocket();
 }
 
 
-/* Commander server */
 void createServer( void *port )
 {
     TRACE_2( COMMANDERSERVER , "createServer( %d )." , *( int * )port );

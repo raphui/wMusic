@@ -21,8 +21,4 @@ sp_playlist *getPlaylistByName( const char *name );
 int addTrackPlaylistByName( sp_track *track , const char *name , int position );
 int addTrackPlaylist( sp_track *track , int index , int position );
 
-//int addTracksMainPlaylist( sp_session *session , sp_track *track );
-//sp_track *getNextTrack( void );
-//int hasNextTrack( void );
-
 #endif // PLAYLISTMANAGER_H
