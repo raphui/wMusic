@@ -50,7 +50,7 @@ extern void Traces_printOnly( unsigned int level, unsigned int module, const cha
 //extern void HTraces_print( unsigned int level, unsigned int module, const char *file , const int *line , const char *function, const char *format, ... );
 extern void Traces_print( const char *file , const int line , const char *function , unsigned int level , unsigned int module ,  const char *format , ... );
 extern int Traces_enable( unsigned int module , unsigned int level );
-extern void setTraceLevel( unsigned int module , unsigned int level );
+extern char *setTraceLevel( unsigned int module , unsigned int level );
 extern char *dumpTrace( void );
 
 enum {

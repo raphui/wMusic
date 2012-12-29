@@ -11,7 +11,8 @@
 #include "utils/threadManager.h"
 #include "network/serverManager.h"
 
-#define CLI_COUNT_COMMAND   3
+#define CLI_COUNT_COMMAND       3
+#define SET_CLI_COUNT_COMMAND   1
 
 typedef struct cliCommand
 {
@@ -20,6 +21,13 @@ typedef struct cliCommand
 
 }cliCommand_t;
 
-void *doCommand( const char *cmd );
+typedef struct setCliCommand
+{
+    char *command;
+    char *( *func )( unsigned int , unsigned int );
+
+}setCliCommand_t;
+
+void *doCommand( char *cmd );
 
 #endif // CLI_H

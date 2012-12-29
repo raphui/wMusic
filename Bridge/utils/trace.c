@@ -28,7 +28,7 @@ trace_module trace_modules[] =
     {"ENVIRONMENTMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUE"            ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUEMANAGER"     ,   TRACE_LEVEL_DEFAULT },
-    {"ZMEMORY"              ,   TRACE_LEVEL_DEFAULT },
+    {"ZMEMORY"              ,   TRACE_LEVEL_ALL },
     {"CLI"                  ,   TRACE_LEVEL_DEFAULT },
     {"MULTICASTADDRMANAGER" ,   TRACE_LEVEL_DEFAULT }
 
@@ -114,16 +114,25 @@ int Traces_enable(unsigned int module, unsigned int level )
 }
 
 
-void setTraceLevel( unsigned int module , unsigned int level )
+char *setTraceLevel( unsigned int module , unsigned int level )
 {
-    if( ( trace_modules[module].level & level ) == level )
+    char *buff = ( char * )zmalloc( 248 * sizeof( char ) );
+
+    memset( buff , 0 , 248 );
+
+    if( trace_modules[module].level == level )
     {
         /* Do nothing */
+        sprintf( buff , "The module have already this level of trace.\n");
     }
     else
     {
         trace_modules[module].level = level;
+
+        sprintf( buff , "The trace level of the module changed.\n");
     }
+
+    return buff;
 }
 
 static char *traceLevelToChar( unsigned int level )
