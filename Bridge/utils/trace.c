@@ -23,12 +23,12 @@ trace_module trace_modules[] =
     {"PLAYLISTMANAGER"      ,   TRACE_LEVEL_DEFAULT },
     {"SEARCHMANAGER"        ,   TRACE_LEVEL_DEFAULT },
     {"SERVERMANAGER"        ,   TRACE_LEVEL_DEFAULT },
-    {"VLCMANAGER"           ,   TRACE_LEVEL_DEFAULT },
+    {"VLCMANAGER"           ,   TRACE_LEVEL_ALL },
     {"FILEMANAGER"          ,   TRACE_LEVEL_DEFAULT },
     {"ENVIRONMENTMANAGER"   ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUE"            ,   TRACE_LEVEL_DEFAULT },
     {"PLAYQUEUEMANAGER"     ,   TRACE_LEVEL_DEFAULT },
-    {"ZMEMORY"              ,   TRACE_LEVEL_ALL },
+    {"ZMEMORY"              ,   TRACE_LEVEL_DEFAULT },
     {"CLI"                  ,   TRACE_LEVEL_DEFAULT },
     {"MULTICASTADDRMANAGER" ,   TRACE_LEVEL_DEFAULT }
 

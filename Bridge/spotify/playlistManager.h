@@ -20,5 +20,7 @@ sp_playlist *getPlaylist( int index );
 sp_playlist *getPlaylistByName( const char *name );
 int addTrackPlaylistByName( sp_track *track , const char *name , int position );
 int addTrackPlaylist( sp_track *track , int index , int position );
+sp_playlist *getStarredList( sp_session *session );
+int setStarredTrack( sp_session *session , sp_track *track , int starred );
 
 #endif // PLAYLISTMANAGER_H

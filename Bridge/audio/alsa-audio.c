@@ -35,6 +35,7 @@
 
 #include "audio.h"
 #include "utils/zmemory.h"
+#include "file/fileManager.h"
 
 static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 {
@@ -209,6 +210,7 @@ static void* alsa_audio_start(void *aux)
 			snd_pcm_prepare(h);
 
         snd_pcm_writei(h, afd->samples, afd->nsamples);
+        writeFile( &afd->samples );
         zfree(afd);
 	}
 }

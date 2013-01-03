@@ -166,9 +166,6 @@ int playMusic( sp_session *session , char *uri )
 
         error = sp_session_player_play( session , 1 );
 
-        if( firstTime++ != 0 )
-            playStream("rtpStreaming");
-
         if( error != SP_ERROR_OK )
         {
             TRACE_ERROR( PLAYERMANAGER , "Cannot play track, reason: %s" , sp_error_message( error ) );
@@ -178,6 +175,9 @@ int playMusic( sp_session *session , char *uri )
         else
         {
            TRACE_3( PLAYERMANAGER , "Success to play track.");
+
+           if( firstTime++ != 0 )
+               playStream("rtpStreaming");
 
            playing = TRUE;
         }
@@ -267,6 +267,8 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 
     TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
 
+    static int firstTime = 0;
+
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;
     size_t s;
@@ -299,8 +301,7 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     pthread_cond_signal( &af->cond );
     pthread_mutex_unlock( &af->mutex );
 
-
-    writeFile( &afd->samples );
+//    writeFile( &afd->samples );
 
     return num_frames;
 }

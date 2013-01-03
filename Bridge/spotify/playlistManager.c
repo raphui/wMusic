@@ -228,3 +228,55 @@ int addTrackPlaylist( sp_track *track , int index , int position )
 
     return status;
 }
+
+
+sp_playlist *getStarredList( sp_session *session )
+{
+    TRACE_2( PLAYLISTMANAGER , "getStarredList().");
+
+    sp_playlist *pl= NULL;
+
+    pthread_mutex_lock( &mutexSession );
+
+    pl = sp_session_starred_create( session );
+
+    if( pl == NULL )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Cannot get the starred playlist ( maybe no user id logged in ? ).");
+    }
+    else
+    {
+        TRACE_3( PLAYLISTMANAGER , "Starred playlist have been retrieved.");
+    }
+
+    pthread_mutex_unlock( &mutexSession );
+
+    return pl;
+}
+
+int setStarredTrack( sp_session *session , sp_track *track , int starred )
+{
+    TRACE_2( PLAYLISTMANAGER , "setStarredTrack().");
+
+    int status = PC_SUCCESS;
+    sp_error error;
+
+    pthread_mutex_lock( &mutexSession );
+
+    error = sp_track_set_starred( session , &track , 1 , starred );
+
+    if( error != SP_ERROR_OK )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Cannot change the starred status of the track.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( PLAYLISTMANAGER , "The starred status of track have been changed.");
+    }
+
+    pthread_mutex_unlock( &mutexSession );
+
+    return status;
+}

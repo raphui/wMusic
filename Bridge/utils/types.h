@@ -9,11 +9,22 @@
 #define TRUE                1
 #define FALSE               0
 
+/**** Compilation Environment settings ****/
+#define CROSS_COMPILE       0
+
 /**** Spotify Envrironment settings ****/
 #define REMEMBER_LOGIN      0
+
+#if CROSS_COMPILE
+#define CREDENTIAL_STORAGE  "/home/pi/cred.txt"
+#define SETTINGS_LOCATION   "/home/pi/tmp"
+#define CACHE_LOCATION      "/home/pi/tmp"
+#else
 #define CREDENTIAL_STORAGE  "/home/raphio/cred.txt"
 #define SETTINGS_LOCATION   "/home/raphio/tmp"
 #define CACHE_LOCATION      "/home/raphio/tmp"
+#endif
+
 #define SPOTIFY_USER_AGENT  "wmusic"
 
 
@@ -21,7 +32,6 @@
 #define SET_ENV             0
 #define ESSID               "wMusic"
 #define KEY                 "azert"
-
 
 pthread_mutex_t mutexSession;
 

@@ -8,10 +8,12 @@ int createFile( void )
     FILE *h = NULL;
     wavHeader_t wavH;
 
+    size_t ret;
+
     int status = PC_SUCCESS;
 
-    f = fopen("/home/raphio/test3.wav" , "wb+");
-    h = fopen("/home/raphio/music.wav" , "rb");
+    f = fopen( STREAM_FILE , "wb+");
+    h = fopen( REF_FILE , "rb");
 
     if( f == NULL || h == NULL )
     {
@@ -21,9 +23,25 @@ int createFile( void )
     }
     else
     {
-        fread( &wavH , sizeof( wavH ) , 1 ,  h );
+        ret = fread( &wavH , sizeof( wavH ) , 1 ,  h );
 
-        fwrite( &wavH , sizeof( wavH ) , 1 , f );
+        if( ret != 1 )
+        {
+            TRACE_ERROR( FILEMANAGER , "Fail to read all data.");
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            ret = fwrite( &wavH , sizeof( wavH ) , 1 , f );
+
+            if( ret != 1 )
+            {
+                TRACE_ERROR( FILEMANAGER , "Fail to write all data.");
+
+                status = PC_ERROR;
+            }
+        }
 
         fclose( f );
         fclose( h );
@@ -39,9 +57,11 @@ int writeFile( void *data )
     static int firstTime = 0;
     int status = PC_SUCCESS;
 
+    size_t ret;
+
     FILE *f = NULL;
 
-    f = fopen("/home/raphio/test3.wav" , "ab");
+    f = fopen( STREAM_FILE , "ab");
 
     if( f == NULL )
     {
@@ -51,12 +71,29 @@ int writeFile( void *data )
     }
     else
     {
-        fwrite( data , 8192 , 1 , f );
+        ret = fwrite( data , DATA_SIZE , 1 , f );
 
-        fclose( f );
+        if( ret != 1 )
+        {
+            TRACE_ERROR( FILEMANAGER , "Not all data have been written.");
 
-        if( firstTime++ == 0 )
-            streamFile("/home/raphio/test3.wav");
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_3( FILEMANAGER , "Data have been written.");
+
+            fclose( f );
+
+            if( firstTime == 0 )
+            {
+                TRACE_3( FILEMANAGER , "Start to stream file.");
+
+                streamFile( STREAM_FILE );
+
+                firstTime++;
+            }
+        }
     }
 
     return status;
