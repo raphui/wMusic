@@ -118,7 +118,11 @@ char *setTraceLevel( unsigned int module , unsigned int level )
 
     memset( buff , 0 , 248 );
 
-    if( trace_modules[module].level == level )
+    if( module >= MODULE_COUNT )
+    {
+        sprintf( buff , "This module does not exist.\n");
+    }
+    else if( trace_modules[module].level == level )
     {
         /* Do nothing */
         sprintf( buff , "The module have already this level of trace.\n");

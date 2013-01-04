@@ -81,7 +81,7 @@ char *dumpPlayQueue( void )
 
     memset( buff , 0 , 1024 );
 
-    sprintf( buff + strlen( buff ) , "Tracks in playqueue : \n");
+    sprintf( buff , "Tracks in playqueue : \n");
 
     pthread_mutex_lock( &mutexSession );
 

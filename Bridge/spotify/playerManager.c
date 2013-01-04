@@ -87,7 +87,7 @@ int createTrackFromUri( char *uri , sp_track *track )
     sp_link_release( link );
 
     running = TRUE;
-    playing = FALSE;
+//    playing = FALSE;
 
     return PC_SUCCESS;
 }
@@ -211,7 +211,8 @@ int pauseMusic( sp_session *session , char *uri )
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Success to pause track.")
+        TRACE_3( PLAYERMANAGER , "Success to pause track.");
+
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -241,6 +242,8 @@ void end_of_track( sp_session *session )
 
     sp_track_release( currentTrack );
 
+    pthread_mutex_unlock( &mutexSession );
+
     if( hasNextTrack() == TRUE )
     {
         TRACE_3( PLAYERMANAGER , "Load next music !");
@@ -251,13 +254,17 @@ void end_of_track( sp_session *session )
     {
         TRACE_WARNING( PLAYERMANAGER , "No more music in the mainplaylist");
 
+        pthread_mutex_lock( &mutexSession );
+
         sp_session_player_play( session , 0 );
         sp_session_player_unload( session );
+
+        pthread_mutex_unlock( &mutexSession );
 
         playing = FALSE;
     }
 
-    pthread_mutex_unlock( &mutexSession );
+
 
 }
 
