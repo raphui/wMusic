@@ -273,6 +273,12 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     audio_fifo_data_t *afd;
     size_t s;
 
+    TRACE_3( PLAYERMANAGER , "###############################################");
+    TRACE_3( PLAYERMANAGER , "Channels: %d" , format->channels );
+    TRACE_3( PLAYERMANAGER , "Rate: %d" , format->sample_rate );
+    TRACE_3( PLAYERMANAGER , "NSamples: %d" , num_frames );
+    TRACE_3( PLAYERMANAGER , "###############################################");
+
     // audio discontinuity, do nothing
     if( num_frames == 0 )
     {

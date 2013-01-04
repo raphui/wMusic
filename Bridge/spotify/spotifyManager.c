@@ -42,6 +42,15 @@ int launchSpotifyManager( void )
     else
     {
         TRACE_2( SPOTIFYMANAGER , "Success to create session");
+
+        TRACE_3( SPOTIFYMANAGER , "Set preferred bitrate to : %d." , PREFERRED_BITRATE );
+
+        error = sp_session_preferred_bitrate( g_session , PREFERRED_BITRATE );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_WARNING( SPOTIFYMANAGER , "Fail to set preferred bitrate to %d." , PREFERRED_BITRATE );
+        }
     }
 
     if( g_session != NULL )

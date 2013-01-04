@@ -14,6 +14,7 @@
 
 /**** Spotify Envrironment settings ****/
 #define REMEMBER_LOGIN      0
+#define PREFERRED_BITRATE   0   //0 = 160k , 1 = 320k , 2 = 96k
 
 #if CROSS_COMPILE
 #define CREDENTIAL_STORAGE  "/home/pi/cred.txt"
