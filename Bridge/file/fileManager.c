@@ -113,13 +113,11 @@ int writeFile( void *data )
 
             fclose( f );
 
-            if( firstTime == 0 )
+            if( firstTime++ == 10 )
             {
                 TRACE_3( FILEMANAGER , "Start to stream file.");
 
                 streamFile( STREAM_FILE );
-
-                firstTime++;
             }
         }
     }

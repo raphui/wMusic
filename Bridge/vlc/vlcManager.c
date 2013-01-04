@@ -30,44 +30,53 @@ int streamFile( const char *filename )
     int ret;
 
     if( vlcInstance == NULL )
-        initVlc();
+        ret = initVlc();
 
-    vlcMedia = libvlc_media_new_path( vlcInstance , filename );
-
-    if( vlcMedia != NULL )
+    if( ret == PC_ERROR )
     {
+        TRACE_ERROR( VLCMANAGER , "Fail to init VLC , cannot stream the file !");
 
-        ret = libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , "#rtp{dst=224.2.2.2,port=1337,ttl=10}" , 0 , NULL , 1 , 0 );
+        status = PC_ERROR;
+    }
+    else
+    {
+        vlcMedia = libvlc_media_new_path( vlcInstance , filename );
 
-        if( ret < 0 )
+        if( vlcMedia != NULL )
         {
-            TRACE_ERROR( VLCMANAGER , "Cannot add a broadcast.");
 
-            status = PC_ERROR;
-        }
-        else
-        {
-            TRACE_3( VLCMANAGER , "Broadcast stream added.");
-
-            ret = libvlc_vlm_play_media( vlcInstance , "rtpStreaming");
+            ret = libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , "#rtp{dst=224.2.2.2,port=1337,ttl=10}" , 0 , NULL , 1 , 0 );
 
             if( ret < 0 )
             {
-                TRACE_ERROR( VLCMANAGER , "Cannot diffuse the stream.");
+                TRACE_ERROR( VLCMANAGER , "Cannot add a broadcast.");
 
                 status = PC_ERROR;
             }
             else
             {
-                TRACE_1( VLCMANAGER , "Start diffuse the stream.");
+                TRACE_3( VLCMANAGER , "Broadcast stream added.");
+
+                ret = libvlc_vlm_play_media( vlcInstance , "rtpStreaming");
+
+                if( ret < 0 )
+                {
+                    TRACE_ERROR( VLCMANAGER , "Cannot diffuse the stream.");
+
+                    status = PC_ERROR;
+                }
+                else
+                {
+                    TRACE_1( VLCMANAGER , "Start diffuse the stream.");
+                }
             }
         }
-    }
-    else
-    {
-        TRACE_ERROR( VLCMANAGER , "Fail to create a new media from the path: %s" , filename );
+        else
+        {
+            TRACE_ERROR( VLCMANAGER , "Fail to create a new media from the path: %s" , filename );
 
-        status = PC_ERROR;
+            status = PC_ERROR;
+        }
     }
 
     return status;
