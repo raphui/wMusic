@@ -55,8 +55,6 @@ extern char *dumpTrace( void );
 
 enum {
 
-    STREAMINGSERVER,
-    COMMANDERSERVER,
     THREADMANAGER,
     SPOTIFYMANAGER,
     NETWORKCOMMAND,

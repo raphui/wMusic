@@ -13,8 +13,6 @@ typedef struct trace_module
 
 trace_module trace_modules[] =
 {
-    {"STREAMINGSERVER"      ,   TRACE_LEVEL_DEFAULT },
-    {"COMMANDERSERVER"      ,   TRACE_LEVEL_DEFAULT },
     {"THREADMANAGER"        ,   TRACE_LEVEL_DEFAULT },
     {"SPOTIFYMANAGER"       ,   TRACE_LEVEL_DEFAULT },
     {"NETWORKCOMMAND"       ,   TRACE_LEVEL_DEFAULT },
@@ -22,7 +20,7 @@ trace_module trace_modules[] =
     {"ACCOUNTMANAGER"       ,   TRACE_LEVEL_DEFAULT },
     {"PLAYLISTMANAGER"      ,   TRACE_LEVEL_DEFAULT },
     {"SEARCHMANAGER"        ,   TRACE_LEVEL_DEFAULT },
-    {"SERVERMANAGER"        ,   TRACE_LEVEL_DEFAULT },
+    {"SERVERMANAGER"        ,   TRACE_LEVEL_ALL },
     {"VLCMANAGER"           ,   TRACE_LEVEL_ALL },
     {"FILEMANAGER"          ,   TRACE_LEVEL_DEFAULT },
     {"ENVIRONMENTMANAGER"   ,   TRACE_LEVEL_DEFAULT },

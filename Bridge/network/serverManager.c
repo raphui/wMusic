@@ -1,9 +1,7 @@
 #include "serverManager.h"
 
 static int socketMulticast;
-static int s_client[MAX_CLIENT];
-static int countClients;
-
+static int lastRequester;
 static int portCommander = PORT_COMMANDER;
 static int portCli = PORT_CLI;
 
@@ -15,7 +13,7 @@ static pthread_t serverCliThread;
 
 int initMulticastSocket( void )
 {
-    TRACE_2( STREAMINGSERVER , "initMulticastSocket()");
+    TRACE_2( SERVERMANAGER , "initMulticastSocket()");
 
     char multicastAddr[14];
 
@@ -23,7 +21,7 @@ int initMulticastSocket( void )
 
     if( socketMulticast < 0 )
     {
-        TRACE_ERROR( STREAMINGSERVER , "Cannot create the multicast socket.");
+        TRACE_ERROR( SERVERMANAGER , "Cannot create the multicast socket.");
 
         return PC_ERROR;
     }
@@ -32,13 +30,13 @@ int initMulticastSocket( void )
 
     if( multicastAddr == NULL )
     {
-        TRACE_ERROR( STREAMINGSERVER , "Cannot retrieve a multicast address");
+        TRACE_ERROR( SERVERMANAGER , "Cannot retrieve a multicast address");
 
         return PC_ERROR;
     }
     else
     {
-        TRACE_3( STREAMINGSERVER , "Multicast address got: %s" , multicastAddr );
+        TRACE_3( SERVERMANAGER , "Multicast address got: %s" , multicastAddr );
 
         addrMulticast.sin_family = AF_INET;
         addrMulticast.sin_addr.s_addr = inet_addr( multicastAddr );
@@ -69,16 +67,18 @@ void launchServer( void )
 
 void createServer( void *port )
 {
-    TRACE_2( COMMANDERSERVER , "createServer( %d )." , *( int * )port );
+    TRACE_2( SERVERMANAGER , "createServer( %d )." , *( int * )port );
 
     int s_server = socket( AF_INET , SOCK_STREAM , 0 );
+    int clients[MAX_CLIENT];
+    int numClients;
 
     struct sockaddr_in serv_addr;
     argumentReceivingThread_t *args;
 
     if( s_server < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to create socket.");
+        TRACE_ERROR( SERVERMANAGER , "[-]Error to create socket.");
 
         pthread_exit( ( void * )PC_ERROR );
     }
@@ -89,37 +89,37 @@ void createServer( void *port )
 
     if( bind( s_server , ( struct sockaddr* )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to bind on port: %d." , *( int * )port );
+        TRACE_ERROR( SERVERMANAGER , "[-]Error to bind on port: %d." , *( int * )port );
 
         pthread_exit( ( void * )PC_ERROR );
     }
 
     if( listen( s_server , 10 ) < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "[-]Error to listen to 10 connection.");
+        TRACE_ERROR( SERVERMANAGER , "[-]Error to listen to 10 connection.");
 
         pthread_exit( ( void * )PC_ERROR );
     }
 
     while( 1 )
     {
-        if( countClients < MAX_CLIENT )
+        if( numClients < MAX_CLIENT )
         {
-            s_client[countClients] = accept( s_server , NULL , NULL );
+            clients[numClients] = accept( s_server , NULL , NULL );
 
-            if( s_client[countClients] > 0 )
+            if( clients[numClients] > 0 )
             {
 
-                TRACE_3( COMMANDERSERVER , "[!]New client connected.");
+                TRACE_3( SERVERMANAGER , "[!]New client connected.");
 
                 args = ( argumentReceivingThread_t * )zmalloc( sizeof( argumentReceivingThread_t ) );
 
-                args->socket = s_client[countClients];
+                args->socket = clients[numClients];
                 args->port = *( int * )port;
 
                 createThread( &receivingThread , args );
 
-                countClients++;
+                numClients++;
             }
         }
     }
@@ -132,7 +132,7 @@ void createServer( void *port )
 
 int closeServer( void )
 {
-    TRACE_2( STREAMINGSERVER , "close().");
+    TRACE_2( SERVERMANAGER , "close().");
 
     return PC_SUCCESS;
 }
@@ -141,7 +141,7 @@ int closeServer( void )
 /* void *arg is a argumentReceivingThread_t type */
 void receivingThread( void *arg )
 {
-    TRACE_2( COMMANDERSERVER , "receivingThread()");
+    TRACE_2( SERVERMANAGER , "receivingThread()");
 
     char buff[BUFF_SIZE];
     char input[] = "wMusic~>";
@@ -150,9 +150,9 @@ void receivingThread( void *arg )
 
     argumentReceivingThread_t *arguments = ( argumentReceivingThread_t * )arg;
 
-    TRACE_3( COMMANDERSERVER , "Thread argument: socket: %d , port: %d" , arguments->socket , arguments->port );
+    TRACE_3( SERVERMANAGER , "Thread argument: socket: %d , port: %d" , arguments->socket , arguments->port );
 
-    TRACE_3( COMMANDERSERVER , "[!]Receiving thread create !");
+    TRACE_3( SERVERMANAGER , "[!]Receiving thread create !");
 
     if( arguments->port == PORT_CLI )
         sendVoidSocket( arguments->socket , input , sizeof( input ) );
@@ -168,7 +168,7 @@ void receivingThread( void *arg )
 
             if( arguments->port == PORT_COMMANDER )
             {
-                TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
+                TRACE_3( SERVERMANAGER , "[+]Data: %s" , buff );
 
                 if( strstr( buff , "DISC") != NULL )
                 {
@@ -177,11 +177,13 @@ void receivingThread( void *arg )
                     break;
                 }
 
+                lastRequester = arguments->socket;
+
                 doAction( buff );
             }
             else if( arguments->port == PORT_CLI )
             {
-                TRACE_3( COMMANDERSERVER , "[+]Data: %s" , buff );
+                TRACE_3( SERVERMANAGER , "[+]Data: %s" , buff );
 
                 cliRet = doCommand( buff );
 
@@ -198,7 +200,7 @@ void receivingThread( void *arg )
 
     }
 
-    TRACE_3( COMMANDERSERVER , "[!]Quitting receiving thread !");
+    TRACE_3( SERVERMANAGER , "[!]Quitting receiving thread !");
 
     releaseThread();
 
@@ -207,120 +209,56 @@ void receivingThread( void *arg )
 
 int disconnectClient( int *socket )
 {
-    TRACE_2( COMMANDERSERVER , "disconnectClient()");
+    TRACE_2( SERVERMANAGER , "disconnectClient()");
 
     int status = PC_SUCCESS;
 
-    countClients--;
 
     if( close( *socket ) < 0 )
     {
-        TRACE_ERROR( COMMANDERSERVER , "Cannot close client socket.");
+        TRACE_ERROR( SERVERMANAGER , "Cannot close client socket.");
 
         status = PC_ERROR;
     }
     else
     {
-        s_client[countClients] = 0;
-
-        TRACE_3( COMMANDERSERVER , "Client disconnect.");
+        TRACE_3( SERVERMANAGER , "Client disconnect.");
     }
 
     return status;
 }
 
-void sendData( audio_fifo_data_t *data , size_t size )
-{
-    TRACE_2( COMMANDERSERVER , "sendData().");
-
-    ssize_t b;
-
-    if( s_client[countClients - 1] != 0 )
-    {
-        b = write( s_client[countClients - 1] , data , size );
-
-        if( b < 0 )
-        {
-            TRACE_WARNING( STREAMINGSERVER , "Cannot write data to client.");
-        }
-    }
-
-}
-
-void sendControl( char *command )
-{
-    TRACE_2( COMMANDERSERVER , "sendControl( %s )." , command );
-
-    if( s_client[countClients - 1] != 0 )
-    {
-        send( s_client[countClients - 1] , command , 6 , 0 );
-    }
-}
-
-
 void sendVoid( void *data , size_t size )
 {
-    TRACE_2( COMMANDERSERVER , "sendVoid()");
+    TRACE_2( SERVERMANAGER , "sendVoid()");
 
     ssize_t b = 0;
 
-    if( s_client[countClients - 1] != 0 )
+    if( lastRequester != 0 )
     {
-        b = send( s_client[countClients - 1] , data , size , 0 );
+        b = send( lastRequester , data , size , 0 );
 
         if( b < 0 )
-            TRACE_WARNING( COMMANDERSERVER , "Fail to send data");
+            TRACE_WARNING( SERVERMANAGER , "Fail to send data");
     }
 
 }
 
 void sendVoidSocket( int socket , void *data , size_t size )
 {
-    TRACE_2( COMMANDERSERVER , "sendVoidSocket()");
+    TRACE_2( SERVERMANAGER , "sendVoidSocket()");
 
     ssize_t b = 0;
 
-    if( s_client[countClients - 1] != 0 )
+    if( socket != 0 )
     {
         b = send( socket , data , size , 0 );
 
         if( b < 0 )
-            TRACE_WARNING( COMMANDERSERVER , "Fail to send data");
+            TRACE_WARNING( SERVERMANAGER , "Fail to send data");
     }
-}
-
-void sendDataMulticast( audio_fifo_data_t *data , size_t size )
-{
-    TRACE_2( STREAMINGSERVER , "sendDataMulticast()");
-
-    ssize_t b;
-
-    b = sendto( socketMulticast , data , size , 0 , ( struct sockaddr * )&addrMulticast , sizeof( addrMulticast ) );
-
-    if( b < 0 )
-        TRACE_WARNING( STREAMINGSERVER , "Fail to send data");
-}
-
-void sendControlMulticast( char *command )
-{
-    TRACE_2( STREAMINGSERVER , "sendControlMulticast()");
-
-    ssize_t b;
-
-    b = sendto( socketMulticast , command , 6 , 0 , ( struct sockaddr * )&addrMulticast , sizeof( addrMulticast ) );
-
-    if( b < 0 )
-        TRACE_WARNING( STREAMINGSERVER , "Fail to send command: %s" , command );
-}
-
-void sendVoidMulticast( void *data , size_t size )
-{
-    TRACE_2( STREAMINGSERVER , "sendVoidMulticast()");
-
-    ssize_t b;
-
-    b = sendto( socketMulticast , data , size , 0 , ( struct sockaddr * )&addrMulticast , sizeof( addrMulticast ) );
-
-    if( b < 0 )
-        TRACE_WARNING( STREAMINGSERVER , "Fail to send void* data");
+    else
+    {
+        TRACE_ERROR( SERVERMANAGER , "Cannot send data, socket might be disconnected.");
+    }
 }
