@@ -4,7 +4,8 @@ static cliCommand_t cliCmd[] =
 {
     {"memory_count"     ,   &getMemoryCount },
     {"thread_count"     ,   &getThreadCount },
-    {"dump_trace_level" ,   &dumpTrace      }
+    {"dump_trace_level" ,   &dumpTrace      },
+    {"dump_playqueue"   ,   &dumpPlayQueue  }
 };
 
 static setCliCommand_t setCliCmd[] =

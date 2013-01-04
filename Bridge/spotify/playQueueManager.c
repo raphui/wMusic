@@ -70,3 +70,25 @@ int hasNextTrack( void )
     else
         return FALSE;
 }
+
+char *dumpPlayQueue( void )
+{
+    TRACE_2( PLAYQUEUEMANAGER , "dumpPlayQueue().");
+
+    playqueue_data_t *pldata;
+
+    char *buff = ( char *)zmalloc( 1024 * sizeof( char ) );
+
+    memset( buff , 0 , 1024 );
+
+    sprintf( buff + strlen( buff ) , "Tracks in playqueue : \n");
+
+    pthread_mutex_lock( &mutexSession );
+
+    TAILQ_FOREACH( pldata , &plfifo->q , link )
+            sprintf( buff + strlen( buff ) , "\t%s\n" , sp_track_name( pldata->track ) );
+
+    pthread_mutex_unlock( &mutexSession );
+
+    return buff;
+}

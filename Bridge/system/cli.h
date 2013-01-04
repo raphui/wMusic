@@ -10,8 +10,9 @@
 #include "utils/zmemory.h"
 #include "utils/threadManager.h"
 #include "network/serverManager.h"
+#include "spotify/playQueueManager.h"
 
-#define CLI_COUNT_COMMAND       3
+#define CLI_COUNT_COMMAND       4
 #define SET_CLI_COUNT_COMMAND   1
 
 typedef struct cliCommand

@@ -17,5 +17,6 @@ void initPlayqueue( void );
 int addTracksPlayqueue( sp_track *track );
 sp_track *getNextTrack( void );
 int hasNextTrack( void );
+char *dumpPlayQueue( void );
 
 #endif // PLAYQUEUEMANAGER_H
