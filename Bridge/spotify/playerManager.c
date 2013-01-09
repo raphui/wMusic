@@ -151,13 +151,13 @@ int playMusic( sp_session *session , char *uri )
         TRACE_WARNING( PLAYERMANAGER , "Cannot play track because no track has been loaded.");
 
         status = PC_ERROR;
-    }
+    }/*
     else if( playing == TRUE )
     {
         TRACE_3( PLAYERMANAGER , "A music is playing, we just have to unpause it.");
 
         sp_session_player_play( session , 1 );
-    }
+    }*/
     else
     {
         TRACE_3( PLAYERMANAGER , "Getting the track.");
@@ -199,20 +199,44 @@ int pauseMusic( sp_session *session , char *uri )
 
     sp_error error;
 
-    pauseStream("rtpStreaming");
-
-    error = sp_session_player_play( session , 0 );
-
-    if( error != SP_ERROR_OK )
+    if( pausing == FALSE )
     {
-        TRACE_ERROR( PLAYERMANAGER , "Cannot pause track, reason: %s" , sp_error_message( error ) );
+        pauseStream("rtpStreaming");
 
-        status = PC_ERROR;
+        error = sp_session_player_play( session , 0 );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYERMANAGER , "Cannot pause track, reason: %s" , sp_error_message( error ) );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_3( PLAYERMANAGER , "Success to pause track.");
+
+            pausing = TRUE;
+
+        }
     }
-    else
+    else if( pausing == TRUE )
     {
-        TRACE_3( PLAYERMANAGER , "Success to pause track.");
+        playStream("rtpStreaming");
 
+        error = sp_session_player_play( session , 1 );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYERMANAGER , "Cannot play track, reason: %s" , sp_error_message( error ) );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_3( PLAYERMANAGER , "Success to play track.");
+
+            pausing = FALSE;
+        }
     }
 
     pthread_mutex_unlock( &mutexSession );

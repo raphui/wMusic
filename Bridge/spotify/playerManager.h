@@ -31,6 +31,7 @@ int pauseMusic( sp_session *session , char *uri );
 
 int running;
 int playing;
+int pausing;
 
 
 #endif // PLAYERMANAGER_H
