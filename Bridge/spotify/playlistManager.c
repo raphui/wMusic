@@ -3,9 +3,6 @@
 static sp_playlistcontainer *plc;
 static sp_session *currentSession;
 
-static int countTrack = 0;
-static int countMusicPlayed = 0;
-
 void tracks_added( sp_playlist *pl , sp_track *const *tracks , int num_tracks , int position , void *userdata )
 {
     TRACE_2( PLAYLISTMANAGER , "track_added()");
