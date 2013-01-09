@@ -58,7 +58,6 @@ int launchSpotifyManager( void )
         if( signin( g_session , USERNAME , PASSWORD ) == CONNECTION_OK )
         {
             launchServer();
-//            initPlaylist();
 
             running = TRUE;
             playing = FALSE;

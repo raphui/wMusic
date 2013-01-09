@@ -72,7 +72,5 @@ void doAction( char *command )
 
     TRACE_1( NETWORKCOMMAND , "Execute query : %s" , query );
 
-//    execute( g_session , query );
-
     spotifyNetworkCmd[idFuncptr].executeCommand( g_session , query );
 }
