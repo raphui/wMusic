@@ -69,7 +69,7 @@ void *doCommand( char *cmd )
     if( ( strstr( cmd , "set_") == NULL )
             && ( ( idFuncptr = searchCliCmd( cmd ) ) != PC_ERROR ) )
     {
-        TRACE_1( CLI , "Execute function.");
+        TRACE_3( CLI , "Execute function.");
 
         ret = ( void * )cliCmd[idFuncptr].func();
 
@@ -77,7 +77,7 @@ void *doCommand( char *cmd )
     }
     else if( ( idFuncptr = searchSetCliCmd( cmd ) ) != PC_ERROR )
     {
-        TRACE_1( CLI , "Execute function.");
+        TRACE_3( CLI , "Execute function.");
 
         strtok( cmd , " ");
 

@@ -109,13 +109,13 @@ int writeFile( void *data )
         }
         else
         {
-            TRACE_3( FILEMANAGER , "Data have been written.");
+            TRACE_1( FILEMANAGER , "Data have been written.");
 
             fclose( f );
 
             if( firstTime++ == 10 )
             {
-                TRACE_3( FILEMANAGER , "Start to stream file.");
+                TRACE_1( FILEMANAGER , "Start to stream file.");
 
                 streamFile( STREAM_FILE );
             }

@@ -37,7 +37,7 @@ int getNextMulticastAddr( char *addr )
     }
     else if( ret == ADDR_OK )
     {
-        TRACE_3( MULTICASTADDRMANAGER , "The address can be used !");
+        TRACE_1( MULTICASTADDRMANAGER , "The address can be used !");
     }
 
     TRACE_3( MULTICASTADDRMANAGER , "Saving the address in the address currently used.");

@@ -112,7 +112,7 @@ int playStream( const char *name )
     }
     else
     {
-        TRACE_3( VLCMANAGER , "Play the stream.");
+        TRACE_1( VLCMANAGER , "Play the stream.");
     }
 
     return status;
@@ -135,7 +135,7 @@ int pauseStream( const char *name )
     }
     else
     {
-        TRACE_3( VLCMANAGER , "Pause the stream.");
+        TRACE_1( VLCMANAGER , "Pause the stream.");
     }
 
     return status;

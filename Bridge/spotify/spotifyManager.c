@@ -41,7 +41,7 @@ int launchSpotifyManager( void )
     }
     else
     {
-        TRACE_2( SPOTIFYMANAGER , "Success to create session");
+        TRACE_1( SPOTIFYMANAGER , "Success to create session");
 
         TRACE_3( SPOTIFYMANAGER , "Set preferred bitrate to : %d." , PREFERRED_BITRATE );
 
@@ -92,30 +92,4 @@ static void notify_main_thread( sp_session *session )
 static void log_message( sp_session *session , const char *data )
 {
     TRACE_2( SPOTIFYMANAGER , "log_message().");
-}
-
-static int initPlaylist( void )
-{
-    TRACE_2( SPOTIFYMANAGER , "initPlaylist().");
-
-    int status = PC_SUCCESS;
-
-    if( getPlaylistContainer( g_session ) == PC_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Fail to get the playlist container.");
-
-        status = PC_ERROR;
-    }
-    else if( createPlaylist("mainPlaylist") == PC_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Fail to create the playlist.");
-
-        status = PC_ERROR;
-    }
-    else
-    {
-        TRACE_3( SPOTIFYMANAGER , "Success to initialize the playlist manager.");
-    }
-
-    return status;
 }

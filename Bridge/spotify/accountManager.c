@@ -22,7 +22,7 @@ int signin( sp_session *session , const char *username , const char *password )
     }
     else
     {
-        TRACE_2( ACCOUNTMANAGER , "Connection ok !");
+        TRACE_1( ACCOUNTMANAGER , "Connection ok !");
     }
 
     while( login != TRUE )
@@ -45,7 +45,7 @@ void logged_in( sp_session *session , sp_error error )
         exit( 1 );
     }
 
-    TRACE_3( ACCOUNTMANAGER , "Success to login.");
+    TRACE_1( ACCOUNTMANAGER , "Success to login.");
 
     login = TRUE;
 }

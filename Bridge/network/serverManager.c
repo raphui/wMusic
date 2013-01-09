@@ -50,11 +50,11 @@ void launchServer( void )
 {
     TRACE_2( SERVERMANAGER , "lanchServer()");
 
-    TRACE_3( SERVERMANAGER , "Start server on port %d..." , portCommander );
+    TRACE_1( SERVERMANAGER , "Start server on port %d..." , portCommander );
 
     pthread_create( &serverCommanderThread , NULL , ( void * )&createServer , &portCommander );
 
-    TRACE_3( SERVERMANAGER , "Start server on port %d..." , portCli );
+    TRACE_1( SERVERMANAGER , "Start server on port %d..." , portCli );
 
     pthread_create( &serverCliThread , NULL , ( void * )&createServer , &portCli );
 
@@ -110,7 +110,7 @@ void createServer( void *port )
             if( clients[numClients] > 0 )
             {
 
-                TRACE_3( SERVERMANAGER , "[!]New client connected.");
+                TRACE_1( SERVERMANAGER , "[!]New client connected.");
 
                 args = ( argumentReceivingThread_t * )zmalloc( sizeof( argumentReceivingThread_t ) );
 
@@ -152,7 +152,7 @@ void receivingThread( void *arg )
 
     TRACE_3( SERVERMANAGER , "Thread argument: socket: %d , port: %d" , arguments->socket , arguments->port );
 
-    TRACE_3( SERVERMANAGER , "[!]Receiving thread create !");
+    TRACE_1( SERVERMANAGER , "[!]Receiving thread create !");
 
     if( arguments->port == PORT_CLI )
         sendVoidSocket( arguments->socket , input , sizeof( input ) );
@@ -222,7 +222,7 @@ int disconnectClient( int *socket )
     }
     else
     {
-        TRACE_3( SERVERMANAGER , "Client disconnect.");
+        TRACE_1( SERVERMANAGER , "Client disconnect.");
     }
 
     return status;

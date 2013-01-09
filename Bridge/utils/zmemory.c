@@ -25,7 +25,7 @@ void zfree( void *ptr )
     realptr = ( char * )ptr - sizeof( size_t );
     sizeptr = *( ( size_t * )realptr );
 
-    TRACE_3( ZMEMORY , "Size to be free : %d." , sizeptr );
+    TRACE_1( ZMEMORY , "Size to be free : %d." , sizeptr );
 
     memoryFree += sizeptr;
 

@@ -30,7 +30,7 @@ static int loadTrack( sp_session *session , sp_track *track )
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Track loaded.");
+        TRACE_1( PLAYERMANAGER , "Track loaded.");
     }
 
     return status;
@@ -45,7 +45,7 @@ int createTrackFromUri( char *uri , sp_track *track )
 
     createFile();
 
-    TRACE_3( PLAYERMANAGER , "Creating URI : %s" , uri );
+    TRACE_1( PLAYERMANAGER , "Creating URI : %s" , uri );
 
     link = sp_link_create_from_string( uri );
 
@@ -57,7 +57,7 @@ int createTrackFromUri( char *uri , sp_track *track )
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Success to create link.");
+        TRACE_1( PLAYERMANAGER , "Success to create link.");
     }
 
     TRACE_3( PLAYERMANAGER , "Construct track...");
@@ -72,7 +72,7 @@ int createTrackFromUri( char *uri , sp_track *track )
     }
     else
     {
-        TRACE_3( PLAYERMANAGER , "Success to create track.");
+        TRACE_1( PLAYERMANAGER , "Success to create track.");
     }
 
     error = sp_track_add_ref( currentTrack );
@@ -115,7 +115,7 @@ int loadMusic( sp_session *session, char *uri )
 
     if( currentTrack != NULL)
     {
-        TRACE_3( PLAYERMANAGER , "Adding track to the playlist.");
+        TRACE_1( PLAYERMANAGER , "Adding track to the playlist.");
 
         addTracksPlayqueue( currentTrack );
 
@@ -160,7 +160,7 @@ int playMusic( sp_session *session , char *uri )
     }*/
     else
     {
-        TRACE_3( PLAYERMANAGER , "Getting the track.");
+        TRACE_1( PLAYERMANAGER , "Getting the track.");
 
         loadTrack( session , getNextTrack() );
 
@@ -174,7 +174,7 @@ int playMusic( sp_session *session , char *uri )
         }
         else
         {
-           TRACE_3( PLAYERMANAGER , "Success to play track.");
+           TRACE_1( PLAYERMANAGER , "Success to play track.");
 
            if( firstTime++ != 0 )
                playStream("rtpStreaming");
@@ -213,7 +213,7 @@ int pauseMusic( sp_session *session , char *uri )
         }
         else
         {
-            TRACE_3( PLAYERMANAGER , "Success to pause track.");
+            TRACE_1( PLAYERMANAGER , "Success to pause track.");
 
             pausing = TRUE;
 
@@ -233,7 +233,7 @@ int pauseMusic( sp_session *session , char *uri )
         }
         else
         {
-            TRACE_3( PLAYERMANAGER , "Success to play track.");
+            TRACE_1( PLAYERMANAGER , "Success to play track.");
 
             pausing = FALSE;
         }
@@ -270,7 +270,7 @@ void end_of_track( sp_session *session )
 
     if( hasNextTrack() == TRUE )
     {
-        TRACE_3( PLAYERMANAGER , "Load next music !");
+        TRACE_1( PLAYERMANAGER , "Load next music !");
 
         playMusic( session , "" );
     }

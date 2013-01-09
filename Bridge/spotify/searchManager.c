@@ -35,7 +35,7 @@ static void searchComplete( sp_search *search , void *userdata )
 
     if( sp_search_error( search ) == SP_ERROR_OK )
     {
-        TRACE_3( SEARCHMANAGER , "Query: %s" , sp_search_query( search ) );
+        TRACE_1( SEARCHMANAGER , "Query: %s" , sp_search_query( search ) );
 
         searchCount = sp_search_num_tracks( search );
 

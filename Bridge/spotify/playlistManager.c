@@ -54,7 +54,7 @@ int getPlaylistContainer( sp_session *session )
     }
     else
     {
-        TRACE_3( PLAYLISTMANAGER , "Success to retrieve the playlistcontainer");
+        TRACE_1( PLAYLISTMANAGER , "Success to retrieve the playlistcontainer");
 
         currentSession = session;
     }
@@ -84,7 +84,7 @@ int createPlaylist( const char *name )
     }
     else
     {
-        TRACE_3( PLAYLISTMANAGER , "Success to create the new playlist : %s" , name );
+        TRACE_1( PLAYLISTMANAGER , "Success to create the new playlist : %s" , name );
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -110,7 +110,7 @@ sp_playlist *getPlaylist( int index )
     {
         pl = sp_playlistcontainer_playlist( plc , index );
 
-        TRACE_3( PLAYLISTMANAGER , "Playlist at index : %d , has been retrieved." , index );
+        TRACE_1( PLAYLISTMANAGER , "Playlist at index : %d , has been retrieved." , index );
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -134,7 +134,7 @@ sp_playlist *getPlaylistByName( const char *name )
 
         if( strcmp( sp_playlist_name( pl ) , name ) == 0 )
         {
-            TRACE_3( PLAYLISTMANAGER , "Playlist have been founded");
+            TRACE_1( PLAYLISTMANAGER , "Playlist have been founded");
 
             return pl;
         }
@@ -180,7 +180,7 @@ int addTrackPlaylistByName( sp_track *track , const char *name , int position )
         }
         else
         {
-            TRACE_3( PLAYLISTMANAGER , "Track have been added !");
+            TRACE_1( PLAYLISTMANAGER , "Track have been added !");
         }
     }
 
@@ -220,7 +220,7 @@ int addTrackPlaylist( sp_track *track , int index , int position )
         }
         else
         {
-            TRACE_3( PLAYLISTMANAGER , "Track have been added !");
+            TRACE_1( PLAYLISTMANAGER , "Track have been added !");
         }
     }
 
@@ -246,7 +246,7 @@ sp_playlist *getStarredList( sp_session *session )
     }
     else
     {
-        TRACE_3( PLAYLISTMANAGER , "Starred playlist have been retrieved.");
+        TRACE_1( PLAYLISTMANAGER , "Starred playlist have been retrieved.");
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -273,7 +273,7 @@ int setStarredTrack( sp_session *session , sp_track *track , int starred )
     }
     else
     {
-        TRACE_3( PLAYLISTMANAGER , "The starred status of track have been changed.");
+        TRACE_1( PLAYLISTMANAGER , "The starred status of track have been changed.");
     }
 
     pthread_mutex_unlock( &mutexSession );

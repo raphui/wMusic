@@ -27,7 +27,7 @@ int addTracksPlayqueue( sp_track *track )
 
     TAILQ_INSERT_TAIL( &plfifo->q , pldata , link );
 
-    TRACE_3( PLAYQUEUEMANAGER , "Track has been added.");
+    TRACE_1( PLAYQUEUEMANAGER , "Track has been added.");
 
     return PC_SUCCESS;
 }
@@ -49,7 +49,7 @@ sp_track *getNextTrack( void )
     {
         TAILQ_REMOVE( &plfifo->q , pldata , link );
 
-        TRACE_3( PLAYQUEUEMANAGER , "Track has been retrieve.");
+        TRACE_1( PLAYQUEUEMANAGER , "Track has been retrieve.");
 
         ret = pldata->track;
     }
