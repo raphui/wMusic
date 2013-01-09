@@ -16,8 +16,12 @@ void playlist_metadata_updated( sp_playlist *pl , void *userdata );
 
 int getPlaylistContainer( sp_session *session );
 int createPlaylist( const char *name );
+int removePlaylist( const char *name );
+int renamePlaylist( const char *name , const char *newName );
 sp_playlist *getPlaylist( int index );
+int getPlaylistIndexByName( const char *name );
 sp_playlist *getPlaylistByName( const char *name );
+int addTrackUriPlaylistByName( char *uri , const char *name );
 int addTrackPlaylistByName( sp_track *track , const char *name , int position );
 int addTrackPlaylist( sp_track *track , int index , int position );
 sp_playlist *getStarredList( sp_session *session );

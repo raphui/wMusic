@@ -92,6 +92,88 @@ int createPlaylist( const char *name )
     return status;
 }
 
+int removePlaylist( const char *name )
+{
+    TRACE_2( PLAYLISTMANAGER , "removePlaylist( %s )" , name );
+
+    int status = PC_SUCCESS;
+    int index;
+
+    sp_error error;
+
+    index = getPlaylistIndexByName( name );
+
+    if( index == PC_ERROR )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Fail to retrieve playlist : %s." , name );
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( PLAYLISTMANAGER , "Playlist have been got.");
+
+        pthread_mutex_lock( &mutexSession );
+
+        error = sp_playlistcontainer_remove_playlist( plc , index );
+
+        pthread_mutex_unlock( &mutexSession );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYLISTMANAGER , "Cannot remove the playlist : %s." , name );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_1( PLAYLISTMANAGER , "Success to remove the playlist : %s." , name );
+        }
+    }
+
+    return status;
+}
+
+int renamePlaylist( const char *name , const char *newName )
+{
+    TRACE_2( PLAYLISTMANAGER , "renamePlaylist( %s , %s )." , name , newName );
+
+    int status = PC_SUCCESS;
+
+    sp_playlist *pl = NULL;
+    sp_error error;
+
+    pl = getPlaylistByName( name );
+
+    if( pl == NULL )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Fail to retrieve the playlist : %s." , name );
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        pthread_mutex_lock( &mutexSession );
+
+        error = sp_playlist_rename( pl , newName );
+
+        pthread_mutex_unlock( &mutexSession );
+
+        if( error != SP_ERROR_OK )
+        {
+            TRACE_ERROR( PLAYLISTMANAGER , "Cannot rename the playlist : %s." , name );
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_1( PLAYLISTMANAGER , "Success to rename the playlist : %s into %s." , name , newName );
+        }
+    }
+
+    return status;
+}
+
 sp_playlist *getPlaylist( int index )
 {
     TRACE_2( PLAYLISTMANAGER , "getPlaylist( %d )" , index );
@@ -116,6 +198,33 @@ sp_playlist *getPlaylist( int index )
     pthread_mutex_unlock( &mutexSession );
 
     return pl;
+}
+
+int getPlaylistIndexByName( const char *name )
+{
+    TRACE_2( PLAYLISTMANAGER , "getPlaylistByName( %s )." , name );
+
+    int i = 0;
+
+    sp_playlist *pl = NULL;
+
+    for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
+    {
+        pl = getPlaylist( i );
+
+        if( strcmp( sp_playlist_name( pl ) , name ) == 0 )
+        {
+            TRACE_1( PLAYLISTMANAGER , "Playlist have been founded");
+
+            return i;
+        }
+    }
+
+    TRACE_3( PLAYLISTMANAGER , "Playlist have not been founded, return a NULL sp_playlist.");
+
+    pl = NULL;
+
+    return PC_ERROR;
 }
 
 sp_playlist *getPlaylistByName( const char *name )
@@ -147,6 +256,85 @@ sp_playlist *getPlaylistByName( const char *name )
 //    pthread_mutex_unlock( &mutexSession );
 
     return pl;
+}
+
+int addTrackUriPlaylistByName( char *uri , const char *name )
+{
+    TRACE_2( PLAYLISTMANAGER , "addTrackUriPlaylistByName( %s , %s )." , uri , name );
+
+    int status = PC_SUCCESS;
+    int position = 0;
+    int ret;
+
+    sp_playlist *pl = NULL;
+    sp_link *link = NULL;
+    sp_track *track = NULL;
+
+    pthread_mutex_lock( &mutexSession );
+
+    link = sp_link_create_from_string( uri );
+
+    pthread_mutex_unlock( &mutexSession );
+
+    if( link == NULL )
+    {
+        TRACE_ERROR( PLAYLISTMANAGER , "Cannot get a link from the uri : %s." , uri );
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        pthread_mutex_lock( &mutexSession );
+
+        track = sp_link_as_track( link );
+
+        pthread_mutex_unlock( &mutexSession );
+
+        if( track == NULL )
+        {
+            TRACE_ERROR( PLAYLISTMANAGER , "Cannot get a track from link.");
+
+            status = PC_ERROR;
+        }
+        else
+        {
+            TRACE_3( PLAYLISTMANAGER , "Get the playlist.");
+
+            pl = getPlaylistByName( name );
+
+            if( pl == NULL )
+            {
+                TRACE_ERROR( PLAYLISTMANAGER , "Cannot get the playlist : %s." , name );
+
+                status = PC_ERROR;
+            }
+            else
+            {
+                TRACE_3( PLAYLISTMANAGER , "Getting the position to insert the track.");
+
+                position = sp_playlist_num_tracks( pl );
+
+
+                TRACE_3( PLAYLISTMANAGER , "Adding track to the playlist : %s." , name );
+
+                ret = addTrackPlaylistByName( track , name , position );
+
+                if( ret == PC_ERROR )
+                {
+                    TRACE_3( PLAYLISTMANAGER , "Fail to add track to the playlist.");
+
+                    status = PC_ERROR;
+                }
+                else
+                {
+                    TRACE_1( PLAYLISTMANAGER , "Track has been added.");
+                }
+            }
+
+        }
+    }
+
+    return status;
 }
 
 int addTrackPlaylistByName( sp_track *track , const char *name , int position )

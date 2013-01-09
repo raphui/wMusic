@@ -3,14 +3,20 @@
 static spotifytNetworkCommand_t spotifyNetworkCmd[] =
 {
 
-    {"PLAYER#LOAD"       ,   &loadMusic      ,   NULL           },
-    {"PLAYER#PLAY"       ,   &playMusic      ,   NULL           },
-    {"PLAYER#PAUSE"      ,   &pauseMusic     ,   NULL           },
-    {"SEARCH#BASIC"      ,   &search         ,   NULL           },
-    {"SEARCH#ARTIST"     ,   &search         ,   "artist:"      },
-    {"SEARCH#ALBUM"      ,   &search         ,   "album:"       },
-    {"SEARCH#TRACK"      ,   &search         ,   "track:"       },
-    {"SEARCH#WHATSNEW"   ,   &search         ,   "tag:new"      }
+    {"PLAYQUEUE#LOAD"       ,   &loadMusic      ,   NULL            },
+    {"PLAYQUEUE#PLAY"       ,   &playMusic      ,   NULL            },
+    {"PLAYQUEUE#PAUSE"      ,   &pauseMusic     ,   NULL            },
+    {"PLAYQUEUE#NEXT"       ,   &nextMusic      ,   NULL            },
+    {"PLAYLIST#ADD"         ,   NULL            ,   NULL            },
+    {"PLAYLIST#REMOVE"      ,   NULL            ,   NULL            },
+    {"PLAYLIST#RENAME"      ,   NULL            ,   NULL            },
+    {"PLAYLIST#ADDTRACK"    ,   NULL            ,   NULL            },
+    {"PLAYLIST#REMOVETRACK" ,   NULL            ,   NULL            },
+    {"SEARCH#BASIC"         ,   &search         ,   NULL            },
+    {"SEARCH#ARTIST"        ,   &search         ,   "artist:"       },
+    {"SEARCH#ALBUM"         ,   &search         ,   "album:"        },
+    {"SEARCH#TRACK"         ,   &search         ,   "track:"        },
+    {"SEARCH#WHATSNEW"      ,   &search         ,   "tag:new"       }
 };
 
 

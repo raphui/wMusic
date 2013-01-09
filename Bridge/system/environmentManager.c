@@ -10,12 +10,6 @@ void setAdhoc( char *essidName , char *key )
 
     sprintf( cmd , "%s %s %s" , SET_AHDOC_SCRIPT , essidName , key );
 
-//    strcat( cmd , SET_AHDOC_SCRIPT );
-//    strcat( cmd , " ");
-//    strcat( cmd , essidName );
-//    strcat( cmd , " ");
-//    strcat( cmd , key );
-
     system( cmd );
 
     TRACE_1( ENVIRONMENTMANAGER , "Command executed.");

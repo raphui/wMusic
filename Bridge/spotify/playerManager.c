@@ -244,6 +244,32 @@ int pauseMusic( sp_session *session , char *uri )
     return status;
 }
 
+int nextMusic( sp_session *session , char *uri )
+{
+    TRACE_2( PLAYERMANAGER , "nextMusic( __session__ , %s )." , uri );
+
+    int status = PC_SUCCESS;
+
+    sp_track *track;
+
+    TRACE_3( PLAYERMANAGER , "Getting next track from the playqueue.");
+
+    if( hasNextTrack() == TRUE )
+    {
+        TRACE_1( PLAYERMANAGER , "Playing next track.");
+
+        playMusic( g_session , NULL );
+    }
+    else
+    {
+        TRACE_ERROR( PLAYERMANAGER , "No next track in the playqueue.");
+
+        status = PC_ERROR;
+    }
+
+    return status;
+}
+
 
 void metadata_updated( sp_session *session )
 {

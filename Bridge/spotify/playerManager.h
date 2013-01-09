@@ -28,6 +28,7 @@ int createTrackFromUri( char *uri , sp_track *track );
 int loadMusic( sp_session *session , char *uri );
 int playMusic( sp_session *session , char *uri );
 int pauseMusic( sp_session *session , char *uri );
+int nextMusic( sp_session *session , char *uri );
 
 int running;
 int playing;
