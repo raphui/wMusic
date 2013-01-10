@@ -33,6 +33,20 @@ void playlist_metadata_updated( sp_playlist *pl , void *userdata )
     TRACE_2( PLAYLISTMANAGER , "playlist_metadata_updated()");
 }
 
+int initPlaylistManager( sp_session *session )
+{
+    TRACE_2( PLAYLISTMANAGER , "initPlaylistManager().");
+
+    return getPlaylistContainer( session );
+}
+
+int reloadPlaylistContainer( void )
+{
+    TRACE_2( PLAYLISTMANAGER , "reloadPlaylistContainer()");
+
+    return getPlaylistContainer( currentSession );
+}
+
 int getPlaylistContainer( sp_session *session )
 {
     TRACE_2( PLAYLISTMANAGER , "getPlaylistContainer()");
@@ -86,6 +100,8 @@ int createPlaylist( const char *name )
 
     pthread_mutex_unlock( &mutexSession );
 
+    reloadPlaylistContainer();
+
     return status;
 }
 
@@ -128,6 +144,8 @@ int removePlaylist( const char *name )
         }
     }
 
+    reloadPlaylistContainer();
+
     return status;
 }
 
@@ -168,6 +186,8 @@ int renamePlaylist( const char *name , const char *newName )
         }
     }
 
+    reloadPlaylistContainer();
+
     return status;
 }
 
@@ -179,7 +199,7 @@ sp_playlist *getPlaylist( int index )
 
     pthread_mutex_lock( &mutexSession );
 
-    if( ( 0 < index ) && ( index < sp_playlistcontainer_num_playlists( plc ) ) )
+    if( ( 0 < index ) && ( index > sp_playlistcontainer_num_playlists( plc ) ) )
     {
         TRACE_ERROR( PLAYLISTMANAGER , "The index : %d , it's not valid." , index );
 
@@ -237,6 +257,9 @@ sp_playlist *getPlaylistByName( const char *name )
     for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
     {
         pl = getPlaylist( i );
+
+        if( pl == NULL )
+            continue;
 
         if( strcmp( sp_playlist_name( pl ) , name ) == 0 )
         {

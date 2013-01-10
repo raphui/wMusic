@@ -14,6 +14,8 @@ void tracks_moved( sp_playlist *pl , const int *tracks , int num_tracks , int ne
 void tracks_removed( sp_playlist *pl , const int *tracks , int num_tracks , void *userdata );
 void playlist_metadata_updated( sp_playlist *pl , void *userdata );
 
+int initPlaylistManager( sp_session *session );
+int reloadPlaylistContainer( void );
 int getPlaylistContainer( sp_session *session );
 int createPlaylist( const char *name );
 int removePlaylist( const char *name );

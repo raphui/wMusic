@@ -59,6 +59,11 @@ int launchSpotifyManager( void )
         {
             launchServer();
 
+            if( initPlaylistManager( g_session ) == PC_ERROR )
+            {
+                TRACE_ERROR( SPOTIFYMANAGER , "Fail to init the playlist manager !");
+            }
+
             running = TRUE;
             playing = FALSE;
 

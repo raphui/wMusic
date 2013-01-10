@@ -11,15 +11,17 @@
 #include "utils/types.h"
 #include "utils/trace.h"
 
-#define NETWORK_COUNT_COMMAND   8
+#define NETWORK_COUNT_COMMAND   14
 #define MAX_QUERY_LENGTH        1024
 
 typedef struct spotifytNetworkCommand
 {
 
     char *command;
-    int ( *executeCommand )( sp_session *arg1 , char *arg2 );
+    int ( *executeCommandOneArg )( void *arg1 );
+    int ( *executeCommandTwoArg )( void *arg1 , void *arg2 );
     char *specificArg;
+    int needSession;
 
 }spotifytNetworkCommand_t;
 
