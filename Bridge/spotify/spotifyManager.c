@@ -5,7 +5,6 @@ static sp_session_callbacks spSessionCallbacks;
 
 static void notify_main_thread( sp_session *session );
 static void log_message( sp_session *session , const char *data );
-static int initPlaylist( void );
 
 int launchSpotifyManager( void )
 {
@@ -58,11 +57,6 @@ int launchSpotifyManager( void )
 
         initAccountManager( g_session );
         launchServer();
-
-//        if( initPlaylistManager( g_session ) == PC_ERROR )
-//        {
-//            TRACE_ERROR( SPOTIFYMANAGER , "Fail to init the playlist manager !");
-//        }
 
         running = TRUE;
         playing = FALSE;

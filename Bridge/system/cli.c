@@ -1,17 +1,38 @@
 #include "cli.h"
 
+static char *help( void );
+
 static cliCommand_t cliCmd[] =
 {
     {"memory_count"     ,   &getMemoryCount },
     {"thread_count"     ,   &getThreadCount },
     {"dump_trace_level" ,   &dumpTrace      },
-    {"dump_playqueue"   ,   &dumpPlayQueue  }
+    {"dump_playqueue"   ,   &dumpPlayQueue  },
+    {"help"             ,   &help           }
 };
 
 static setCliCommand_t setCliCmd[] =
 {
     {"set_trace_level"  ,   &setTraceLevel  }
 };
+
+static char *help( void )
+{
+    TRACE_2( CLI , "help().");
+
+    int i = 0;
+    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
+
+    memset( buff , 0 , 1024 );
+
+    for( i = 0 ; i < CLI_COUNT_COMMAND ; i++ )
+        sprintf( buff + strlen( buff ) , "%s\n" ,  cliCmd[i].command );
+
+    for( i = 0 ; i < SET_CLI_COUNT_COMMAND ; i++ )
+        sprintf( buff + strlen( buff ) , "%s\n" ,  setCliCmd[i].command );
+
+    return buff;
+}
 
 static int searchCliCmd( const char *cmd )
 {

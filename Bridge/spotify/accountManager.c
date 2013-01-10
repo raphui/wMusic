@@ -9,39 +9,6 @@ void initAccountManager( sp_session *session )
     currentSession = session;
 }
 
-int signin( sp_session *session , const char *username , const char *password )
-{
-    TRACE_2( ACCOUNTMANAGER , "signin().");
-
-    int next_timeout = 0;
-
-    sp_error error;
-
-    TRACE_3( ACCOUNTMANAGER , "Trying to login....");
-
-    logged = FALSE;
-
-    error = sp_session_login( session , username , password , REMEMBER_LOGIN , NULL );
-
-    if( error != SP_ERROR_OK )
-    {
-        TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s" , sp_error_message( error ) );
-
-        return CONNECTION_ERROR;
-    }
-    else
-    {
-        TRACE_1( ACCOUNTMANAGER , "Connection ok !");
-    }
-
-    while( logged != TRUE )
-    {
-        sp_session_process_events( session , &next_timeout );
-    }
-
-    return CONNECTION_OK;
-}
-
 int login( const char *username , const char *password )
 {
     TRACE_2( ACCOUNTMANAGER , "login( %s , %s )." , username , password );

@@ -42,6 +42,7 @@ char *getMemoryCount( void )
 
     sprintf( buff , "Total memory allocate : %d\n" , memoryAllocate );
     sprintf( buff + strlen( buff ), "Total memory free : %d\n" , memoryFree );
+    sprintf( buff + strlen( buff ), "Current memory allocate : %d\n" , memoryAllocate - memoryFree );
 
     return buff;
 }
