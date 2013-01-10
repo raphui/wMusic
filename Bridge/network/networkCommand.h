@@ -7,6 +7,8 @@
 
 #include "spotify/playerManager.h"
 #include "spotify/searchManager.h"
+#include "spotify/playlistManager.h"
+#include "spotify/accountManager.h"
 #include "network/serverManager.h"
 #include "utils/types.h"
 #include "utils/trace.h"

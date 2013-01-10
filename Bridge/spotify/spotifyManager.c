@@ -55,33 +55,28 @@ int launchSpotifyManager( void )
 
     if( g_session != NULL )
     {
-        if( signin( g_session , USERNAME , PASSWORD ) == CONNECTION_OK )
+
+        initAccountManager( g_session );
+        launchServer();
+
+//        if( initPlaylistManager( g_session ) == PC_ERROR )
+//        {
+//            TRACE_ERROR( SPOTIFYMANAGER , "Fail to init the playlist manager !");
+//        }
+
+        running = TRUE;
+        playing = FALSE;
+
+        TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
+
+        while( running )
         {
-            launchServer();
+            pthread_mutex_lock( &mutexSession );
 
-            if( initPlaylistManager( g_session ) == PC_ERROR )
-            {
-                TRACE_ERROR( SPOTIFYMANAGER , "Fail to init the playlist manager !");
-            }
+            sp_session_process_events( g_session , &next_timeout );
 
-            running = TRUE;
-            playing = FALSE;
+            pthread_mutex_unlock( &mutexSession );
 
-            TRACE_INFO( SPOTIFYMANAGER , "Ready to be used !");
-
-            while( running )
-            {
-                pthread_mutex_lock( &mutexSession );
-
-                sp_session_process_events( g_session , &next_timeout );
-
-                pthread_mutex_unlock( &mutexSession );
-
-            }
-        }
-        else
-        {
-            return CONNECTION_ERROR;
         }
     }
 

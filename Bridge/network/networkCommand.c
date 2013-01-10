@@ -2,7 +2,8 @@
 
 static spotifytNetworkCommand_t spotifyNetworkCmd[] =
 {
-
+    {"ACCOUNT#LOGIN"        ,   NULL                        ,   &login          ,   NULL            ,   0   },
+    {"ACCOUNT#LOGOUT"       ,   &logout                     ,   NULL            ,   NULL            ,   1   },
     {"PLAYQUEUE#LOAD"       ,   NULL                        ,   &loadMusic      ,   NULL            ,   1   },
     {"PLAYQUEUE#PLAY"       ,   NULL                        ,   &playMusic      ,   NULL            ,   1   },
     {"PLAYQUEUE#PAUSE"      ,   NULL                        ,   &pauseMusic     ,   NULL            ,   1   },
@@ -112,7 +113,8 @@ void doAction( char *command )
         spotifyNetworkCmd[idFuncptr].executeCommandTwoArg( g_session , query );
     else if( spotifyNetworkCmd[idFuncptr].executeCommandOneArg == NULL )
         spotifyNetworkCmd[idFuncptr].executeCommandTwoArg( query , arg2 );
+    else if( ( spotifyNetworkCmd[idFuncptr].executeCommandTwoArg == NULL ) && ( spotifyNetworkCmd[idFuncptr].needSession == 1 ) )
+        spotifyNetworkCmd[idFuncptr].executeCommandOneArg( g_session );
     else if( spotifyNetworkCmd[idFuncptr].executeCommandTwoArg == NULL )
         spotifyNetworkCmd[idFuncptr].executeCommandOneArg( query );
-
 }
