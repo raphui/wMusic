@@ -25,7 +25,7 @@ typedef struct cliCommand
 typedef struct setCliCommand
 {
     char *command;
-    char *( *func )( unsigned int , unsigned int );
+    char *( *func )( void* , void* );
 
 }setCliCommand_t;
 
