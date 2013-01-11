@@ -35,7 +35,28 @@ int getMulticastAddr( const char *url )
     TRACE_2( STREAMMANAGER , "getMulticastAddr( %s )." , url );
 
     int status = PC_SUCCESS;
+    int ret = 0;
 
+    char *addr = ( char * )zmalloc( 14 * sizeof( char ) );
+
+    memset( addr , 0 , 14 );
+
+    TRACE_3( STREAMMANAGER , "Getting the address.");
+
+    ret = getNextMulticastAddr( addr );
+
+    if( ret == PC_ERROR )
+    {
+        TRACE_ERROR( STREAMMANAGER , "Fail to get a multicast address.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        TRACE_3( STREAMMANAGER , "Retrieve the address : %s" , addr );
+
+        sendVoid( addr , 14 );
+    }
 
     return status;
 }

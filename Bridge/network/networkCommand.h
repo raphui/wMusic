@@ -10,10 +10,11 @@
 #include "spotify/playlistManager.h"
 #include "spotify/accountManager.h"
 #include "network/serverManager.h"
+#include "network/streamManager.h"
 #include "utils/types.h"
 #include "utils/trace.h"
 
-#define NETWORK_COUNT_COMMAND   17
+#define NETWORK_COUNT_COMMAND   20
 #define MAX_QUERY_LENGTH        1024
 
 typedef struct spotifytNetworkCommand

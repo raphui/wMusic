@@ -9,6 +9,8 @@
 #include "utils/trace.h"
 #include "utils/zmemory.h"
 #include "vlc/vlcManager.h"
+#include "network/serverManager.h"
+#include "network/multicastAddrManager.h"
 
 int loadStreamer( const char *url );
 int playStreamer( const char *addr );
