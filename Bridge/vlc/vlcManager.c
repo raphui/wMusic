@@ -95,6 +95,15 @@ int destroyVlc( void )
     return status;
 }
 
+int loadStreamFromUrl( const char *url )
+{
+    TRACE_2( VLCMANAGER , "loadStreamFromUrl( %s )." , url );
+
+    int status = PC_SUCCESS;
+
+    return status;
+}
+
 int playStream( const char *name )
 {
     TRACE_2( VLCMANAGER , "playStream( %s )" , name );

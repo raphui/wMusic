@@ -17,7 +17,11 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
     {"SEARCH#ARTIST"        ,   NULL                        ,   &search         ,   "artist:"       ,   1   },
     {"SEARCH#ALBUM"         ,   NULL                        ,   &search         ,   "album:"        ,   1   },
     {"SEARCH#TRACK"         ,   NULL                        ,   &search         ,   "track:"        ,   1   },
-    {"SEARCH#WHATSNEW"      ,   NULL                        ,   &search         ,   "tag:new"       ,   1   }
+    {"SEARCH#WHATSNEW"      ,   NULL                        ,   &search         ,   "tag:new"       ,   1   },
+    {"STREAM#LOAD"          ,   &loadStreamer               ,   NULL            ,   NULL            ,   0   },  /* Not implemented !*/
+    {"STREAM#PLAY"          ,   &playStreamer               ,   NULL            ,   NULL            ,   0   },  /* Not implemented !*/
+    {"STREAM#PAUSE"         ,   &pauseStreamer              ,   NULL            ,   NULL            ,   0   },  /* Not implemented !*/
+    {"STREAM#GETADDR"       ,   &getMulticastAddr           ,   NULL            ,   NULL            ,   0   }   /* Not implemented !*/
 };
 
 

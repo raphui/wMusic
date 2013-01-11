@@ -10,6 +10,7 @@
 
 int streamFile( const char *filename );
 int destroyVlc( void );
+int loadStreamFromUrl( const char *url );
 int playStream( const char *name );
 int pauseStream( const char *name );
 

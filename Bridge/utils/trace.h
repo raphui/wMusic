@@ -12,7 +12,7 @@
 
 #include "utils/zmemory.h"
 
-#define MODULE_COUNT    16
+#define MODULE_COUNT    17
 
 #define TRACE_LEVEL_ERR    ( 1 << 0 )
 #define TRACE_LEVEL_WARN   ( 1 << 1 )
@@ -70,7 +70,8 @@ enum {
     PLAYQUEUEMANAGER,
     ZMEMORY,
     CLI,
-    MULTICASTADDRMANAGER
+    MULTICASTADDRMANAGER,
+    STREAMMANAGER
 };
 
 

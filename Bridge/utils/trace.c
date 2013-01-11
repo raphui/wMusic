@@ -28,8 +28,8 @@ trace_module trace_modules[] =
     {"PLAYQUEUEMANAGER"     ,   TRACE_LEVEL_DEFAULT },
     {"ZMEMORY"              ,   TRACE_LEVEL_DEFAULT },
     {"CLI"                  ,   TRACE_LEVEL_DEFAULT },
-    {"MULTICASTADDRMANAGER" ,   TRACE_LEVEL_DEFAULT }
-
+    {"MULTICASTADDRMANAGER" ,   TRACE_LEVEL_DEFAULT },
+    {"STREAMMANAGER"        ,   TRACE_LEVEL_DEFAULT }
 };
 
 void Traces_printOnly(unsigned int level, unsigned int module, const char *function, const char *format, ...)
