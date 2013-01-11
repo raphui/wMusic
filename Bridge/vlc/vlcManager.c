@@ -2,7 +2,7 @@
 
 static libvlc_instance_t *vlcInstance = NULL;
 static libvlc_media_t *vlcMedia = NULL;
-//static libvlc_media_player_t *vlcMediaPlayer = NULL;
+static char *currentUrl = NULL;
 
 static int initVlc( void )
 {
@@ -18,6 +18,8 @@ static int initVlc( void )
 
         status = PC_ERROR;
     }
+
+    currentUrl = ( char * )zmalloc( 124 * sizeof( char ) );
 
     return status;
 }
@@ -100,6 +102,8 @@ int loadStreamFromUrl( const char *url )
     TRACE_2( VLCMANAGER , "loadStreamFromUrl( %s )." , url );
 
     int status = PC_SUCCESS;
+
+    strncpy( currentUrl , url , strlen( url ) );
 
     return status;
 }

@@ -7,6 +7,7 @@
 
 #include "utils/trace.h"
 #include "utils/types.h"
+#include "utils/zmemory.h"
 
 int streamFile( const char *filename );
 int destroyVlc( void );

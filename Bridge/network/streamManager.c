@@ -53,7 +53,7 @@ int getMulticastAddr( const char *url )
     }
     else
     {
-        TRACE_3( STREAMMANAGER , "Retrieve the address : %s" , addr );
+        TRACE_1( STREAMMANAGER , "Retrieve the address : %s" , addr );
 
         sendVoid( addr , 14 );
     }
