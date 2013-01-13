@@ -12,9 +12,23 @@
 #include "network/serverManager.h"
 #include "network/multicastAddrManager.h"
 
+#define MAX_STREAM  10
+
+typedef struct streamProperties
+{
+    char *url;
+    char *name;
+
+}streamProperties_t;
+
+streamProperties_t streamProps[MAX_STREAM];
+
+int initStreamer( void );
 int loadStreamer( const char *url );
-int playStreamer( const char *addr );
-int pauseStreamer( const char *addr );
+int playStreamer( const char *name );
+int pauseStreamer( const char *name );
 int getMulticastAddr( const char *url );
+int registerNewStream( char *url , char *name );
+int unregisterStream( char *name );
 
 #endif // STREAMMANAGER_H

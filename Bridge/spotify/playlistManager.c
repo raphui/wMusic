@@ -53,7 +53,7 @@ int getPlaylistContainer( sp_session *session )
 
     int status = PC_SUCCESS;
 
-    pthread_mutex_lock( &mutexSession );
+//    pthread_mutex_lock( &mutexSession );
 
     plc = sp_session_playlistcontainer( session );
 
@@ -70,7 +70,7 @@ int getPlaylistContainer( sp_session *session )
         currentSession = session;
     }
 
-    pthread_mutex_unlock( &mutexSession );
+//    pthread_mutex_unlock( &mutexSession );
 
     return status;
 }

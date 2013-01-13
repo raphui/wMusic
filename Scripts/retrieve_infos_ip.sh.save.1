@@ -1,0 +1,3 @@
+#ifconfig wlan0 | grep "inet addr:" | awk '{print substr($2,6,14)}'
+
+echo $ipLocal

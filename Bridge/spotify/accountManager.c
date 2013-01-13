@@ -21,11 +21,11 @@ int login( const char *username , const char *password )
 
     logged = FALSE;
 
-//    pthread_mutex_lock( &mutexSession );
+    pthread_mutex_lock( &mutexSession );
 
     error = sp_session_login( currentSession , username , password , REMEMBER_LOGIN , NULL );
 
-//    pthread_mutex_unlock( &mutexSession );
+    pthread_mutex_unlock( &mutexSession );
 
     if( error != SP_ERROR_OK )
     {
@@ -35,16 +35,16 @@ int login( const char *username , const char *password )
     }
     else
     {
-        TRACE_1( ACCOUNTMANAGER , "Connection ok !");
+        TRACE_1( ACCOUNTMANAGER , "Connection on the way...");
     }
 
     while( logged != TRUE )
     {
-//        pthread_mutex_lock( &mutexSession );
+        pthread_mutex_lock( &mutexSession );
 
         sp_session_process_events( currentSession , &next_timeout );
 
-//        pthread_mutex_unlock( &mutexSession );
+        pthread_mutex_unlock( &mutexSession );
     }
 
     return CONNECTION_OK;

@@ -30,6 +30,11 @@ int streamFile( const char *filename )
 
     int status = PC_SUCCESS;
     int ret;
+    char output[50];
+
+    memset( output , 0 , 50 );
+
+    sprintf( output , "#http{dst=:1337/test3.wav}");
 
     if( vlcInstance == NULL )
         ret = initVlc();
@@ -47,7 +52,7 @@ int streamFile( const char *filename )
         if( vlcMedia != NULL )
         {
 
-            ret = libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , "#rtp{dst=224.2.2.2,port=1337,ttl=10}" , 0 , NULL , 1 , 0 );
+            ret = libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , output , 0 , NULL , 1 , 0 );
 
             if( ret < 0 )
             {
@@ -94,16 +99,76 @@ int destroyVlc( void )
     if( vlcInstance != NULL )
         libvlc_release( vlcInstance );
 
+    zfree( currentUrl );
+
     return status;
 }
 
-int loadStreamFromUrl( const char *url )
+int loadStreamFromUrl( char *url , char *name )
 {
     TRACE_2( VLCMANAGER , "loadStreamFromUrl( %s )." , url );
 
     int status = PC_SUCCESS;
+    int ret;
+    char output[50];
 
-    strncpy( currentUrl , url , strlen( url ) );
+    memset( output , 0 , 50 );
+
+    sprintf( output , "#http{dst=:1337/%s.wav}" , name );
+
+    if( vlcInstance == NULL )
+        ret = initVlc();
+
+    if( ret == PC_ERROR )
+    {
+        TRACE_ERROR( VLCMANAGER , "Fail to init VLC , cannot stream the file !");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        strncpy( currentUrl , url , strlen( url ) );
+
+        registerNewStream( url , name );
+
+        vlcMedia = libvlc_media_new_path( vlcInstance , url );
+
+        if( vlcMedia != NULL )
+        {
+
+            ret = libvlc_vlm_add_broadcast( vlcInstance , name , url , output , 0 , NULL , 1 , 0 );
+
+            if( ret < 0 )
+            {
+                TRACE_ERROR( VLCMANAGER , "Cannot add a broadcast.");
+
+                status = PC_ERROR;
+            }
+            else
+            {
+                TRACE_3( VLCMANAGER , "Broadcast stream added.");
+
+                ret = libvlc_vlm_play_media( vlcInstance , name );
+
+                if( ret < 0 )
+                {
+                    TRACE_ERROR( VLCMANAGER , "Cannot diffuse the stream.");
+
+                    status = PC_ERROR;
+                }
+                else
+                {
+                    TRACE_1( VLCMANAGER , "Start diffuse the stream.");
+                }
+            }
+        }
+        else
+        {
+            TRACE_ERROR( VLCMANAGER , "Fail to create a new media from the path: %s" , url );
+
+            status = PC_ERROR;
+        }
+    }
 
     return status;
 }

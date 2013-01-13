@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ipLocal=$(ifconfig wlan0 | grep 'inet addr:' | awk '{print substr($2,6,14)}')
+ipPublic
+
+echo $ipLocal
