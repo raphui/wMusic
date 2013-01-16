@@ -30,11 +30,12 @@ int streamFile( const char *filename )
 
     int status = PC_SUCCESS;
     int ret;
-    char output[50];
+    char output[255];
 
     memset( output , 0 , 50 );
 
-    sprintf( output , "#http{dst=:1337/test3.wav}");
+//    sprintf( output , "#http{dst=:1337/test3.wav}");
+    sprintf( output , "#transcode{vcodec=drac,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:http{dst=:1337/test.mp3}");
 
     if( vlcInstance == NULL )
         ret = initVlc();
@@ -106,7 +107,7 @@ int destroyVlc( void )
 
 int loadStreamFromUrl( char *url , char *name )
 {
-    TRACE_2( VLCMANAGER , "loadStreamFromUrl( %s )." , url );
+    TRACE_2( VLCMANAGER , "loadStreamFromUrl( %s , %s )." , url , name );
 
     int status = PC_SUCCESS;
     int ret;
@@ -114,7 +115,7 @@ int loadStreamFromUrl( char *url , char *name )
 
     memset( output , 0 , 50 );
 
-    sprintf( output , "#http{dst=:1337/%s.wav}" , name );
+    sprintf( output , "#transcode{vcodec=drac,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:http{dst=:1337/%s.mp3}" , name );
 
     if( vlcInstance == NULL )
         ret = initVlc();
