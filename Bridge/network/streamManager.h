@@ -24,7 +24,7 @@ typedef struct streamProperties
 streamProperties_t streamProps[MAX_STREAM];
 
 int initStreamer( void );
-int loadStreamer( const char *url );
+int loadStreamer( const char *url , const char *name );
 int playStreamer( const char *name );
 int pauseStreamer( const char *name );
 int getMulticastAddr( const char *url );

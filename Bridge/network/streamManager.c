@@ -19,14 +19,11 @@ int initStreamer( void )
     return status;
 }
 
-int loadStreamer( const char *url )
+int loadStreamer( const char *url , const char *name )
 {
-    TRACE_2( STREAMMANAGER , "loadStream( %s )." , url );
+    TRACE_2( STREAMMANAGER , "loadStream( %s , %s )." , url , name );
 
-    int status = PC_SUCCESS;
-
-
-    return status;
+    return loadStreamFromUrl( url , name );
 }
 
 int playStreamer( const char *name )
