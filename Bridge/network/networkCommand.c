@@ -18,10 +18,11 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
     {"SEARCH#ALBUM"         ,   NULL                        ,   &search         ,   "album:"        ,   1   },
     {"SEARCH#TRACK"         ,   NULL                        ,   &search         ,   "track:"        ,   1   },
     {"SEARCH#WHATSNEW"      ,   NULL                        ,   &search         ,   "tag:new"       ,   1   },
-    {"STREAMER#LOAD"        ,   NULL                        ,   &loadStreamer   ,   NULL            ,   0   },  /* Not implemented !*/
-    {"STREAMER#PLAY"        ,   &playStreamer               ,   NULL            ,   NULL            ,   0   },  /* Not implemented !*/
-    {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL            ,   NULL            ,   0   },  /* Not implemented !*/
-    {"STREAMER#GETADDR"     ,   NULL                        ,   NULL            ,   NULL            ,   0   }   /* Not implemented !*/
+    {"STREAMER#LOAD"        ,   NULL                        ,   &loadStreamer   ,   NULL            ,   0   },
+    {"STREAMER#PLAY"        ,   &playStreamer               ,   NULL            ,   NULL            ,   0   },
+    {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL            ,   NULL            ,   0   },  /* Not tested !*/
+    {"STREAMER#UNLOAD"      ,   &unregisterStream           ,   NULL            ,   NULL            ,   0   },
+    {"STREAMER#GETADDR"     ,   NULL                        ,   NULL            ,   NULL            ,   0   }   /* /!\ Useless ? <Not implemented !>*/
 };
 
 
