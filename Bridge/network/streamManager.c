@@ -60,7 +60,12 @@ int playStreamer( const char *name )
         }
         else
         {
-            status = playMusic( g_session , streamProps[index].url );
+
+            if( pausing == FALSE )
+                status = playMusic( g_session , streamProps[index].url );
+            else if( pausing == TRUE )
+                status = pauseStreamer( name );
+
         }
     }
 
