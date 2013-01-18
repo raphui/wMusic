@@ -87,20 +87,21 @@ void logged_in( sp_session *session , sp_error error )
     if( error != SP_ERROR_OK )
     {
         TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s." ,  sp_error_message( error ) );
-
-        exit( 1 );
     }
-
-    TRACE_1( ACCOUNTMANAGER , "Success to login.");
-
-    if( initPlaylistManager( currentSession ) == PC_ERROR )
+    else
     {
-        TRACE_ERROR( ACCOUNTMANAGER , "Fail to init the playlist manager !");
+        TRACE_1( ACCOUNTMANAGER , "Success to login.");
+
+        if( initPlaylistManager( currentSession ) == PC_ERROR )
+        {
+            TRACE_ERROR( ACCOUNTMANAGER , "Fail to init the playlist manager !");
+        }
+
+        logged = TRUE;
+
+        TRACE_INFO( ACCOUNTMANAGER , "Hello !");
     }
 
-    logged = TRUE;
-
-    TRACE_INFO( ACCOUNTMANAGER , "Hello !");
 }
 
 void logged_out( sp_session *session )
