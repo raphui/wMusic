@@ -24,11 +24,12 @@ typedef struct streamProperties
 streamProperties_t streamProps[MAX_STREAM];
 
 int initStreamer( void );
-int loadStreamer( const char *url , const char *name );
+int loadStreamer( char *url , char *name );
 int playStreamer( const char *name );
 int pauseStreamer( const char *name );
 int getMulticastAddr( const char *url );
 int registerNewStream( char *url , char *name );
 int unregisterStream( char *name );
+int getStreamUrlFromName( const char *name );
 
 #endif // STREAMMANAGER_H

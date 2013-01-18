@@ -19,25 +19,81 @@ int initStreamer( void )
     return status;
 }
 
-int loadStreamer( const char *url , const char *name )
+int loadStreamer( char *url , char *name )
 {
     TRACE_2( STREAMMANAGER , "loadStream( %s , %s )." , url , name );
 
-    return loadStreamFromUrl( url , name );
+    registerNewStream( url , name );
+
+    if( strstr( url , "spotify") == NULL )
+    {
+        return loadStreamFromUrl( url , name );
+    }
+    else
+    {
+        return loadMusic( g_session , url );
+    }
+
 }
 
 int playStreamer( const char *name )
 {
     TRACE_2( STREAMMANAGER , "playStream( %s )." , name );
 
-    return playStream( name );
+    int status = PC_SUCCESS;
+
+    int index;
+
+    index = getStreamUrlFromName( name );
+
+    if( index == PC_ERROR )
+    {
+        TRACE_ERROR( STREAMMANAGER , "Fail to retrieve stream.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        if( strstr( streamProps[index].url , "spotify") == NULL )
+        {
+            status = playStream( name );
+        }
+        else
+        {
+            status = playMusic( g_session , streamProps[index].url );
+        }
+    }
+
+    return status;
 }
 
 int pauseStreamer( const char *name )
 {
-    TRACE_2( STREAMMANAGER , "pauseStream( %s )." , name );
+    int status = PC_SUCCESS;
 
-    return pauseStream( name );
+    int index;
+
+    index = getStreamUrlFromName( name );
+
+    if( index == PC_ERROR )
+    {
+        TRACE_ERROR( STREAMMANAGER , "Fail to retrieve stream.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        if( strstr( streamProps[index].url , "spotify") == NULL )
+        {
+            status = pauseStream( name );
+        }
+        else
+        {
+            status = pauseMusic( g_session , streamProps[index].url );
+        }
+    }
+
+    return status;
 }
 
 int getMulticastAddr( const char *url )
@@ -77,17 +133,32 @@ int registerNewStream( char *url , char *name )
 
     int status;
     int i;
+    int sizeUrl;
+    int sizeName;
+
+    sizeUrl = strlen( url );
+    sizeName = strlen( name );
 
     for( i = 0 ; i < MAX_STREAM ; i++ )
     {
-        if( strcmp( streamProps[i].name , "" ) == 0 )
+        if( ( streamProps[i].name == NULL ) || ( strcmp( streamProps[i].name , "" ) == 0 ) )
         {
             TRACE_3( STREAMMANAGER , "Settings the properties.");
 
-            memcpy( streamProps[i].url , url , strlen( url ) );
-            memcpy( streamProps[i].name , name , strlen( name ) );
+            streamProps[i].url = ( char * )zmalloc( sizeUrl * sizeof( char ) );
+            streamProps[i].name = ( char * )zmalloc( sizeName * sizeof( char ) );
+
+            memset( streamProps[i].url , 0 , sizeUrl );
+            memset( streamProps[i].name , 0 , sizeName );
+
+            sprintf( streamProps[i].url , "%s" , url );
+            sprintf( streamProps[i].name , "%s" , name );
 
             status = PC_SUCCESS;
+
+            TRACE_1( STREAMMANAGER , "Stream : %s , %s is now registered." , url , name );
+
+            TRACE_3( STREAMMANAGER , "Index : %d , Url : %s , Name : %s" , i , streamProps[i].url , streamProps[i].name );
 
             break;
         }
@@ -114,18 +185,50 @@ int unregisterStream( char *name )
 
     for( i = 0 ; i < MAX_STREAM ; i++ )
     {
-        if( strcmp( streamProps[i].name , name ) == 0 )
+        if( ( streamProps[i].name == NULL ) || ( strcmp( streamProps[i].name , name ) == 0 ) )
         {
             strcpy( streamProps[i].url , "");
             strcpy( streamProps[i].name , "");
+
+            zfree( streamProps[i].url );
+            zfree( streamProps[i].name );
+
+            TRACE_1( STREAMMANAGER , "Stream: %s has been removed." , name );
         }
         else
         {
-            TRACE_ERROR( STREAMMANAGER , "Stream: %s has been found !" , name );
+            TRACE_ERROR( STREAMMANAGER , "Stream: %s has not been found !" , name );
 
             status = PC_ERROR;
         }
     }
 
     return status;
+}
+
+int getStreamUrlFromName( const char *name )
+{
+    TRACE_2( STREAMMANAGER , "getStreamUrlFromName( %s )." , name );
+
+    int i;
+
+    for( i = 0 ; i < MAX_STREAM ; i++ )
+    {
+        if( streamProps[i].name == NULL )
+        {
+            continue;
+        }
+        else if( strcmp( streamProps[i].name , name ) == 0 )
+        {
+            TRACE_1( STREAMMANAGER , "Getting stream : %s." , name );
+
+            return i;
+        }
+        else
+        {
+            TRACE_ERROR( STREAMMANAGER , "Cannot get stream : %s." , name );
+        }
+    }
+
+    return PC_ERROR;
 }
