@@ -12,6 +12,20 @@
 #include "utils/zmemory.h"
 #include "spotify/playQueue.h"
 
+#define MAX_PLAYQUEUE   10
+
+typedef struct playqueueStream
+{
+    char *name;
+    playqueue_fifo_t playqueue;
+
+}playqueueStream_t;
+
+typedef struct playqueueContainer
+{
+    playqueueStream_t playqueues[MAX_PLAYQUEUE];
+
+}playqueueContainer_t;
 
 void initPlayqueue( void );
 int addTracksPlayqueue( sp_track *track );
