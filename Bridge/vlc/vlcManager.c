@@ -32,7 +32,7 @@ int streamFile( const char *filename )
     int ret;
     char output[255];
 
-    memset( output , 0 , 50 );
+    memset( output , 0 , 255 );
 
 //    sprintf( output , "#http{dst=:1337/test3.wav}");
     sprintf( output , "#transcode{vcodec=drac,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:http{dst=:1337/test.mp3}");
@@ -111,9 +111,9 @@ int loadStreamFromUrl( char *url , char *name )
 
     int status = PC_SUCCESS;
     int ret;
-    char output[50];
+    char output[255];
 
-    memset( output , 0 , 50 );
+    memset( output , 0 , 255 );
 
     sprintf( output , "#transcode{vcodec=drac,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:http{dst=:1337/%s.mp3}" , name );
 

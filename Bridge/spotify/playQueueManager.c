@@ -86,7 +86,8 @@ char *dumpPlayQueue( void )
     pthread_mutex_lock( &mutexSession );
 
     TAILQ_FOREACH( pldata , &plfifo->q , link )
-            sprintf( buff + strlen( buff ) , "\t%s\n" , sp_track_name( pldata->track ) );
+            if( pldata != NULL )
+                sprintf( buff + strlen( buff ) , "\t%s\n" , sp_track_name( pldata->track ) );
 
     pthread_mutex_unlock( &mutexSession );
 
