@@ -43,7 +43,8 @@ int createTrackFromUri( char *uri , sp_track *track )
     sp_link *link;
     sp_error error;
 
-    createFile();
+    if( playing == FALSE && hasNextTrack() == FALSE )
+        createFile();
 
     TRACE_1( PLAYERMANAGER , "Creating URI : %s" , uri );
 
