@@ -10,6 +10,7 @@
 #include "utils/types.h"
 #include "utils/trace.h"
 #include "spotify/playlistManager.h"
+#include "network/serverManager.h"
 
 /* ############# CALLBACK functions ############# */
 void logged_in( sp_session *session , sp_error error);

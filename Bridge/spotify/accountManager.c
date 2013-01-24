@@ -84,6 +84,8 @@ void logged_in( sp_session *session , sp_error error )
 
     TRACE_2( ACCOUNTMANAGER , "logged_in()");
 
+    char response[] = "LOGIN: OK";
+
     if( error != SP_ERROR_OK )
     {
         TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s." ,  sp_error_message( error ) );
@@ -100,6 +102,8 @@ void logged_in( sp_session *session , sp_error error )
         logged = TRUE;
 
         TRACE_INFO( ACCOUNTMANAGER , "Hello !");
+
+        sendVoid( response , strlen( response ) );
     }
 
 }
