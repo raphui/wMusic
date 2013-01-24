@@ -1,8 +1,10 @@
 #include "fileManager.h"
 
-int createFile( void )
+static char filename[255];
+
+int createFile( char *name )
 {
-    TRACE_2( FILEMANAGER , "createFile()");
+    TRACE_2( FILEMANAGER , "createFile( %s )." , name );
 
     FILE *f = NULL;
     FILE *h = NULL;
@@ -12,7 +14,13 @@ int createFile( void )
 
     int status = PC_SUCCESS;
 
-    f = fopen( STREAM_FILE , "wb+");
+    memset( filename , 0 , 255 );
+
+    sprintf( filename , "%s%s.wav" , STREAM_FOLDER , name );
+
+    TRACE_INFO( FILEMANAGER , "Creating stream filename : %s." , filename );
+
+    f = fopen( filename , "wb+");
     h = fopen( REF_FILE , "rb");
 
     if( f == NULL || h == NULL )
@@ -89,7 +97,7 @@ int writeFile( void *data )
 
     FILE *f = NULL;
 
-    f = fopen( STREAM_FILE , "ab");
+    f = fopen( filename , "ab");
 
     if( f == NULL )
     {
@@ -117,7 +125,7 @@ int writeFile( void *data )
             {
                 TRACE_1( FILEMANAGER , "Start to stream file.");
 
-                streamFile( STREAM_FILE );
+                streamFile( filename );
             }
         }
     }

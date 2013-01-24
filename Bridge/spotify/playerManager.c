@@ -36,7 +36,7 @@ static int loadTrack( sp_session *session , sp_track *track )
     return status;
 }
 
-int createTrackFromUri( char *uri , sp_track *track )
+int createTrackFromUri( char *uri , char *name )
 {
     TRACE_2( PLAYERMANAGER , "createTrackFromUri( %s , __track__ )" , uri );
 
@@ -44,7 +44,7 @@ int createTrackFromUri( char *uri , sp_track *track )
     sp_error error;
 
     if( playing == FALSE && hasNextTrack() == FALSE )
-        createFile();
+        createFile( name );
 
     TRACE_1( PLAYERMANAGER , "Creating URI : %s" , uri );
 
@@ -93,7 +93,7 @@ int createTrackFromUri( char *uri , sp_track *track )
     return PC_SUCCESS;
 }
 
-int loadMusic( sp_session *session, char *uri )
+int loadMusic( sp_session *session, char *uri , char *name )
 {
     TRACE_2( PLAYERMANAGER , "loadMusic().");
 
@@ -111,7 +111,7 @@ int loadMusic( sp_session *session, char *uri )
 
     currentTrack = track;
 
-    if( createTrackFromUri( uri , currentTrack ) == PC_ERROR )
+    if( createTrackFromUri( uri , name ) == PC_ERROR )
         status = PC_ERROR;
 
     if( currentTrack != NULL)
@@ -133,7 +133,7 @@ int loadMusic( sp_session *session, char *uri )
     return status;
 }
 
-int playMusic( sp_session *session , char *uri )
+int playMusic( sp_session *session , char *uri , char *name )
 {
     TRACE_2( PLAYERMANAGER , "playMusic().");
 
@@ -178,7 +178,7 @@ int playMusic( sp_session *session , char *uri )
            TRACE_1( PLAYERMANAGER , "Success to play track.");
 
            if( firstTime++ != 0 )
-               playStream("rtpStreaming");
+               playStream( name );
 
            playing = TRUE;
         }
@@ -190,7 +190,7 @@ int playMusic( sp_session *session , char *uri )
     return status;
 }
 
-int pauseMusic( sp_session *session , char *uri )
+int pauseMusic(sp_session *session , char *uri , char *name )
 {
     TRACE_2( PLAYERMANAGER , "pauseMusic().");
 
@@ -202,7 +202,7 @@ int pauseMusic( sp_session *session , char *uri )
 
     if( pausing == FALSE )
     {
-        pauseStream("rtpStreaming");
+        pauseStream( name );
 
         error = sp_session_player_play( session , 0 );
 
@@ -222,7 +222,7 @@ int pauseMusic( sp_session *session , char *uri )
     }
     else if( pausing == TRUE )
     {
-        playStream("rtpStreaming");
+        playStream( name );
 
         error = sp_session_player_play( session , 1 );
 
@@ -259,7 +259,7 @@ int nextMusic( sp_session *session , char *uri )
     {
         TRACE_1( PLAYERMANAGER , "Playing next track.");
 
-        playMusic( g_session , NULL );
+//        playMusic( g_session , NULL );
     }
     else
     {
@@ -299,7 +299,7 @@ void end_of_track( sp_session *session )
     {
         TRACE_1( PLAYERMANAGER , "Load next music !");
 
-        playMusic( session , "" );
+//        playMusic( session , "" );
     }
     else
     {

@@ -31,7 +31,7 @@ int loadStreamer( char *url , char *name )
     }
     else
     {
-        return loadMusic( g_session , url );
+        return loadMusic( g_session , url , name );
     }
 
 }
@@ -62,7 +62,7 @@ int playStreamer( const char *name )
         {
 
             if( pausing == FALSE )
-                status = playMusic( g_session , streamProps[index].url );
+                status = playMusic( g_session , streamProps[index].url , name );
             else if( pausing == TRUE )
                 status = pauseStreamer( name );
 
@@ -94,7 +94,7 @@ int pauseStreamer( const char *name )
         }
         else
         {
-            status = pauseMusic( g_session , streamProps[index].url );
+            status = pauseMusic( g_session , streamProps[index].url , name );
         }
     }
 

@@ -11,16 +11,16 @@
 
 #if CROSS_COMPILE
 #define REF_FILE    "/home/pi/music.wav"
-#define STREAM_FILE "/home/pi/test3.wav"
+#define STREAM_FOLDER "/home/pi/"
 #else
 #define REF_FILE    "/home/raphio/music.wav"
-#define STREAM_FILE "/home/raphio/test3.wav"
+#define STREAM_FOLDER "/home/raphio/"
 #endif
 
 #define DATA_SIZE   8192
 
 
-int createFile( void );
+int createFile( char *name );
 int writeFile( void *data );
 
 #endif // FILEMANAGER_H

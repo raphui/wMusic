@@ -24,18 +24,28 @@ static int initVlc( void )
     return status;
 }
 
-int streamFile( const char *filename )
+int streamFile( char *filename )
 {
     TRACE_2( VLCMANAGER , "streamFile( %s )" , filename );
 
     int status = PC_SUCCESS;
     int ret;
     char output[255];
+    char *tmp;
+    char name[255];
 
     memset( output , 0 , 255 );
+    memset( name , 0 , 255 );
+
+    tmp = strrchr( filename , '/');
+
+    while( *( ( tmp++ + 1 ) ) != '.' )
+        memcpy( name + strlen( name ) , tmp , 1 );
 
 //    sprintf( output , "#http{dst=:1337/test3.wav}");
-    sprintf( output , "#transcode{vcodec=drac,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:http{dst=:1337/test.mp3}");
+    sprintf( output , "#transcode{vcodec=drac,vb=800,scale=1,acodec=mpga,ab=128,channels=2,samplerate=44100}:http{dst=:1337/%s.mp3}" , name );
+
+    TRACE_INFO( VLCMANAGER , "Url stream : http:1337/%s.mp3" , name );
 
     if( vlcInstance == NULL )
         ret = initVlc();
@@ -53,7 +63,7 @@ int streamFile( const char *filename )
         if( vlcMedia != NULL )
         {
 
-            ret = libvlc_vlm_add_broadcast( vlcInstance , "rtpStreaming" , filename , output , 0 , NULL , 1 , 0 );
+            ret = libvlc_vlm_add_broadcast( vlcInstance , name , filename , output , 0 , NULL , 1 , 0 );
 
             if( ret < 0 )
             {
@@ -65,7 +75,7 @@ int streamFile( const char *filename )
             {
                 TRACE_3( VLCMANAGER , "Broadcast stream added.");
 
-                ret = libvlc_vlm_play_media( vlcInstance , "rtpStreaming");
+                ret = libvlc_vlm_play_media( vlcInstance , name );
 
                 if( ret < 0 )
                 {

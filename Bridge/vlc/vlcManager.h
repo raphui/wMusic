@@ -10,7 +10,7 @@
 #include "utils/zmemory.h"
 #include "network/streamManager.h"
 
-int streamFile( const char *filename );
+int streamFile( char *filename );
 int destroyVlc( void );
 int loadStreamFromUrl( char *url , char *name  );
 int playStream( const char *name );
