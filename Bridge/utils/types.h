@@ -36,6 +36,12 @@
 
 pthread_mutex_t mutexSession;
 
+enum
+{
+    SUCCESS =   0x0,
+    ERROR   =   0x80
+};
+
 enum accountManagerState
 {
     INVALID_LOGIN_INFO,

@@ -11,41 +11,6 @@ static struct sockaddr_in addrMulticast;
 static pthread_t serverCommanderThread;
 static pthread_t serverCliThread;
 
-int initMulticastSocket( void )
-{
-    TRACE_2( SERVERMANAGER , "initMulticastSocket()");
-
-    char multicastAddr[14];
-
-    socketMulticast = socket( AF_INET , SOCK_DGRAM , 0 );
-
-    if( socketMulticast < 0 )
-    {
-        TRACE_ERROR( SERVERMANAGER , "Cannot create the multicast socket.");
-
-        return PC_ERROR;
-    }
-
-    getNextMulticastAddr( multicastAddr );
-
-    if( multicastAddr == NULL )
-    {
-        TRACE_ERROR( SERVERMANAGER , "Cannot retrieve a multicast address");
-
-        return PC_ERROR;
-    }
-    else
-    {
-        TRACE_3( SERVERMANAGER , "Multicast address got: %s" , multicastAddr );
-
-        addrMulticast.sin_family = AF_INET;
-        addrMulticast.sin_addr.s_addr = inet_addr( multicastAddr );
-        addrMulticast.sin_port = htons( MULTICAST_PORT );
-    }
-
-    return PC_SUCCESS;
-}
-
 void launchServer( void )
 {
     TRACE_2( SERVERMANAGER , "lanchServer()");
@@ -61,7 +26,6 @@ void launchServer( void )
     /* We have to increment the thread count by 2, because we don't use createThread() function. */
     incrementThreadCount( 2 );
 
-    initMulticastSocket();
 }
 
 

@@ -20,7 +20,6 @@ SOURCES += main.c \
     spotify/playQueueManager.c \
     system/cli.c \
     utils/zmemory.c \
-    network/multicastAddrManager.c \
     network/streamManager.c
 
 
@@ -45,7 +44,6 @@ HEADERS += \
     spotify/playQueueManager.h \
     system/cli.h \
     utils/zmemory.h \
-    network/multicastAddrManager.h \
     network/streamManager.h
 
 target.path = /home/pi/Development

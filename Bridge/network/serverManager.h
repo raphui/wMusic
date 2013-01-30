@@ -17,7 +17,6 @@
 #include "utils/threadManager.h"
 #include "spotify/spotifyManager.h"
 #include "network/networkCommand.h"
-#include "network/multicastAddrManager.h"
 #include "system/cli.h"
 #include "vlc/vlcManager.h"
 
@@ -26,8 +25,6 @@
 #define PORT_STREAMER   1337
 #define PORT_COMMANDER  1338
 #define PORT_CLI        1339
-#define MULTICAST_ADDR  "224.2.2.2"
-#define MULTICAST_PORT  1337
 
 typedef struct argumentReceivingThread
 {
@@ -36,7 +33,6 @@ typedef struct argumentReceivingThread
 
 }argumentReceivingThread_t;
 
-int initMulticastSocket( void );
 void launchServer( void );
 void createServer( void *port );
 int closeServer( void );

@@ -10,7 +10,6 @@
 #include "utils/zmemory.h"
 #include "vlc/vlcManager.h"
 #include "network/serverManager.h"
-#include "network/multicastAddrManager.h"
 
 #define MAX_STREAM  10
 
@@ -27,7 +26,6 @@ int initStreamer( void );
 int loadStreamer( char *url , char *name );
 int playStreamer( const char *name );
 int pauseStreamer( const char *name );
-int getMulticastAddr( const char *url );
 int registerNewStream( char *url , char *name );
 int unregisterStream( char *name );
 int getStreamUrlFromName( const char *name );
