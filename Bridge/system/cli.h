@@ -12,7 +12,7 @@
 #include "network/serverManager.h"
 #include "spotify/playQueueManager.h"
 
-#define CLI_COUNT_COMMAND       5
+#define CLI_COUNT_COMMAND       6
 #define SET_CLI_COUNT_COMMAND   1
 
 typedef struct cliCommand

@@ -7,6 +7,7 @@ static cliCommand_t cliCmd[] =
     {"memory_count"     ,   &getMemoryCount },
     {"thread_count"     ,   &getThreadCount },
     {"dump_trace_level" ,   &dumpTrace      },
+    {"get_level"        ,   &levelInfo      },
     {"dump_playqueue"   ,   &dumpPlayQueue  },
     {"help"             ,   &help           }
 };

@@ -52,6 +52,7 @@ extern void Traces_print( const char *file , const int line , const char *functi
 extern int Traces_enable( unsigned int module , unsigned int level );
 extern char *setTraceLevel( unsigned int module , unsigned int level );
 extern char *dumpTrace( void );
+extern char *levelInfo( void );
 
 enum {
 

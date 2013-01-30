@@ -127,6 +127,14 @@ char *setTraceLevel( unsigned int module , unsigned int level )
         /* Do nothing */
         sprintf( buff , "The module have already this level of trace.\n");
     }
+    else if( ( level != TRACE_LEVEL_ALL )
+             && ( level != TRACE_LEVEL_MID )
+             && ( level != TRACE_LEVEL_DEFAULT )
+             && ( level != TRACE_LEVEL_FUNC ) )
+    {
+        /* Do nothing */
+        sprintf( buff , "This level of trace doesn't exist.\n");
+    }
     else
     {
         trace_modules[module].level = level;
@@ -145,6 +153,10 @@ static char *traceLevelToChar( unsigned int level )
             return "DEFAULT";
         case TRACE_LEVEL_ALL:
             return "ALL";
+        case TRACE_LEVEL_MID:
+            return "MID";
+        case TRACE_LEVEL_FUNC:
+            return "FUNC";
     }
 
     return "UNKNOWN";
@@ -163,6 +175,23 @@ char *dumpTrace( void )
     {
         sprintf( buff + strlen( buff ) , "%d:%s\t\t\t%d:%s\n" , i , trace_modules[i].module , trace_modules[i].level , traceLevelToChar( trace_modules[i].level ) );
     }
+
+    return buff;
+}
+
+char *levelInfo( void )
+{
+    char *buff = ( char * )zmalloc( 1024 * sizeof( char ) );
+
+    int i = 0;
+
+    /* memset to clean the buff, because not all the buff will be fill.*/
+    memset( buff , 0 , 1024 );
+
+    sprintf( buff , "%d:%s\n%d:%s\n%d:%s\n%d:%s\n"  , TRACE_LEVEL_ALL , traceLevelToChar( TRACE_LEVEL_ALL )
+                                                    , TRACE_LEVEL_MID , traceLevelToChar( TRACE_LEVEL_MID )
+                                                    , TRACE_LEVEL_FUNC , traceLevelToChar( TRACE_LEVEL_FUNC )
+                                                    , TRACE_LEVEL_DEFAULT , traceLevelToChar( TRACE_LEVEL_DEFAULT ) );
 
     return buff;
 }
