@@ -11,6 +11,8 @@ loadUrl = 'STREAMER#LOAD#http://dl.soundowl.com/2wbk.mp3%stream1'
 unload = 'STREAMER#UNLOAD#stream1'
 play = 'STREAMER#PLAY#stream1'
 pause = 'STREAMER#PAUSE#stream1'
+setDispatcherIp = 'CONFIG#DISPATCHER#127.0.0.1'
+loadUrlConnecteur = 'STREAMER#PLAY#test.mp3'
 
 s = socket.socket( socket.AF_INET , socket.SOCK_STREAM )
 
@@ -34,6 +36,12 @@ elif sys.argv[1] == 'play':
 elif sys.argv[1] == 'pause':
 	s.sendall( ( pause ) )
 	print 'Sended' , pause
+elif sys.argv[1] == 'setip':
+	s.sendall( ( setDispatcherIp ) )
+	print 'Sended' , setDispatcherIp
+elif sys.argv[1] == 'loadconnecteur':
+	s.sendall( ( loadUrlConnecteur ) )
+	print 'Sended' , loadUrlConnecteur
 else:
 	print "Command not supported"
 
