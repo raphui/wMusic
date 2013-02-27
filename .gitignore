@@ -8,3 +8,4 @@ Bridge/*.pro.user
 # Build directory #
 ###################
 wMusic-build-*
+wMusic_Connector-*
