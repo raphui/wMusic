@@ -84,11 +84,13 @@ void logged_in( sp_session *session , sp_error error )
 
     TRACE_2( ACCOUNTMANAGER , "logged_in()");
 
-    char response[] = "LOGIN: OK";
+    char response[25] = { 0 };
 
     if( error != SP_ERROR_OK )
     {
         TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s." ,  sp_error_message( error ) );
+
+        sprintf( response , "LOGIN: NOK");
     }
     else
     {
@@ -96,15 +98,18 @@ void logged_in( sp_session *session , sp_error error )
 
         if( initPlaylistManager( currentSession ) == PC_ERROR )
         {
-            TRACE_ERROR( ACCOUNTMANAGER , "Fail to init the playlist manager !");
+            TRACE_ERROR( ACCOUNTMANAGER , "Fail levelInfoto init the playlist manager !");
         }
 
         logged = TRUE;
 
         TRACE_INFO( ACCOUNTMANAGER , "Hello !");
 
-        sendVoid( response , strlen( response ) );
+        sprintf( response , "LOGIN: OK");
+
     }
+
+    sendVoid( response , strlen( response ) );
 
 }
 
