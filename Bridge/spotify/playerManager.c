@@ -2,6 +2,7 @@
 
 static sp_track *currentTrack;
 static audio_fifo_t g_audiofifo;
+static char currentStreamName[255] = { 0 };
 
 
 static void initPlayerEnv( void )
@@ -182,6 +183,20 @@ int playMusic( sp_session *session , char *uri , char *name )
 
            playing = TRUE;
         }
+
+        if( currentStreamName[0] == 0 )
+        {
+            snprintf( currentStreamName , strlen( name ) , "%s" , name );
+        }
+        else if( strcmp( currentStreamName , name ) != 0 )
+        {
+            memset( currentStreamName , 0 , 255 );
+            snprintf( currentStreamName , strlen( name ) , "%s" , name );
+        }
+        else if( !strcmp( currentStreamName , name ) )
+        {
+            //Do nothing
+        }
     }
 
     pthread_mutex_unlock( &mutexSession );
@@ -285,7 +300,7 @@ void end_of_track( sp_session *session )
 
     TRACE_3( PLAYERMANAGER , "End of track...");
 
-    audio_fifo_flush( &g_audiofifo );
+//    audio_fifo_flush( &g_audiofifo );
 
     pthread_mutex_lock( &mutexSession );
 
@@ -299,11 +314,13 @@ void end_of_track( sp_session *session )
     {
         TRACE_1( PLAYERMANAGER , "Load next music !");
 
-//        playMusic( session , "" );
+        playMusic( session , "" , currentStreamName );
     }
     else
     {
         TRACE_WARNING( PLAYERMANAGER , "No more music in the mainplaylist");
+
+        audio_fifo_flush( &g_audiofifo );
 
         pthread_mutex_lock( &mutexSession );
 

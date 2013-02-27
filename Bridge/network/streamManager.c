@@ -120,11 +120,14 @@ int registerNewStream( char *url , char *name )
         {
             TRACE_3( STREAMMANAGER , "Settings the properties.");
 
-            streamProps[i].url = ( char * )zmalloc( sizeUrl * sizeof( char ) );
-            streamProps[i].name = ( char * )zmalloc( sizeName * sizeof( char ) );
+//            streamProps[i].url = ( char * )zmalloc( sizeUrl * sizeof( char ) );
+//            streamProps[i].name = ( char * )zmalloc( sizeName * sizeof( char ) );
 
-            memset( streamProps[i].url , 0 , sizeUrl );
-            memset( streamProps[i].name , 0 , sizeName );
+//            memset( streamProps[i].url , 0 , sizeUrl );
+//            memset( streamProps[i].name , 0 , sizeName );
+
+            streamProps[i].url = ( char * )calloc( sizeUrl , sizeof( char ) );
+            streamProps[i].name = ( char * )calloc( sizeName , sizeof( char ) );
 
             sprintf( streamProps[i].url , "%s" , url );
             sprintf( streamProps[i].name , "%s" , name );
