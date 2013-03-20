@@ -128,8 +128,10 @@ int registerNewStream( char *url , char *name )
     int sizeUrl;
     int sizeName;
 
-    sizeUrl = strlen( url );
-    sizeName = strlen( name );
+    sizeUrl = strlen( url ) + 1;
+    sizeName = strlen( name ) + 1;
+
+    TRACE_3( STREAMMANAGER , "Size name: %d , size url: %d."  , sizeName , sizeUrl );
 
     for( i = 0 ; i < MAX_STREAM ; i++ )
     {
@@ -143,11 +145,11 @@ int registerNewStream( char *url , char *name )
 //            memset( streamProps[i].url , 0 , sizeUrl );
 //            memset( streamProps[i].name , 0 , sizeName );
 
-            streamProps[i].url = ( char * )calloc( sizeUrl , sizeof( char ) );
-            streamProps[i].name = ( char * )calloc( sizeName , sizeof( char ) );
+            streamProps[i].url = ( char * )zmalloc( sizeUrl * sizeof( char ) );
+            streamProps[i].name = ( char * )zmalloc( sizeName * sizeof( char ) );
 
-            sprintf( streamProps[i].url , "%s" , url );
-            sprintf( streamProps[i].name , "%s" , name );
+            strncpy( streamProps[i].name , name , sizeName );
+            strncpy( streamProps[i].url , url , sizeUrl );
 
             status = PC_SUCCESS;
 

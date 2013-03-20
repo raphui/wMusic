@@ -38,11 +38,11 @@ int login( const char *username , const char *password )
 
     logged = FALSE;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
 
     error = sp_session_login( currentSession , username , password , REMEMBER_LOGIN , NULL );
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
 
     if( error != SP_ERROR_OK )
     {
@@ -57,11 +57,11 @@ int login( const char *username , const char *password )
 
     while( logged != TRUE )
     {
-        pthread_mutex_lock( &mutexSession );
+        LOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
 
         sp_session_process_events( currentSession , &next_timeout );
 
-        pthread_mutex_unlock( &mutexSession );
+        UNLOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
     }
 
     return CONNECTION_OK;
@@ -76,7 +76,7 @@ int logout( sp_session *session )
 
     sp_error error;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
 
     error = sp_session_logout( session );
 
@@ -91,7 +91,7 @@ int logout( sp_session *session )
         TRACE_1( ACCOUNTMANAGER , "Success to logout.");
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
 
     return status;
 }

@@ -70,7 +70,7 @@ int getPlaylistContainer( sp_session *session )
 
     int status = PC_SUCCESS;
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     plc = sp_session_playlistcontainer( session );
 
@@ -87,7 +87,7 @@ int getPlaylistContainer( sp_session *session )
         currentSession = session;
     }
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return status;
 }
@@ -100,7 +100,7 @@ int createPlaylist( const char *name )
 
     sp_playlist *pl = NULL;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     pl = sp_playlistcontainer_add_new_playlist( plc , name );
 
@@ -115,7 +115,7 @@ int createPlaylist( const char *name )
         TRACE_1( PLAYLISTMANAGER , "Success to create the new playlist : %s" , name );
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     reloadPlaylistContainer();
 
@@ -143,11 +143,11 @@ int removePlaylist( const char *name )
     {
         TRACE_3( PLAYLISTMANAGER , "Playlist have been got.");
 
-        pthread_mutex_lock( &mutexSession );
+        LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
         error = sp_playlistcontainer_remove_playlist( plc , index );
 
-        pthread_mutex_unlock( &mutexSession );
+        UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
         if( error != SP_ERROR_OK )
         {
@@ -185,11 +185,11 @@ int renamePlaylist( const char *name , const char *newName )
     }
     else
     {
-        pthread_mutex_lock( &mutexSession );
+        LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
         error = sp_playlist_rename( pl , newName );
 
-        pthread_mutex_unlock( &mutexSession );
+        UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
         if( error != SP_ERROR_OK )
         {
@@ -214,7 +214,7 @@ sp_playlist *getPlaylist( int index )
 
     sp_playlist *pl;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     if( ( 0 < index ) && ( index > sp_playlistcontainer_num_playlists( plc ) ) )
     {
@@ -229,7 +229,7 @@ sp_playlist *getPlaylist( int index )
         TRACE_1( PLAYLISTMANAGER , "Playlist at index : %d , has been retrieved." , index );
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return pl;
 }
@@ -269,7 +269,7 @@ sp_playlist *getPlaylistByName( const char *name )
 
     sp_playlist *pl = NULL;
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
     {
@@ -290,7 +290,7 @@ sp_playlist *getPlaylistByName( const char *name )
 
     pl = NULL;
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return pl;
 }
@@ -307,11 +307,11 @@ int addTrackUriPlaylistByName( char *uri , const char *name )
     sp_link *link = NULL;
     sp_track *track = NULL;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     link = sp_link_create_from_string( uri );
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     if( link == NULL )
     {
@@ -321,11 +321,11 @@ int addTrackUriPlaylistByName( char *uri , const char *name )
     }
     else
     {
-        pthread_mutex_lock( &mutexSession );
+        LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
         track = sp_link_as_track( link );
 
-        pthread_mutex_unlock( &mutexSession );
+        UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
         if( track == NULL )
         {
@@ -385,7 +385,7 @@ int addTrackPlaylistByName( sp_track *track , const char *name , int position )
 
     pl = getPlaylistByName( name );
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     if( pl == NULL )
     {
@@ -409,7 +409,7 @@ int addTrackPlaylistByName( sp_track *track , const char *name , int position )
         }
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return status;
 }
@@ -425,7 +425,7 @@ int addTrackPlaylist( sp_track *track , int index , int position )
 
     pl = getPlaylist( index );
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     if( pl == NULL )
     {
@@ -449,7 +449,7 @@ int addTrackPlaylist( sp_track *track , int index , int position )
         }
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return status;
 }
@@ -461,7 +461,7 @@ sp_playlist *getStarredList( sp_session *session )
 
     sp_playlist *pl= NULL;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     pl = sp_session_starred_create( session );
 
@@ -474,7 +474,7 @@ sp_playlist *getStarredList( sp_session *session )
         TRACE_1( PLAYLISTMANAGER , "Starred playlist have been retrieved.");
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return pl;
 }
@@ -486,7 +486,7 @@ int setStarredTrack( sp_session *session , sp_track *track , int starred )
     int status = PC_SUCCESS;
     sp_error error;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     error = sp_track_set_starred( session , &track , 1 , starred );
 
@@ -501,7 +501,7 @@ int setStarredTrack( sp_session *session , sp_track *track , int starred )
         TRACE_1( PLAYLISTMANAGER , "The starred status of track have been changed.");
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     return status;
 }

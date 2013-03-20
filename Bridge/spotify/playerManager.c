@@ -123,7 +123,7 @@ int loadMusic( sp_session *session, char *uri , char *name )
     if( firstTime++ == 0 )
         initPlayerEnv();
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     sp_track *track = NULL;
 
@@ -146,7 +146,7 @@ int loadMusic( sp_session *session, char *uri , char *name )
         status = PC_ERROR;
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     return status;
 }
@@ -161,7 +161,9 @@ int playMusic( sp_session *session , char *uri , char *name )
 
     sp_error error;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
+
+//    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     TRACE_3( PLAYERMANAGER , "Test if a music is playing or not");
 
@@ -216,7 +218,7 @@ int playMusic( sp_session *session , char *uri , char *name )
         }
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
 
     return status;
@@ -228,7 +230,7 @@ int pauseMusic(sp_session *session , char *uri , char *name )
 
     int status = PC_SUCCESS;
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     sp_error error;
 
@@ -272,7 +274,7 @@ int pauseMusic(sp_session *session , char *uri , char *name )
         }
     }
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     return status;
 }
@@ -317,15 +319,13 @@ void end_of_track( sp_session *session )
 
     TRACE_3( PLAYERMANAGER , "End of track...");
 
-//    audio_fifo_flush( &g_audiofifo );
-
-    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     TRACE_3( PLAYERMANAGER , "Removing the track which have been played.");
 
     sp_track_release( currentTrack );
 
-    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     if( hasNextTrack() == TRUE )
     {
@@ -339,12 +339,12 @@ void end_of_track( sp_session *session )
 
         audio_fifo_flush( &g_audiofifo );
 
-        pthread_mutex_lock( &mutexSession );
+        LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
         sp_session_player_play( session , 0 );
         sp_session_player_unload( session );
 
-        pthread_mutex_unlock( &mutexSession );
+        UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
         playing = FALSE;
     }
@@ -358,8 +358,6 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     TRACE_2( PLAYERMANAGER , "music_delivery().");
 
     TRACE_3( PLAYERMANAGER , "Playing music...%d" , num_frames );
-
-    static int firstTime = 0;
 
     audio_fifo_t *af = &g_audiofifo;
     audio_fifo_data_t *afd;

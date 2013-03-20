@@ -7,6 +7,11 @@ socket.connect( port , host , function() {
 	console.log("Connected to: " + host + ":" + port );
 });
 
+exports.login = function( req , res ) {
+	res.send({action:'login' , status:'OK'});
+	socket.write("ACCOUNT#LOGIN#" + req.params.username + "%" + req.params.password );
+};
+
 exports.load = function( req , res ) {
 	res.send({action:'load' , status:'OK'});
 	socket.write("STREAMER#LOAD#" + req.params.url + "%" + req.params.name );

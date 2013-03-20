@@ -25,6 +25,8 @@ SOURCES += main.c \
 
 unix:!macx:!symbian: LIBS += -lspotify -lasound -lvlc
 
+
+
 HEADERS += \
     audio/audio.h \
     file/fileManager.h \
@@ -46,7 +48,6 @@ HEADERS += \
     utils/zmemory.h \
     network/streamManager.h
 
-target.path = /home/pi/Development
-INSTALLS += target
 
-OTHER_FILES +=
+INCLUDEPATH += $$PWD/
+DEPENDPATH += $$PWD/

@@ -19,6 +19,7 @@
 #define TYPES_H
 
 #include <pthread.h>
+#include "utils/trace.h"
 
 #define PC_SUCCESS          0
 #define PC_ERROR            -1
@@ -50,6 +51,14 @@
 #define SET_ENV             0
 #define ESSID               "wMusic"
 #define KEY                 "azert"
+
+
+/**** Mutex tracking ****/
+#define LOCK_MUTEX( MODULE , MUTEX )    TRACE_INFO( MODULE , "Lock Mutex !") \
+                                        pthread_mutex_lock( MUTEX );
+
+#define UNLOCK_MUTEX( MODULE , MUTEX )    TRACE_INFO( MODULE , "Unlock Mutex !") \
+                                        pthread_mutex_unlock( MUTEX );
 
 pthread_mutex_t mutexSession;
 

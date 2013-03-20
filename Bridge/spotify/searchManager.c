@@ -23,11 +23,11 @@ int search( sp_session *session , char *query )
 {
     TRACE_2( SEARCHMANAGER , "search( __session__ , %s )." , query );
 
-    pthread_mutex_lock( &mutexSession );
+    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     sp_search_create( session , query , 0 , MAX_SEARCH_COUNT , 0 , MAX_SEARCH_COUNT , 0 , MAX_SEARCH_COUNT , 0 , MAX_SEARCH_COUNT , SP_SEARCH_STANDARD , &searchComplete , NULL );
 
-    pthread_mutex_unlock( &mutexSession );
+    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     return PC_SUCCESS;
 }
@@ -48,7 +48,7 @@ static void searchComplete( sp_search *search , void *userdata )
 
     sp_track *currentTrack;
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     if( sp_search_error( search ) == SP_ERROR_OK )
     {
@@ -94,14 +94,14 @@ static void searchComplete( sp_search *search , void *userdata )
 
     sp_search_release( search );
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 }
 
 const char *printAlbum( sp_album *album )
 {
     TRACE_2( SEARCHMANAGER , "printAlbum()");
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     const char *albumName;
 
@@ -109,7 +109,7 @@ const char *printAlbum( sp_album *album )
 
     TRACE_3( SEARCHMANAGER , "Album:\t\t %s" , albumName );
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     return albumName;
 }
@@ -118,7 +118,7 @@ const char *printArtist( sp_artist *artist )
 {
     TRACE_2( SEARCHMANAGER , "printArtist()");
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     const char *artistName;
 
@@ -126,7 +126,7 @@ const char *printArtist( sp_artist *artist )
 
     TRACE_3( SEARCHMANAGER , "Artist:\t\t %s" , artistName );
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     return artistName;
 }
@@ -135,7 +135,7 @@ const char *printTrack( sp_track *track )
 {
     TRACE_2( SEARCHMANAGER , "printTrack()");
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     const char *trackName;
 
@@ -143,7 +143,7 @@ const char *printTrack( sp_track *track )
 
     TRACE_3( SEARCHMANAGER , "Track:\t\t %s" , trackName );
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     return trackName;
 }
@@ -152,11 +152,11 @@ int trackDuration( sp_track *track )
 {
     TRACE_2( SEARCHMANAGER , "trackDuration()");
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     int duration = sp_track_duration( track );
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     return duration;
 }
@@ -165,11 +165,11 @@ char *trackUri( sp_track *track , char *uri )
 {
     TRACE_2( SEARCHMANAGER , "trackUri()");
 
-//    pthread_mutex_lock( &mutexSession );
+//    LOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     sp_link_as_string( sp_link_create_from_track( track , 0 ) , uri , 255 );
 
-//    pthread_mutex_unlock( &mutexSession );
+//    UNLOCK_MUTEX( SEARCHMANAGER , &mutexSession );
 
     return uri;
 }

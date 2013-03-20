@@ -1,5 +1,5 @@
 TARGET := wMusic-Bridge
-PROJECT_HOME := /home/raphio/Development/SpotifyEverywhere/Bridge
+PROJECT_HOME := /home/raphio/Development/wMusic/Bridge
 INCLUDES_SRC := -I$(PROJECT_HOME)
 INCLUDES_LIBS_HEADERS := -I/usr/local/include/ -I/usr/include/
 GCC := gcc

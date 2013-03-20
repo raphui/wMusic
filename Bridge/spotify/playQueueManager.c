@@ -100,13 +100,21 @@ char *dumpPlayQueue( void )
 
     sprintf( buff , "Tracks in playqueue : \n");
 
-    pthread_mutex_lock( &mutexSession );
+    if( hasNextTrack() == TRUE )
+    {
+        LOCK_MUTEX( PLAYQUEUEMANAGER , &mutexSession );
 
-    TAILQ_FOREACH( pldata , &plfifo->q , link )
-            if( pldata != NULL )
-                sprintf( buff + strlen( buff ) , "\t%s\n" , sp_track_name( pldata->track ) );
+        TAILQ_FOREACH( pldata , &plfifo->q , link )
+                if( pldata != NULL )
+                    sprintf( buff + strlen( buff ) , "\t%s\n" , sp_track_name( pldata->track ) );
 
-    pthread_mutex_unlock( &mutexSession );
+        UNLOCK_MUTEX( PLAYQUEUEMANAGER , &mutexSession );
+    }
+    else
+    {
+        sprintf( buff + strlen( buff ) , "\tThe playqueue is empty.\n");
+    }
+
 
     return buff;
 }
