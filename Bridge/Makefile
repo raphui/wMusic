@@ -1,5 +1,5 @@
-TARGET_NAME := wMusic-Bridge
-PROJECT_HOME := /home/raphio/Development/SpotifyEverywhere/Bridge
+TARGET := wMusic-Bridge
+PROJECT_HOME := /home/raphio/Development/wMusic/Bridge
 INCLUDES_SRC := -I$(PROJECT_HOME)
 INCLUDES_LIBS_HEADERS := -I/usr/local/include/
 INCLUDES_HEADERS := -I/opt/cross/x-tools/arm-unknown-linux-gnueabi/arm-unknown-linux-gnueabi/sysroot/usr/include
@@ -7,8 +7,29 @@ CC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi
 GCC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-gcc
 DEBUGFLAGS_C-Compiler := -g -O0 -fno-omit-frame-pointer -pipe -Wall
 LIBS := -L/home/raphio/Development/SpotifyEverywhere/ARMLibs -lvlc -lspotify -lasound -lpthread-2.13 -lvlccore -ldbus-1
-OBJFILES := $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.c,%.o,$(wildcard src/*.c))
-SRC := 	audio/audio.c \
+
+OBJFILES := main.o \
+	audio/audio.o \
+	audio/alsa-audio.o \
+	file/fileManager.o \
+	network/networkCommand.o \
+	network/serverManager.o \
+	network/streamManager.o \
+	spotify/accountManager.o \
+	spotify/playlistManager.o \
+	spotify/playerManager.o \
+	spotify/searchManager.o \
+	spotify/playQueueManager.o \
+	spotify/spotifyManager.o \
+	system/cli.o \
+	system/environmentManager.o \
+	utils/threadManager.o \
+	utils/trace.o \
+	utils/zmemory.o \
+	vlc/vlcManager.o
+
+SRC := 	main.c \
+	audio/audio.c \
 	audio/alsa-audio.c \
 	file/fileManager.c \
 	network/networkCommand.c \
@@ -28,10 +49,12 @@ SRC := 	audio/audio.c \
 	vlc/vlcManager.c
 
 %.o: %.c
-	$(GCC) -o $(SRC) $(DEBUGFLAGS_C-Compiler) $(INCLUDES_SRC) $(INCLUDES_LIBS_HEADERS) $(INCLUDES_HEADERS) $(LIBS)
+	$(GCC) $(DEBUGFLAGS_C-Compiler) $(INCLUDES_SRC) $(INCLUDES_LIBS_HEADERS) -c -fmessage-length=0 -o $@ $<
 
 all: $(OBJFILES)
-	$(GCC) -o $(TARGET) $(OBJFILES) $(LIBS)
+	$(GCC) $(OBJFILES) -o $(TARGET) $(LIBS)
+	rm -f $(OBJFILES)
+	rm -f *.o
 
 clean:
 	rm -f $(OBJFILES) rm -f $(TARGET)
