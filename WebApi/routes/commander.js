@@ -1,4 +1,16 @@
 var net = require("net");
+var http = require("http");
+
+
+function replaceByValue( field, oldvalue, newvalue ) {
+    for( var k = 0; k < httpOptions.length; ++k ) {
+        if( oldvalue == httpOptions[k][field] ) {
+            httpOptions[k][field] = newvalue ;
+        }
+    }
+    return httpOptions;
+}
+
 var host = '127.0.0.1'
 var port = '1338';
 
@@ -25,4 +37,34 @@ exports.play = function( req , res ) {
 exports.pause = function( req , res ) {
 	res.send({action:'pause' , status:'OK'});
 	socket.write("STREAMER#PAUSE#" + req.params.name );
+};
+
+exports.searchArtist = function( req , res ) {
+
+	var query = '/search/1/artist.json?q=' + req.params.query;
+
+	var httpOptions = {
+
+		host: 'ws.spotify.com',
+		port: '80',
+		path: query,
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+
+	};
+
+	http.get(httpOptions , function( response ) {
+		response.setEncoding('utf8');
+	  	response.on("data" , function( chunk ) {
+	    console.log("BODY: " + chunk );
+	    res.send( chunk );
+	  });
+
+	}).on('error' , function( e ) {	
+	  console.log("Got error: " + e.message );
+	});
+
+
 };

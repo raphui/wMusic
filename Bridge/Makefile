@@ -6,7 +6,7 @@ INCLUDES_HEADERS := -I/opt/cross/x-tools/arm-unknown-linux-gnueabi/arm-unknown-l
 CC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-g++
 GCC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-gcc
 DEBUGFLAGS_C-Compiler := -g -O0 -fno-omit-frame-pointer -pipe -Wall
-LIBS := -L/home/raphio/Development/SpotifyEverywhere/ARMLibs -lvlc -lspotify -lasound -lpthread-2.13 -lvlccore -ldbus-1
+LIBS := -L/home/raphio/Development/wMusic/ARMLibs -lvlc -lspotify -lasound -lpthread-2.13 -lvlccore -ldbus-1
 
 OBJFILES := main.o \
 	audio/audio.o \
