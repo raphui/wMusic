@@ -1,16 +1,6 @@
 var net = require("net");
 var http = require("http");
 
-
-function replaceByValue( field, oldvalue, newvalue ) {
-    for( var k = 0; k < httpOptions.length; ++k ) {
-        if( oldvalue == httpOptions[k][field] ) {
-            httpOptions[k][field] = newvalue ;
-        }
-    }
-    return httpOptions;
-}
-
 var host = '127.0.0.1'
 var port = '1338';
 
