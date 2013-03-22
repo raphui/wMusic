@@ -19,28 +19,30 @@
 
 static spotifytNetworkCommand_t spotifyNetworkCmd[] =
 {
-    {"ACCOUNT#LOGIN"        ,   NULL                        ,   &login          ,   NULL            ,   0   },
-    {"ACCOUNT#LOGOUT"       ,   &logout                     ,   NULL            ,   NULL            ,   1   },
-    {"PLAYQUEUE#LOAD"       ,   NULL                        ,   &loadMusic      ,   NULL            ,   1   },
-    {"PLAYQUEUE#PLAY"       ,   NULL                        ,   &playMusic      ,   NULL            ,   1   },
-    {"PLAYQUEUE#PAUSE"      ,   NULL                        ,   &pauseMusic     ,   NULL            ,   1   },
-    {"PLAYQUEUE#NEXT"       ,   NULL                        ,   &nextMusic      ,   NULL            ,   1   },
-    {"PLAYLIST#ADD"         ,   &createPlaylist             ,   NULL            ,   NULL            ,   0   },
-    {"PLAYLIST#REMOVE"      ,   &removePlaylist             ,   NULL            ,   NULL            ,   0   },
-    {"PLAYLIST#RENAME"      ,   NULL                        ,   &renamePlaylist ,   NULL            ,   0   },
-    {"PLAYLIST#ADDTRACK"    ,   &addTrackUriPlaylistByName  ,   NULL            ,   NULL            ,   0   },
-    {"PLAYLIST#REMOVETRACK" ,   NULL                        ,   NULL            ,   NULL            ,   0   },  /* Not implemented !*/
-    {"SEARCH#BASIC"         ,   NULL                        ,   &search         ,   NULL            ,   1   },
-    {"SEARCH#ARTIST"        ,   NULL                        ,   &search         ,   "artist:"       ,   1   },
-    {"SEARCH#ALBUM"         ,   NULL                        ,   &search         ,   "album:"        ,   1   },
-    {"SEARCH#TRACK"         ,   NULL                        ,   &search         ,   "track:"        ,   1   },
-    {"SEARCH#WHATSNEW"      ,   NULL                        ,   &search         ,   "tag:new"       ,   1   },
-    {"STREAMER#LOAD"        ,   NULL                        ,   &loadStreamer   ,   NULL            ,   0   },
-    {"STREAMER#PLAY"        ,   &playStreamer               ,   NULL            ,   NULL            ,   0   },
-    {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL            ,   NULL            ,   0   },  /* Not tested !*/
-    {"STREAMER#NEXT"        ,   &nextTrackInStream          ,   NULL            ,   NULL            ,   0   },
-    {"STREAMER#UNLOAD"      ,   &unregisterStream           ,   NULL            ,   NULL            ,   0   },
-    {"STREAMER#GETADDR"     ,   NULL                        ,   NULL            ,   NULL            ,   0   }   /* /!\ Useless ? <Not implemented !>*/
+    {"ACCOUNT#LOGIN"        ,   NULL                        ,   &login                  ,   NULL            ,   0   },
+    {"ACCOUNT#LOGOUT"       ,   &logout                     ,   NULL                    ,   NULL            ,   1   },
+    {"PLAYQUEUE#LOAD"       ,   NULL                        ,   &loadMusic              ,   NULL            ,   1   },
+    {"PLAYQUEUE#PLAY"       ,   NULL                        ,   &playMusic              ,   NULL            ,   1   },
+    {"PLAYQUEUE#PAUSE"      ,   NULL                        ,   &pauseMusic             ,   NULL            ,   1   },
+    {"PLAYQUEUE#NEXT"       ,   NULL                        ,   &nextMusic              ,   NULL            ,   1   },
+    {"PLAYLIST#ADD"         ,   &createPlaylist             ,   NULL                    ,   NULL            ,   0   },
+    {"PLAYLIST#REMOVE"      ,   &removePlaylist             ,   NULL                    ,   NULL            ,   0   },
+    {"PLAYLIST#RENAME"      ,   NULL                        ,   &renamePlaylist         ,   NULL            ,   0   },
+    {"PLAYLIST#ADDTRACK"    ,   &addTrackUriPlaylistByName  ,   NULL                    ,   NULL            ,   0   },
+    {"PLAYLIST#REMOVETRACK" ,   NULL                        ,   NULL                    ,   NULL            ,   0   },  /* Not implemented !*/
+    {"PLAYLIST#LIST"        ,   listPlaylists               ,   NULL                    ,   NULL            ,   0   },
+    {"SEARCH#BASIC"         ,   NULL                        ,   &search                 ,   NULL            ,   1   },
+    {"SEARCH#ARTIST"        ,   NULL                        ,   &search                 ,   "artist:"       ,   1   },
+    {"SEARCH#ALBUM"         ,   NULL                        ,   &search                 ,   "album:"        ,   1   },
+    {"SEARCH#TRACK"         ,   NULL                        ,   &search                 ,   "track:"        ,   1   },
+    {"SEARCH#WHATSNEW"      ,   NULL                        ,   &search                 ,   "tag:new"       ,   1   },
+    {"STREAMER#LOAD"        ,   NULL                        ,   &loadStreamer           ,   NULL            ,   0   },
+    {"STREAMER#PLAY"        ,   &playStreamer               ,   NULL                    ,   NULL            ,   0   },
+    {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL                    ,   NULL            ,   0   },  /* Not tested !*/
+    {"STREAMER#NEXT"        ,   &nextTrackInStream          ,   NULL                    ,   NULL            ,   0   },
+    {"STREAMER#PLLOAD"      ,   NULL                        ,   &loadPlaylistInStream   ,   NULL            ,   0   },
+    {"STREAMER#UNLOAD"      ,   &unregisterStream           ,   NULL                    ,   NULL            ,   0   },
+    {"STREAMER#GETADDR"     ,   NULL                        ,   NULL                    ,   NULL            ,   0   }   /* /!\ Useless ? <Not implemented !>*/
 };
 
 

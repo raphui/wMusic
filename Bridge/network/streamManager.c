@@ -163,6 +163,46 @@ int nextTrackInStream( const char *name )
     return status;
 }
 
+int loadPlaylistInStream( const char *playlist , const char *name )
+{
+    TRACE_2( STREAMMANAGER , "loadPlaylistInStream( %s , %s )." , playlist , name );
+
+    int status = PC_SUCCESS;
+
+    int i = 0;
+
+    sp_playlist *pl = NULL;
+
+    pl = getPlaylist( ( int )( playlist[0] - '0') );
+
+    if( pl == NULL )
+    {
+        TRACE_ERROR( STREAMMANAGER , "Cannot get playlist: %s" , playlist );
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        for( i = 0 ; i < sp_playlist_num_tracks( pl ) ; i++ )
+        {
+            char uri[255] = {0};
+
+//            LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
+
+            sp_link *link = sp_link_create_from_track( sp_playlist_track( pl , i ) , 0  );
+
+            sp_link_as_string( link , uri , 255 );
+
+//            UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
+
+            TRACE_3( STREAMMANAGER , "Get track: %s from playlist: %s" , uri , playlist );
+
+            loadStreamer( uri , name );
+        }
+    }
+
+    return status;
+}
 
 int registerNewStream( char *url , char *name )
 {

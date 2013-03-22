@@ -34,6 +34,21 @@ exports.next = function( req , res ) {
 	socket.write("STREAMER#NEXT#" + req.params.name );
 };
 
+exports.playlistName = function( req , res ) {
+	//res.send({action:'playlistName' , status:'OK'});
+	socket.write("PLAYLIST#LIST");
+
+	socket.on('data' , function( data ) {
+		console.log( data );
+	    res.send( data );
+	});
+};
+
+exports.loadPlaylist = function( req , res ) {
+	res.send({action:'loadPlaylist' , status:'OK'});
+	socket.write("STREAMER#PLLOAD#" + req.params.plid + "%" + req.params.name );
+};
+
 exports.searchArtist = function( req , res ) {
 
 	var query = '/search/1/artist.json?q=' + req.params.query;

@@ -24,6 +24,7 @@
 
 #include "spotify/playQueueManager.h"
 #include "spotify/playerManager.h"
+#include "spotify/playlistManager.h"
 #include "utils/types.h"
 #include "utils/trace.h"
 #include "utils/zmemory.h"
@@ -47,6 +48,7 @@ int loadStreamer( char *url , char *name );
 int playStreamer( const char *name );
 int pauseStreamer( const char *name );
 int nextTrackInStream( const char *name );
+int loadPlaylistInStream( const char *playlist , const char *name );
 int registerNewStream( char *url , char *name );
 int unregisterStream( char *name );
 int getStreamUrlFromName( const char *name );

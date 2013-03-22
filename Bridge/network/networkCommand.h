@@ -31,7 +31,7 @@
 #include "utils/types.h"
 #include "utils/trace.h"
 
-#define NETWORK_COUNT_COMMAND   20
+#define NETWORK_COUNT_COMMAND   24
 #define MAX_QUERY_LENGTH        1024
 
 typedef struct spotifytNetworkCommand

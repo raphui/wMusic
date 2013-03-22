@@ -25,6 +25,7 @@
 
 #include "utils/types.h"
 #include "utils/trace.h"
+#include "network/serverManager.h"
 
 void tracks_added( sp_playlist *pl , sp_track *const *tracks , int num_tracks , int position , void *userdata );
 void tracks_moved( sp_playlist *pl , const int *tracks , int num_tracks , int new_position , void *userdata );
@@ -40,6 +41,7 @@ int renamePlaylist( const char *name , const char *newName );
 sp_playlist *getPlaylist( int index );
 int getPlaylistIndexByName( const char *name );
 sp_playlist *getPlaylistByName( const char *name );
+int listPlaylists( const char *dump );
 int addTrackUriPlaylistByName( char *uri , const char *name );
 int addTrackPlaylistByName( sp_track *track , const char *name , int position );
 int addTrackPlaylist( sp_track *track , int index , int position );

@@ -295,6 +295,34 @@ sp_playlist *getPlaylistByName( const char *name )
     return pl;
 }
 
+int listPlaylists( const char *dump )
+{
+    TRACE_2( PLAYLISTMANAGER , "listPlaylists().");
+
+    char buff[255] = {0};
+    int i = 0;
+
+    sp_playlist *pl = NULL;
+
+    for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
+    {
+        pl = getPlaylist( i );
+
+        if( pl == NULL )
+        {
+            continue;
+        }
+        else
+        {
+            TRACE_3( PLAYLISTMANAGER , "Get playlist: %s" , sp_playlist_name( pl ) );
+
+            sprintf( buff , "%d: %s" , i , sp_playlist_name( pl ) );
+
+            sendVoid( ( void * )buff , 255 );
+        }
+    }
+}
+
 int addTrackUriPlaylistByName( char *uri , const char *name )
 {
     TRACE_2( PLAYLISTMANAGER , "addTrackUriPlaylistByName( %s , %s )." , uri , name );
