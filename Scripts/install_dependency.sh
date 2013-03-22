@@ -4,7 +4,7 @@
 wget https://developer.spotify.com/download/libspotify/libspotify-12.1.103-Linux-armv6-bcm2708hardfp-release.tar.gz
 tar -xvzf libspotify-12.1.103-Linux-armv6-bcm2708hardfp-release.tar.gz
 cd libspotify-12.1.103-Linux-armv6-bcm2708hardfp-release
-make install prefix=/usr/local
+sudo make install prefix=/usr/local
 echo "LibSpotify has been installed"
 
 #Get vlc
