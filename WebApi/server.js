@@ -7,6 +7,7 @@ app.get('/login/:username/:password' , commander.login );
 app.get('/load/:url/:name' , commander.load ); 
 app.get('/play/:name' , commander.play );
 app.get('/pause/:name' , commander.pause );
+app.get('/next/:name' , commander.next );
 app.get('/search/artist/:query' , commander.searchArtist );
 
 

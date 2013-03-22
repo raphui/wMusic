@@ -29,6 +29,11 @@ exports.pause = function( req , res ) {
 	socket.write("STREAMER#PAUSE#" + req.params.name );
 };
 
+exports.next = function( req , res ) {
+	res.send({action:'next' , status:'OK'});
+	socket.write("STREAMER#NEXT#" + req.params.name );
+};
+
 exports.searchArtist = function( req , res ) {
 
 	var query = '/search/1/artist.json?q=' + req.params.query;

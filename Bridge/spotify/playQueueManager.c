@@ -32,6 +32,63 @@ void initPlayqueue( void )
 }
 
 
+int addTracksToPlayqueue( playqueue_fifo_t *playqueue , sp_track *track )
+{
+    TRACE_2( PLAYQUEUEMANAGER , "addTracksToPlayqueue()");
+
+    playqueue_data_t *pldata;
+
+    pldata = ( playqueue_data_t * )zmalloc( 1024 );
+
+    pldata->track = track;
+
+    TAILQ_INSERT_TAIL( &playqueue->q , pldata , link );
+
+    TRACE_1( PLAYQUEUEMANAGER , "Track has been added.");
+
+    return PC_SUCCESS;
+}
+
+sp_track *getNextTrackToPlayqueue( playqueue_fifo_t *playqueue )
+{
+    TRACE_2( PLAYQUEUEMANAGER , "getNextTrack().");
+
+    playqueue_data_t *pldata;
+    sp_track *ret = NULL;
+
+    pldata = TAILQ_FIRST( &playqueue->q );
+
+    if( pldata == NULL )
+    {
+        TRACE_WARNING( PLAYQUEUEMANAGER , "Cannot get the next track, because the queue might be empty.");
+    }
+    else
+    {
+        TAILQ_REMOVE( &playqueue->q , pldata , link );
+
+        TRACE_1( PLAYQUEUEMANAGER , "Track has been retrieve.");
+
+        ret = pldata->track;
+    }
+
+    return ret;
+}
+
+int hasNextTrackFromPlayqueue( playqueue_fifo_t *playqueue )
+{
+    TRACE_2( PLAYQUEUEMANAGER , "hasNextTrack().");
+
+    playqueue_data_t *pldata;
+
+    pldata = TAILQ_FIRST( &playqueue->q );
+
+    if( pldata != NULL )
+        return TRUE;
+    else
+        return FALSE;
+}
+
+
 int addTracksPlayqueue( sp_track *track )
 {
     TRACE_2( PLAYQUEUEMANAGER , "addTracksPlayqueue()");
@@ -117,4 +174,11 @@ char *dumpPlayQueue( void )
 
 
     return buff;
+}
+
+playqueue_fifo_t *getPlayqueue( void )
+{
+    TRACE_2( PLAYQUEUEMANAGER , "getPlayqueue().");
+
+    return &mainPlayqueue;
 }

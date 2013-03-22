@@ -22,7 +22,7 @@ static audio_fifo_t g_audiofifo;
 static char currentStreamName[255] = { 0 };
 
 
-static void initPlayerEnv( void )
+void initPlayerEnv( void )
 {
     TRACE_2( PLAYERMANAGER , "initPlayerEnv().");
 
@@ -111,7 +111,7 @@ int createTrackFromUri( char *uri , char *name )
     return PC_SUCCESS;
 }
 
-int loadMusic( sp_session *session, char *uri , char *name )
+int loadMusic( sp_session *session, char *uri , char *name , playqueue_fifo_t *playqueue )
 {
     TRACE_2( PLAYERMANAGER , "loadMusic().");
 
@@ -120,8 +120,8 @@ int loadMusic( sp_session *session, char *uri , char *name )
     int status = PC_SUCCESS;
 
     /* If it's the first time we load a track, we have to init the audio driver and the playqueue */
-    if( firstTime++ == 0 )
-        initPlayerEnv();
+//    if( firstTime++ == 0 )
+//        initPlayerEnv();
 
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
@@ -136,7 +136,8 @@ int loadMusic( sp_session *session, char *uri , char *name )
     {
         TRACE_1( PLAYERMANAGER , "Adding track to the playlist.");
 
-        addTracksPlayqueue( currentTrack );
+//        addTracksPlayqueue( currentTrack );
+        addTracksToPlayqueue( playqueue , currentTrack );
 
     }
     else
@@ -151,7 +152,7 @@ int loadMusic( sp_session *session, char *uri , char *name )
     return status;
 }
 
-int playMusic( sp_session *session , char *uri , char *name )
+int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *playqueue )
 {
     TRACE_2( PLAYERMANAGER , "playMusic().");
 
@@ -162,8 +163,6 @@ int playMusic( sp_session *session , char *uri , char *name )
     sp_error error;
 
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
-
-//    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
     TRACE_3( PLAYERMANAGER , "Test if a music is playing or not");
 
@@ -183,7 +182,9 @@ int playMusic( sp_session *session , char *uri , char *name )
     {
         TRACE_1( PLAYERMANAGER , "Getting the track.");
 
-        loadTrack( session , getNextTrack() );
+//        loadTrack( session , getNextTrack() );
+
+        loadTrack( session , getNextTrackToPlayqueue( playqueue ) );
 
         error = sp_session_player_play( session , 1 );
 
@@ -205,12 +206,14 @@ int playMusic( sp_session *session , char *uri , char *name )
 
         if( currentStreamName[0] == 0 )
         {
-            snprintf( currentStreamName , strlen( name ) , "%s" , name );
+//            snprintf( currentStreamName , strlen( name ) , "%s" , name );
+            strncpy( currentStreamName , name , strlen( name ) );
         }
         else if( strcmp( currentStreamName , name ) != 0 )
         {
             memset( currentStreamName , 0 , 255 );
-            snprintf( currentStreamName , strlen( name ) , "%s" , name );
+            strncpy( currentStreamName , name , strlen( name ) );
+//            snprintf( currentStreamName , strlen( name ) , "%s" , name );
         }
         else if( !strcmp( currentStreamName , name ) )
         {
@@ -327,11 +330,15 @@ void end_of_track( sp_session *session )
 
 //    UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
-    if( hasNextTrack() == TRUE )
+//    if( hasNextTrack() == TRUE )
+//    {
+//        TRACE_1( PLAYERMANAGER , "Load next music !");
+
+//        playMusic( session , "" , currentStreamName );
+//    }
+    if( nextTrackInStream( currentStreamName ) == PC_SUCCESS )
     {
         TRACE_1( PLAYERMANAGER , "Load next music !");
-
-        playMusic( session , "" , currentStreamName );
     }
     else
     {

@@ -32,9 +32,16 @@
 #define MAX_PLAYQUEUE   10
 
 void initPlayqueue( void );
+
+int addTracksToPlayqueue( playqueue_fifo_t *plfifo , sp_track *track );
+sp_track *getNextTrackToPlayqueue( playqueue_fifo_t *playqueue );
+int hasNextTrackFromPlayqueue( playqueue_fifo_t *playqueue );
+
 int addTracksPlayqueue( sp_track *track );
 sp_track *getNextTrack( void );
 int hasNextTrack( void );
 char *dumpPlayQueue( void );
+
+playqueue_fifo_t *getPlayqueue( void );
 
 #endif // PLAYQUEUEMANAGER_H

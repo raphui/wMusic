@@ -38,12 +38,12 @@ void metadata_updated( sp_session *session );
 int music_delivery( sp_session *session , const sp_audioformat *format , const void *frames , int num_frames );
 void end_of_track( sp_session *session );
 
-
+void initPlayerEnv( void );
 int play( sp_session *session , char *uri );
 
 int createTrackFromUri( char *uri , char *name );
-int loadMusic( sp_session *session , char *uri , char *name );
-int playMusic( sp_session *session , char *uri , char *name );
+int loadMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *playqueue );
+int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *playqueue );
 int pauseMusic( sp_session *session , char *uri , char *name  );
 int nextMusic( sp_session *session , char *uri );
 

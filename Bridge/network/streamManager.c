@@ -40,7 +40,18 @@ int loadStreamer( char *url , char *name )
 {
     TRACE_2( STREAMMANAGER , "loadStream( %s , %s )." , url , name );
 
-    registerNewStream( url , name );
+    int stream = getStreamUrlFromName( name );
+
+    if( stream == PC_ERROR )
+    {
+        TRACE_3( STREAMMANAGER , "Stream is not existing.");
+
+        initPlayerEnv();
+
+        registerNewStream( url , name );
+
+        stream = getStreamUrlFromName( name );
+    }
 
     if( strstr( url , "spotify") == NULL )
     {
@@ -48,7 +59,7 @@ int loadStreamer( char *url , char *name )
     }
     else
     {
-        return loadMusic( g_session , url , name );
+        return loadMusic( g_session , url , name , streamProps[stream].playqueue );
     }
 
 }
@@ -79,7 +90,7 @@ int playStreamer( const char *name )
         {
 
             if( pausing == FALSE )
-                status = playMusic( g_session , streamProps[index].url , name );
+                status = playMusic( g_session , streamProps[index].url , name , streamProps[index].playqueue );
             else if( pausing == TRUE )
                 status = pauseStreamer( name );
 
@@ -91,6 +102,8 @@ int playStreamer( const char *name )
 
 int pauseStreamer( const char *name )
 {
+    TRACE_2( STREAMMANAGER , "pauseStream( %s )." , name );
+
     int status = PC_SUCCESS;
 
     int index;
@@ -118,6 +131,38 @@ int pauseStreamer( const char *name )
     return status;
 }
 
+int nextTrackInStream( const char *name )
+{
+    TRACE_2( STREAMMANAGER , "nextTrackInStream( %s )." , name );
+
+    int status = PC_SUCCESS;
+
+    int index = getStreamUrlFromName( name );
+
+    if( index == PC_ERROR )
+    {
+        TRACE_ERROR( STREAMMANAGER , "Fail to retrieve stream.");
+
+        status = PC_ERROR;
+    }
+    else
+    {
+        if( hasNextTrackFromPlayqueue( streamProps[index].playqueue ) == TRUE )
+        {
+            playMusic( g_session , streamProps[index].url , name , streamProps[index].playqueue );
+        }
+        else
+        {
+            TRACE_WARNING( STREAMMANAGER , "Playqueue of stream: %s is empty !" , name );
+
+            status = PC_ERROR;
+        }
+    }
+
+
+    return status;
+}
+
 
 int registerNewStream( char *url , char *name )
 {
@@ -139,17 +184,13 @@ int registerNewStream( char *url , char *name )
         {
             TRACE_3( STREAMMANAGER , "Settings the properties.");
 
-//            streamProps[i].url = ( char * )zmalloc( sizeUrl * sizeof( char ) );
-//            streamProps[i].name = ( char * )zmalloc( sizeName * sizeof( char ) );
-
-//            memset( streamProps[i].url , 0 , sizeUrl );
-//            memset( streamProps[i].name , 0 , sizeName );
-
             streamProps[i].url = ( char * )zmalloc( sizeUrl * sizeof( char ) );
             streamProps[i].name = ( char * )zmalloc( sizeName * sizeof( char ) );
 
             strncpy( streamProps[i].name , name , sizeName );
             strncpy( streamProps[i].url , url , sizeUrl );
+
+            streamProps[i].playqueue = getPlayqueue();
 
             status = PC_SUCCESS;
 

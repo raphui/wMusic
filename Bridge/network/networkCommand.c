@@ -38,6 +38,7 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
     {"STREAMER#LOAD"        ,   NULL                        ,   &loadStreamer   ,   NULL            ,   0   },
     {"STREAMER#PLAY"        ,   &playStreamer               ,   NULL            ,   NULL            ,   0   },
     {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL            ,   NULL            ,   0   },  /* Not tested !*/
+    {"STREAMER#NEXT"        ,   &nextTrackInStream          ,   NULL            ,   NULL            ,   0   },
     {"STREAMER#UNLOAD"      ,   &unregisterStream           ,   NULL            ,   NULL            ,   0   },
     {"STREAMER#GETADDR"     ,   NULL                        ,   NULL            ,   NULL            ,   0   }   /* /!\ Useless ? <Not implemented !>*/
 };
