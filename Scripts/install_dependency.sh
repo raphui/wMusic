@@ -15,6 +15,10 @@ echo -e "\e[01;33mLibVlc has been installed\e[00m"
 sudo apt-get install libasound2-dev
 echo -e "\e[01;33mLibAsound2 has been installed\e[00m"
 
+#Get libreadline-dev
+sudo apt-get install libreadline-dev
+echo -e "\e[01;33mLibReadLine has been installed\e[00m"
+
 #Get node.js
 sudo apt-get install nodejs nodejs-dev
 echo -e "\e[01;33mNode.js has been installed\e[00m"
