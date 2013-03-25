@@ -30,7 +30,7 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
     {"PLAYLIST#RENAME"      ,   NULL                        ,   &renamePlaylist         ,   NULL            ,   0   },
     {"PLAYLIST#ADDTRACK"    ,   &addTrackUriPlaylistByName  ,   NULL                    ,   NULL            ,   0   },
     {"PLAYLIST#REMOVETRACK" ,   NULL                        ,   NULL                    ,   NULL            ,   0   },  /* Not implemented !*/
-    {"PLAYLIST#LIST"        ,   listPlaylists               ,   NULL                    ,   NULL            ,   0   },
+    {"PLAYLIST#LIST"        ,   &listPlaylists              ,   NULL                    ,   NULL            ,   0   },
     {"SEARCH#BASIC"         ,   NULL                        ,   &search                 ,   NULL            ,   1   },
     {"SEARCH#ARTIST"        ,   NULL                        ,   &search                 ,   "artist:"       ,   1   },
     {"SEARCH#ALBUM"         ,   NULL                        ,   &search                 ,   "album:"        ,   1   },

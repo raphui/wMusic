@@ -299,10 +299,13 @@ int listPlaylists( const char *dump )
 {
     TRACE_2( PLAYLISTMANAGER , "listPlaylists().");
 
+    int status = PC_SUCCESS;
     char buff[255] = {0};
     int i = 0;
 
     sp_playlist *pl = NULL;
+
+//    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
     {
@@ -321,6 +324,10 @@ int listPlaylists( const char *dump )
             sendVoid( ( void * )buff , 255 );
         }
     }
+
+//    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
+
+    return status;
 }
 
 int addTrackUriPlaylistByName( char *uri , const char *name )
