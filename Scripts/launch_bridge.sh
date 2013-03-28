@@ -1,6 +1,8 @@
 #!/bin/bash
 cd ../Bridge/
-./wMusic-Bridge&
+sudo ./wMusic-Bridge&
 
 cd ../WebApi/
-node server.js
+#sudo node server.js
+sudo /usr/bin/nodejs server.js
+

@@ -173,7 +173,7 @@ int loadPlaylistInStream( const char *playlist , const char *name )
 
     sp_playlist *pl = NULL;
 
-    pl = getPlaylist( ( int )( playlist[0] - '0') );
+    pl = getPlaylist( atoi( playlist ) );
 
     if( pl == NULL )
     {
@@ -187,13 +187,13 @@ int loadPlaylistInStream( const char *playlist , const char *name )
         {
             char uri[255] = {0};
 
-//            LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
+            LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
             sp_link *link = sp_link_create_from_track( sp_playlist_track( pl , i ) , 0  );
 
             sp_link_as_string( link , uri , 255 );
 
-//            UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
+            UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
             TRACE_3( STREAMMANAGER , "Get track: %s from playlist: %s" , uri , playlist );
 
