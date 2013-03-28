@@ -115,8 +115,6 @@ int loadMusic( sp_session *session, char *uri , char *name , playqueue_fifo_t *p
 {
     TRACE_2( PLAYERMANAGER , "loadMusic().");
 
-    static int firstTime = 0;
-
     int status = PC_SUCCESS;
 
     /* If it's the first time we load a track, we have to init the audio driver and the playqueue */
@@ -184,7 +182,9 @@ int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *
 
 //        loadTrack( session , getNextTrack() );
 
-        loadTrack( session , getNextTrackToPlayqueue( playqueue ) );
+        currentTrack = getNextTrackToPlayqueue( playqueue );
+
+        loadTrack( session ,  currentTrack );
 
         error = sp_session_player_play( session , 1 );
 
@@ -287,8 +287,6 @@ int nextMusic( sp_session *session , char *uri )
     TRACE_2( PLAYERMANAGER , "nextMusic( __session__ , %s )." , uri );
 
     int status = PC_SUCCESS;
-
-    sp_track *track;
 
     TRACE_3( PLAYERMANAGER , "Getting next track from the playqueue.");
 
@@ -407,4 +405,19 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
 //    writeFile( &afd->samples );
 
     return num_frames;
+}
+
+char *getTrackInfos( void )
+{
+    TRACE_2( PLAYERMANAGER , "getTrackInfo().");
+
+    char buff[512] = {0};
+
+    LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
+
+    sprintf( buff , "%s , %s , %s" , sp_track_name( currentTrack ) , sp_artist_name( sp_track_artist( currentTrack , 0 ) ) , sp_album_name( sp_track_album( currentTrack ) ) );
+
+    UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
+
+    return buff;
 }

@@ -17,12 +17,9 @@
 
 #include "serverManager.h"
 
-static int socketMulticast;
 static int lastRequester;
 static int portCommander = PORT_COMMANDER;
 static int portCli = PORT_CLI;
-
-static struct sockaddr_in addrMulticast;
 
 //static pthread_t serverStreamerThread;
 static pthread_t serverCommanderThread;
@@ -139,7 +136,7 @@ void receivingThread( void *arg )
     if( arguments->port == PORT_CLI )
         sendVoidSocket( arguments->socket , input , sizeof( input ) );
     else
-        info = IAMBRIDGE; sendVoid( ( void *)&info , sizeof( int ) );    //Sending info that the client is connected to a bridge.
+        usleep( 300 ); info = IAMBRIDGE; sendVoidSocket( arguments->socket , ( void *)&info , sizeof( int ) );    //Sending info that the remote is connected to a bridge.
 
     while( 1 )
     {

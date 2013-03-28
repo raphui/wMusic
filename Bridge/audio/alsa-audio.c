@@ -35,6 +35,7 @@
 
 #include "audio.h"
 #include "utils/zmemory.h"
+#include "utils/types.h"
 #include "file/fileManager.h"
 #include "network/serverManager.h"
 
@@ -231,6 +232,8 @@ void audio_init(audio_fifo_t *af)
 
 void audio_set_volume( long volume )
 {
+//    int infos[3];
+    int infos;
     long min, max;
     snd_mixer_t *handle;
     snd_mixer_selem_id_t *sid;
@@ -251,4 +254,18 @@ void audio_set_volume( long volume )
     snd_mixer_selem_set_playback_volume_all(elem, volume * max / 100);
 
     snd_mixer_close(handle);
+
+    //Sending the info to the remote
+//    infos[0] = CURRENTVOL;
+//    infos[1] = ( int )volume;
+//    infos[2] = END;
+
+    infos = CURRENTVOL;
+    sendVoid( ( void * )&infos , sizeof( infos ) );
+
+    infos = ( int )volume;
+    sendVoid( ( void * )&infos , sizeof( infos ) );
+
+    infos = END;
+    sendVoid( ( void * )&infos , sizeof( infos ) );
 }

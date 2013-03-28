@@ -46,6 +46,7 @@ int loadMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *
 int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *playqueue );
 int pauseMusic( sp_session *session , char *uri , char *name  );
 int nextMusic( sp_session *session , char *uri );
+char *getTrackInfos( void );
 
 int running;
 int playing;

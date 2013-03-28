@@ -64,7 +64,7 @@ int loadStreamer( char *url , char *name )
 
 }
 
-int playStreamer( const char *name )
+int playStreamer( char *name )
 {
     TRACE_2( STREAMMANAGER , "playStream( %s )." , name );
 
@@ -100,7 +100,7 @@ int playStreamer( const char *name )
     return status;
 }
 
-int pauseStreamer( const char *name )
+int pauseStreamer( char *name )
 {
     TRACE_2( STREAMMANAGER , "pauseStream( %s )." , name );
 
@@ -131,7 +131,7 @@ int pauseStreamer( const char *name )
     return status;
 }
 
-int nextTrackInStream( const char *name )
+int nextTrackInStream( char *name )
 {
     TRACE_2( STREAMMANAGER , "nextTrackInStream( %s )." , name );
 
@@ -163,7 +163,7 @@ int nextTrackInStream( const char *name )
     return status;
 }
 
-int loadPlaylistInStream( const char *playlist , const char *name )
+int loadPlaylistInStream( char *playlist , char *name )
 {
     TRACE_2( STREAMMANAGER , "loadPlaylistInStream( %s , %s )." , playlist , name );
 
@@ -309,4 +309,13 @@ int getStreamUrlFromName( const char *name )
     }
 
     return PC_ERROR;
+}
+
+void getInfosCurrentTrack( char *name )
+{
+    TRACE_2( STREAMMANAGER , "getInfosCurrentTrack( %s )." , name );
+
+    char *infos = getTrackInfos();
+
+    sendVoid( ( void * )infos , strlen( infos ) );
 }

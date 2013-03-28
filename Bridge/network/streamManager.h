@@ -45,12 +45,13 @@ streamProperties_t streamProps[MAX_STREAM];
 
 int initStreamer( void );
 int loadStreamer( char *url , char *name );
-int playStreamer( const char *name );
-int pauseStreamer( const char *name );
-int nextTrackInStream( const char *name );
-int loadPlaylistInStream( const char *playlist , const char *name );
+int playStreamer( char *name );
+int pauseStreamer( char *name );
+int nextTrackInStream( char *name );
+int loadPlaylistInStream( char *playlist , char *name );
 int registerNewStream( char *url , char *name );
 int unregisterStream( char *name );
 int getStreamUrlFromName( const char *name );
+void getInfosCurrentTrack( char *name );
 
 #endif // STREAMMANAGER_H

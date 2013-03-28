@@ -34,12 +34,22 @@ exports.next = function( req , res ) {
 	socket.write("STREAMER#NEXT#" + req.params.name );
 };
 
+exports.infos = function( req , res ) {
+	res.send({action:'infos' , status:'OK'});
+	socket.write("STREAMER#INFOS#" + req.params.name );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    res.send( data );
+	});
+};
+
 exports.playlistName = function( req , res ) {
 	//res.send({action:'playlistName' , status:'OK'});
 	socket.write("PLAYLIST#LIST");
 
 	socket.on('data' , function( data ) {
-		console.log( data );
+		console.log( data.toString("utf8") );
 	    res.send( data );
 	});
 };
