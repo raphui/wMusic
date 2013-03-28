@@ -49,6 +49,11 @@ exports.loadPlaylist = function( req , res ) {
 	socket.write("STREAMER#PLLOAD#" + req.params.plid + "%" + req.params.name );
 };
 
+exports.playlistAdd = function( req , res ) {
+	res.send({action:'playlistAdd' , status:'OK'});
+	socket.write("PLAYLIST#ADD#" + req.params.name );
+};
+
 exports.searchArtist = function( req , res ) {
 
 	var query = '/search/1/artist.json?q=' + req.params.query;

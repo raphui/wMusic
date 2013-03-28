@@ -38,7 +38,7 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
     {"SEARCH#WHATSNEW"      ,   NULL                        ,   &search                 ,   "tag:new"       ,   1   },
     {"STREAMER#LOAD"        ,   NULL                        ,   &loadStreamer           ,   NULL            ,   0   },
     {"STREAMER#PLAY"        ,   &playStreamer               ,   NULL                    ,   NULL            ,   0   },
-    {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL                    ,   NULL            ,   0   },  /* Not tested !*/
+    {"STREAMER#PAUSE"       ,   &pauseStreamer              ,   NULL                    ,   NULL            ,   0   },
     {"STREAMER#NEXT"        ,   &nextTrackInStream          ,   NULL                    ,   NULL            ,   0   },
     {"STREAMER#PLLOAD"      ,   NULL                        ,   &loadPlaylistInStream   ,   NULL            ,   0   },
     {"STREAMER#UNLOAD"      ,   &unregisterStream           ,   NULL                    ,   NULL            ,   0   },

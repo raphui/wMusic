@@ -82,6 +82,14 @@ enum searchManagerState
     SEARCH_OK
 };
 
+enum
+{
+    IAMBRIDGE,
+    CURRENTTIME,
+    CURRENTVOL,
+    END
+};
+
 typedef struct wav_hdr
 {
     char        RIFF[4];        // RIFF Header

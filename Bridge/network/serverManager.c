@@ -127,6 +127,7 @@ void receivingThread( void *arg )
     char buff[BUFF_SIZE];
     char input[] = "wMusic~>";
     int ret;
+    int info;
     void *cliRet;
 
     argumentReceivingThread_t *arguments = ( argumentReceivingThread_t * )arg;
@@ -137,6 +138,8 @@ void receivingThread( void *arg )
 
     if( arguments->port == PORT_CLI )
         sendVoidSocket( arguments->socket , input , sizeof( input ) );
+    else
+        info = IAMBRIDGE; sendVoid( ( void *)&info , sizeof( int ) );    //Sending info that the client is connected to a bridge.
 
     while( 1 )
     {
