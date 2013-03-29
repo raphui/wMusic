@@ -14,6 +14,11 @@ exports.login = function( req , res ) {
 	socket.write("ACCOUNT#LOGIN#" + req.params.username + "%" + req.params.password );
 };
 
+exports.logout = function( req , res ) {
+	res.send({action:'logout' , status:'OK'});
+	socket.write("ACCOUNT#LOGOUT");
+};
+
 exports.load = function( req , res ) {
 	res.send({action:'load' , status:'OK'});
 	socket.write("STREAMER#LOAD#" + req.params.url + "%" + req.params.name );

@@ -4,6 +4,7 @@ commander = require('./routes/commander');
 var app = express();
 
 app.get('/login/:username/:password' , commander.login );
+app.get('/logout' , commander.logout );
 app.get('/load/:url/:name' , commander.load ); 
 app.get('/play/:name' , commander.play );
 app.get('/pause/:name' , commander.pause );
