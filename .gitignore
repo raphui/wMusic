@@ -9,6 +9,7 @@ Bridge/*.pro.user
 ###################
 wMusic-build-*
 wMusic_Connector-*
+build-wMusic-*
 
 #Libs#
 ######
