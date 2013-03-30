@@ -411,7 +411,7 @@ char *getTrackInfos( void )
 {
     TRACE_2( PLAYERMANAGER , "getTrackInfo().");
 
-    char buff[512] = {0};
+    char *buff = ( char * )zmalloc( 512 * sizeof( char ) );
 
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
