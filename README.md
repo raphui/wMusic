@@ -7,8 +7,8 @@ Streaming system using Spotify.
 
 To install wMusic on your RaspberryPi you have to :
  * Clone this repo
- * Execute Scripts/install_dependency.sh
- * Execute Scripts/launch_bridge.sh
+ * Execute __Scripts/install_dependency.sh__
+ * Execute __Scripts/launch_bridge.sh__
 
 wMusic is now working :)
 
