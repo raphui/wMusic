@@ -53,5 +53,6 @@ int registerNewStream( char *url , char *name );
 int unregisterStream( char *name );
 int getStreamUrlFromName( const char *name );
 void getInfosCurrentTrack( char *name );
+void getListStream( void );
 
 #endif // STREAMMANAGER_H

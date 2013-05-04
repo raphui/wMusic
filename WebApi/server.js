@@ -14,7 +14,7 @@ app.get('/playlist/list' , commander.playlistName );
 app.get('/playlist/add/:name' , commander.playlistAdd );
 app.get('/playlist/load/:plid/:name' , commander.loadPlaylist );
 app.get('/search/artist/:query' , commander.searchArtist );
-
+app.get('/stream/list' , commander.listStream );
 
 app.listen(3000);
 console.log('Listening on port 3000...');

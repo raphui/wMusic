@@ -26,7 +26,15 @@ void initPlayerEnv( void )
 {
     TRACE_2( PLAYERMANAGER , "initPlayerEnv().");
 
-    audio_init( &g_audiofifo );
+    static int firstTime = 0;
+
+    //We have to init the audio driver only 1 time !
+    if( firstTime == 0 )
+    {
+        audio_init( &g_audiofifo );
+        firstTime++;
+    }
+
     initPlayqueue();
 }
 

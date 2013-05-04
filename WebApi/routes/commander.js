@@ -98,3 +98,15 @@ exports.searchArtist = function( req , res ) {
 
 
 };
+
+
+exports.listStream = function( req , res ) {
+	res.send({action:'list' , status:'OK'});
+	socket.write("STREAMER#GETLIST");
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    res.send( data );
+	});
+
+};
