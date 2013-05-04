@@ -15,3 +15,8 @@ build-wMusic-*
 ######
 *.so.*
 *.so
+
+#VIM#
+#####
+*.bak
+*.swp
