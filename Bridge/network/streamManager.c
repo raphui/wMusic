@@ -358,9 +358,18 @@ void getListStream( void )
 
     int i = 0;
 
+    char response[255] = { 0 };
+
     for( i =  0 ; i < MAX_STREAM ; i++ )
     {
         if( streamProps[i].name != NULL && strcmp( streamProps[i].name  , "" ) != 0 )
-            sendVoid( ( void * )streamProps[i].name , strlen( streamProps[i].name ) );
+        {
+            strcat( response , streamProps[i].name );
+            strcat( response , ",");
+        }
+
+        //sendVoid( ( void * )streamProps[i].name , strlen( streamProps[i].name ) );
     }
+
+    sendVoid( ( void * )response , strlen( response ) );
 }
