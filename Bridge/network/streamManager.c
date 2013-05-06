@@ -115,6 +115,7 @@ int pauseStreamer( char *name )
         TRACE_ERROR( STREAMMANAGER , "Fail to retrieve stream.");
 
         status = PC_ERROR;
+
     }
     else
     {
@@ -139,11 +140,17 @@ int nextTrackInStream( char *name )
 
     int index = getStreamUrlFromName( name );
 
+    char response[255] = { 0 };
+
     if( index == PC_ERROR )
     {
         TRACE_ERROR( STREAMMANAGER , "Fail to retrieve stream.");
 
         status = PC_ERROR;
+
+        snprintf( response , 255 , "Fail to retrieve stream." );
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
     else
     {
@@ -156,6 +163,10 @@ int nextTrackInStream( char *name )
             TRACE_WARNING( STREAMMANAGER , "Playqueue of stream: %s is empty !" , name );
 
             status = PC_ERROR;
+
+            snprintf( response , 255 , "Playqueue of stream: %s is empty !" , name );
+
+            sendVoid( ( void * )response , strlen( response ) );
         }
     }
 
@@ -171,6 +182,8 @@ int loadPlaylistInStream( char *playlist , char *name )
 
     int i = 0;
 
+    char response[255] = { 0 };
+
     sp_playlist *pl = NULL;
 
     pl = getPlaylist( atoi( playlist ) );
@@ -180,6 +193,10 @@ int loadPlaylistInStream( char *playlist , char *name )
         TRACE_ERROR( STREAMMANAGER , "Cannot get playlist: %s" , playlist );
 
         status = PC_ERROR;
+
+        snprintf( response , 255 , "NOK: Cannot get playlist: %s" , playlist );
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
     else
     {
@@ -198,7 +215,12 @@ int loadPlaylistInStream( char *playlist , char *name )
             TRACE_3( STREAMMANAGER , "Get track: %s from playlist: %s" , uri , playlist );
 
             loadStreamer( uri , name );
+
         }
+
+        snprintf( response , 255 , "OK");
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
 
     return status;
@@ -290,6 +312,8 @@ int getStreamUrlFromName( const char *name )
 
     int i;
 
+    char response[255] = { 0 };
+
     for( i = 0 ; i < MAX_STREAM ; i++ )
     {
         if( streamProps[i].name == NULL )
@@ -300,11 +324,19 @@ int getStreamUrlFromName( const char *name )
         {
             TRACE_1( STREAMMANAGER , "Getting stream : %s." , name );
 
+            snprintf( response , 255 , "OK");
+
+            sendVoid( ( void * )response , strlen( response ) );
+
             return i;
         }
         else
         {
             TRACE_ERROR( STREAMMANAGER , "Cannot get stream : %s." , name );
+
+            snprintf( response , 255 , "NOK: Cannot get stream : %s." , name );
+
+            sendVoid( ( void * )response , strlen( response ) );
         }
     }
 

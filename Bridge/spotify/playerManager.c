@@ -124,6 +124,7 @@ int loadMusic( sp_session *session, char *uri , char *name , playqueue_fifo_t *p
     TRACE_2( PLAYERMANAGER , "loadMusic().");
 
     int status = PC_SUCCESS;
+    char response[255] = { 0 };
 
     /* If it's the first time we load a track, we have to init the audio driver and the playqueue */
 //    if( firstTime++ == 0 )
@@ -142,15 +143,21 @@ int loadMusic( sp_session *session, char *uri , char *name , playqueue_fifo_t *p
     {
         TRACE_1( PLAYERMANAGER , "Adding track to the playlist.");
 
-//        addTracksPlayqueue( currentTrack );
         addTracksToPlayqueue( playqueue , currentTrack );
 
+        snprintf( response , 255 , "OK");
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
     else
     {
         TRACE_ERROR( PLAYERMANAGER , "Cannot add track to the playlist because track is NULL.");
 
         status = PC_ERROR;
+
+        snprintf( response , 255 , "NOK: Cannot add the track to the playlist because the URI might be invalid.");
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
 
     UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
@@ -166,6 +173,8 @@ int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *
 
     int status = PC_SUCCESS;
 
+    char response[255] = { 0 };
+
     sp_error error;
 
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
@@ -177,18 +186,15 @@ int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *
         TRACE_WARNING( PLAYERMANAGER , "Cannot play track because no track has been loaded.");
 
         status = PC_ERROR;
-    }/*
-    else if( playing == TRUE )
-    {
-        TRACE_3( PLAYERMANAGER , "A music is playing, we just have to unpause it.");
 
-        sp_session_player_play( session , 1 );
-    }*/
+        snprintf( response , 255 , "NOK: Cannot play track because no track has been loaded.");
+
+        sendVoid( ( void * )response , strlen( response ) );
+    }
     else
     {
         TRACE_1( PLAYERMANAGER , "Getting the track.");
 
-//        loadTrack( session , getNextTrack() );
 
         currentTrack = getNextTrackToPlayqueue( playqueue );
 
@@ -210,23 +216,27 @@ int playMusic( sp_session *session , char *uri , char *name , playqueue_fifo_t *
                playStream( name );
 
            playing = TRUE;
+
+           snprintf( response , 255 , "OK");
+
+           sendVoid( ( void * )response , strlen( response ) );
         }
 
         if( currentStreamName[0] == 0 )
         {
-//            snprintf( currentStreamName , strlen( name ) , "%s" , name );
             strncpy( currentStreamName , name , strlen( name ) );
         }
         else if( strcmp( currentStreamName , name ) != 0 )
         {
             memset( currentStreamName , 0 , 255 );
             strncpy( currentStreamName , name , strlen( name ) );
-//            snprintf( currentStreamName , strlen( name ) , "%s" , name );
         }
         else if( !strcmp( currentStreamName , name ) )
         {
             //Do nothing
         }
+
+
     }
 
     UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
@@ -240,6 +250,8 @@ int pauseMusic(sp_session *session , char *uri , char *name )
     TRACE_2( PLAYERMANAGER , "pauseMusic().");
 
     int status = PC_SUCCESS;
+
+    char response[255] = { 0 };
 
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
@@ -256,12 +268,20 @@ int pauseMusic(sp_session *session , char *uri , char *name )
             TRACE_ERROR( PLAYERMANAGER , "Cannot pause track, reason: %s" , sp_error_message( error ) );
 
             status = PC_ERROR;
+
+            snprintf( response , 255 , "NOK: Cannot pause track, reason: %s" , sp_error_message( error ) );
+
+            sendVoid( ( void * )response , strlen( response ) );
         }
         else
         {
             TRACE_1( PLAYERMANAGER , "Success to pause track.");
 
             pausing = TRUE;
+
+            snprintf( response , 255 , "OK");
+
+            sendVoid( ( void * )response , strlen( response ) );
 
         }
     }
@@ -410,8 +430,6 @@ int music_delivery( sp_session *session , const sp_audioformat *format , const v
     pthread_cond_signal( &af->cond );
     pthread_mutex_unlock( &af->mutex );
 
-//    writeFile( &afd->samples );
-
     return num_frames;
 }
 
@@ -423,7 +441,16 @@ char *getTrackInfos( void )
 
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
-    sprintf( buff , "%s , %s , %s" , sp_track_name( currentTrack ) , sp_artist_name( sp_track_artist( currentTrack , 0 ) ) , sp_album_name( sp_track_album( currentTrack ) ) );
+
+    //If the return of sp_track_name is a empty string, the an error occured
+    if( strcmp( sp_track_name( currentTrack ) , "" ) == 0 )
+    {
+        snprintf( buff , 512 , "Cannot get metadata from track.");
+    }
+    else
+    {
+        sprintf( buff , "%s , %s , %s" , sp_track_name( currentTrack ) , sp_artist_name( sp_track_artist( currentTrack , 0 ) ) , sp_album_name( sp_track_album( currentTrack ) ) );
+    }
 
     UNLOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 

@@ -17,64 +17,112 @@ exports.login = function( req , res ) {
 	socket.on('data' , function( data ) {
 		console.log( data.toString("utf8") );
 	    code += data;
-		res.send({action:'login' , status: code});
+
+		if( code != "" || code.indexOf("\u0000") != -1 )
+			res.send({action:'login' , status: code});
+		else
+			code = "";
 	});
 
 };
 
 exports.logout = function( req , res ) {
-	res.send({action:'logout' , status:'OK'});
+	var code = "";
 	socket.write("ACCOUNT#LOGOUT");
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'logout' , status: code});
+	});
 };
 
 exports.load = function( req , res ) {
-	res.send({action:'load' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#LOAD#" + req.params.url + "%" + req.params.name );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'load' , status: code});
+	});
 };
 
 exports.play = function( req , res ) {
-	res.send({action:'play' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#PLAY#" + req.params.name );
+	
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'play' , status: code});
+	});
 };
 
 exports.pause = function( req , res ) {
-	res.send({action:'pause' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#PAUSE#" + req.params.name );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'pause' , status: code});
+	});
 };
 
 exports.next = function( req , res ) {
-	res.send({action:'next' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#NEXT#" + req.params.name );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'next' , status: code});
+	});
 };
 
 exports.infos = function( req , res ) {
-	res.send({action:'infos' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#INFOS#" + req.params.name );
 
 	socket.on('data' , function( data ) {
 		console.log( data.toString("utf8") );
-	    res.send( data );
+		code += data;
+		res.send({action:'infos' , status: code});
 	});
 };
 
 exports.playlistName = function( req , res ) {
-	//res.send({action:'playlistName' , status:'OK'});
+	var code = "";
 	socket.write("PLAYLIST#LIST");
 
 	socket.on('data' , function( data ) {
 		console.log( data.toString("utf8") );
-	    res.send( data );
+		code += data;
+		res.send({action:'playlistName' , status: code});
 	});
 };
 
 exports.loadPlaylist = function( req , res ) {
-	res.send({action:'loadPlaylist' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#PLLOAD#" + req.params.plid + "%" + req.params.name );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'loadPlaylist' , status: code});
+	});
 };
 
 exports.playlistAdd = function( req , res ) {
-	res.send({action:'playlistAdd' , status:'OK'});
+	var code = "";
 	socket.write("PLAYLIST#ADD#" + req.params.name );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'playlistAdd' , status: code});
+	});
 };
 
 exports.searchArtist = function( req , res ) {
@@ -109,12 +157,13 @@ exports.searchArtist = function( req , res ) {
 
 
 exports.listStream = function( req , res ) {
-	res.send({action:'list' , status:'OK'});
+	var code = "";
 	socket.write("STREAMER#GETLIST");
 
 	socket.on('data' , function( data ) {
 		console.log( data.toString("utf8") );
-	    res.send( data );
+	    code += data;
+		res.send({action:'list' , status: code});
 	});
 
 };

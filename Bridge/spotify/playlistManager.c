@@ -98,6 +98,8 @@ int createPlaylist( const char *name )
 
     int status = PC_SUCCESS;
 
+    char response[255] = { 0 };
+
     sp_playlist *pl = NULL;
 
     LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
@@ -109,10 +111,18 @@ int createPlaylist( const char *name )
         TRACE_ERROR( PLAYLISTMANAGER , "Fail to create the new playlist : %s" , name );
 
         status = PC_ERROR;
+
+        snprintf( response , 255 , "NOK: Fail to create the new playlist : %s" , name );
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
     else
     {
         TRACE_1( PLAYLISTMANAGER , "Success to create the new playlist : %s" , name );
+
+        snprintf( response , 255 , "OK");
+
+        sendVoid( ( void * )response , strlen( response ) );
     }
 
     UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
@@ -300,12 +310,10 @@ int listPlaylists( const char *dump )
     TRACE_2( PLAYLISTMANAGER , "listPlaylists().");
 
     int status = PC_SUCCESS;
-    char buff[255] = {0};
+    char buff[255] = { 0 };
     int i = 0;
 
     sp_playlist *pl = NULL;
-
-//    LOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
 
     for( i = 0 ; i < sp_playlistcontainer_num_playlists( plc ) ; i++ )
     {
@@ -319,13 +327,19 @@ int listPlaylists( const char *dump )
         {
             TRACE_3( PLAYLISTMANAGER , "Get playlist: %s" , sp_playlist_name( pl ) );
 
-            sprintf( buff , "%d: %s" , i , sp_playlist_name( pl ) );
+            snprintf( buff , 255 , "%d: %s" , i , sp_playlist_name( pl ) );
 
             sendVoid( ( void * )buff , 255 );
         }
     }
 
-//    UNLOCK_MUTEX( PLAYLISTMANAGER , &mutexSession );
+    //This means we didn't write into the buffer , so we didn't find the playlist
+    if( buff[0] == 0 )
+    {
+        snprintf( buff , 255 , "NOK: Cannot find any playlist.");
+
+        sendVoid( ( void * )buff , strlen( buff ) );
+    }
 
     return status;
 }

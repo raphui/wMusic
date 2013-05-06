@@ -98,9 +98,9 @@ void logged_in( sp_session *session , sp_error error )
     {
         TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s." ,  sp_error_message( error ) );
 
-        sprintf( response , "NOK : %s" , sp_error_message( error ) );
+        snprintf( response , 255 , "NOK : %s" , sp_error_message( error ) );
 
-        sendVoid( response , strlen( response ) );
+        sendVoid( ( void * )response , strlen( response ) );
     }
     else
     {
@@ -115,9 +115,9 @@ void logged_in( sp_session *session , sp_error error )
 
         TRACE_INFO( ACCOUNTMANAGER , "Hello !");
 
-        sprintf( response , "OK");
+        snprintf( response , 255 , "OK");
 
-        sendVoid( response , strlen( response ) );
+        sendVoid( ( void * )response , strlen( response ) );
 
     }
 
