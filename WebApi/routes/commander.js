@@ -17,11 +17,7 @@ exports.login = function( req , res ) {
 	socket.on('data' , function( data ) {
 		console.log( data.toString("utf8") );
 	    code += data;
-
-		if( code != "" || code.indexOf("\u0000") != -1 )
-			res.send({action:'login' , status: code});
-		else
-			code = "";
+		res.send({action:'login' , status: code});
 	});
 
 };
