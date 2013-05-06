@@ -24,6 +24,7 @@
 #include "utils/trace.h"
 
 void *zmalloc( size_t size );
+void *zcalloc( size_t count , size_t size );
 void zfree( void *ptr );
 char *getMemoryCount( void );
 

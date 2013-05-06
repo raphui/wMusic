@@ -29,6 +29,15 @@ void *zmalloc( size_t size )
     return malloc( size );
 }
 
+void *zcalloc( size_t count , size_t size )
+{
+    TRACE_2( ZMEMORY , "zcalloc( %d , %d )." , count , size );
+
+    memoryAllocate += size;
+
+    return calloc( count , size );
+}
+
 void zfree( void *ptr )
 {
     TRACE_2( ZMEMORY , "zfree().");

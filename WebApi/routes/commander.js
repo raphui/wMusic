@@ -14,6 +14,11 @@ exports.login = function( req , res ) {
 	socket.write("ACCOUNT#LOGIN#" + req.params.username + "%" + req.params.password );
 };
 
+exports.logout = function( req , res ) {
+	res.send({action:'logout' , status:'OK'});
+	socket.write("ACCOUNT#LOGOUT");
+};
+
 exports.load = function( req , res ) {
 	res.send({action:'load' , status:'OK'});
 	socket.write("STREAMER#LOAD#" + req.params.url + "%" + req.params.name );
@@ -91,5 +96,17 @@ exports.searchArtist = function( req , res ) {
 	  console.log("Got error: " + e.message );
 	});
 
+
+};
+
+
+exports.listStream = function( req , res ) {
+	res.send({action:'list' , status:'OK'});
+	socket.write("STREAMER#GETLIST");
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    res.send( data );
+	});
 
 };

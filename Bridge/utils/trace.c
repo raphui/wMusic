@@ -131,9 +131,11 @@ int Traces_enable(unsigned int module, unsigned int level )
 
 char *setTraceLevel( unsigned int module , unsigned int level )
 {
-    char *buff = ( char * )zmalloc( 248 * sizeof( char ) );
+//    char *buff = ( char * )zmalloc( 248 * sizeof( char ) );
 
-    memset( buff , 0 , 248 );
+//    memset( buff , 0 , 248 );
+
+    char *buff = ( char * )zcalloc( 248 , sizeof( char ) );
 
     if( module >= MODULE_COUNT )
     {
