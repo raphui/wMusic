@@ -55,15 +55,6 @@ int login( const char *username , const char *password )
         TRACE_1( ACCOUNTMANAGER , "Connection on the way...");
     }
 
-    while( logged != TRUE )
-    {
-        LOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
-
-        sp_session_process_events( currentSession , &next_timeout );
-
-        UNLOCK_MUTEX( ACCOUNTMANAGER , &mutexSession );
-    }
-
     return CONNECTION_OK;
 
 }
@@ -101,13 +92,15 @@ void logged_in( sp_session *session , sp_error error )
 
     TRACE_2( ACCOUNTMANAGER , "logged_in()");
 
-    char response[25] = { 0 };
+    char response[255] = { 0 };
 
     if( error != SP_ERROR_OK )
     {
         TRACE_ERROR( ACCOUNTMANAGER , "Fail to login, reason: %s." ,  sp_error_message( error ) );
 
-        sprintf( response , "LOGIN: NOK");
+        sprintf( response , "NOK : %s" , sp_error_message( error ) );
+
+        sendVoid( response , strlen( response ) );
     }
     else
     {
@@ -115,24 +108,30 @@ void logged_in( sp_session *session , sp_error error )
 
         if( initPlaylistManager( currentSession ) == PC_ERROR )
         {
-            TRACE_ERROR( ACCOUNTMANAGER , "Fail levelInfoto init the playlist manager !");
+            TRACE_ERROR( ACCOUNTMANAGER , "Fail init the playlist manager !");
         }
 
         logged = TRUE;
 
         TRACE_INFO( ACCOUNTMANAGER , "Hello !");
 
-        sprintf( response , "LOGIN: OK");
+        sprintf( response , "OK");
+
+        sendVoid( response , strlen( response ) );
 
     }
-
-    sendVoid( response , strlen( response ) );
 
 }
 
 void logged_out( sp_session *session )
 {
     TRACE_2( SPOTIFYMANAGER , "logged_out()");
+
+    char response[25] = { 0 };
+
+    sprintf( response , "OK");
+
+    sendVoid( ( void * )response , strlen( response ) );
 
     TRACE_INFO( ACCOUNTMANAGER , "Goodbye !");
 }

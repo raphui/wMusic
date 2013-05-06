@@ -10,8 +10,16 @@ socket.connect( port , host , function() {
 });
 
 exports.login = function( req , res ) {
-	res.send({action:'login' , status:'OK'});
+	var code = "";
+
 	socket.write("ACCOUNT#LOGIN#" + req.params.username + "%" + req.params.password );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'login' , status: code});
+	});
+
 };
 
 exports.logout = function( req , res ) {
