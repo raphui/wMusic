@@ -357,6 +357,7 @@ void getListStream( void )
     TRACE_2( STREAMMANAGER , "getListStream()");
 
     int i = 0;
+    int flags = FALSE;
 
     char response[255] = { 0 };
 
@@ -366,10 +367,16 @@ void getListStream( void )
         {
             strcat( response , streamProps[i].name );
             strcat( response , ",");
-        }
 
-        //sendVoid( ( void * )streamProps[i].name , strlen( streamProps[i].name ) );
+            flags = TRUE;
+        }
+    }
+
+    if( flags == FALSE )
+    {
+        snprintf( response , 255 , "none");
     }
 
     sendVoid( ( void * )response , strlen( response ) );
+
 }

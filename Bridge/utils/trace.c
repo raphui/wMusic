@@ -192,7 +192,7 @@ char *dumpTrace( void )
 
     for( i = 0 ; i < MODULE_COUNT ; i++ )
     {
-        sprintf( buff + strlen( buff ) , "%d:%s\t\t\t%d:%s\n" , i , trace_modules[i].module , trace_modules[i].level , traceLevelToChar( trace_modules[i].level ) );
+        sprintf( buff + strlen( buff ) , "%d:%-30s\t%d:%s\n" , i , trace_modules[i].module , trace_modules[i].level , traceLevelToChar( trace_modules[i].level ) );
     }
 
     return buff;
