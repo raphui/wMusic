@@ -312,8 +312,6 @@ int getStreamUrlFromName( const char *name )
 
     int i;
 
-    char response[255] = { 0 };
-
     for( i = 0 ; i < MAX_STREAM ; i++ )
     {
         if( streamProps[i].name == NULL )
@@ -324,19 +322,13 @@ int getStreamUrlFromName( const char *name )
         {
             TRACE_1( STREAMMANAGER , "Getting stream : %s." , name );
 
-            snprintf( response , 255 , "OK");
-
-            sendVoid( ( void * )response , strlen( response ) );
-
             return i;
         }
         else
         {
             TRACE_ERROR( STREAMMANAGER , "Cannot get stream : %s." , name );
 
-            snprintf( response , 255 , "NOK: Cannot get stream : %s." , name );
 
-            sendVoid( ( void * )response , strlen( response ) );
         }
     }
 
