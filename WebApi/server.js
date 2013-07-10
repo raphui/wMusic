@@ -14,6 +14,7 @@ app.get('/playlist/list' , commander.playlistName );
 app.get('/playlist/add/:name' , commander.playlistAdd );
 app.get('/playlist/load/:plid/:name' , commander.loadPlaylist );
 app.get('/search/artist/:query' , commander.searchArtist );
+app.get('/search/track/:query' , commander.searchTrack );
 app.get('/stream/list' , commander.listStream );
 app.get('/stream/volume/:vol' , commander.setVolume );
 

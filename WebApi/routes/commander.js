@@ -161,6 +161,47 @@ exports.searchArtist = function( req , res ) {
 };
 
 
+exports.searchTrack = function( req , res ) {
+
+	var query = '/search/1/track.json?q=' + req.params.query;
+	var data = "";
+
+	console.log("Query: " + req.params.query );
+
+	var httpOptions = {
+
+		host: 'ws.spotify.com',
+		port: '80',
+		path: query,
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+
+	};
+
+	http.get(httpOptions , function( response ) {
+		response.setEncoding('utf8');
+	  	response.on("data" , function( chunk ) {
+//	    console.log("BODY: " + chunk );
+		data += chunk;
+//	    res.send( chunk );
+		console.log("DATA: " + data );
+	  });
+
+	response.on("end" , function () {
+		console.log("Sending JSON to client");
+		res.send( data );
+	});
+
+	}).on('error' , function( e ) {	
+	  console.log("Got error: " + e.message );
+	});
+
+};
+
+
+
 exports.listStream = function( req , res ) {
 	var code = "";
 	socket.write("STREAMER#GETLIST");
