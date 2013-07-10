@@ -124,6 +124,9 @@ exports.playlistAdd = function( req , res ) {
 exports.searchArtist = function( req , res ) {
 
 	var query = '/search/1/artist.json?q=' + req.params.query;
+	var data = "";
+
+	console.log("Query: " + req.params.query );
 
 	var httpOptions = {
 
@@ -140,14 +143,20 @@ exports.searchArtist = function( req , res ) {
 	http.get(httpOptions , function( response ) {
 		response.setEncoding('utf8');
 	  	response.on("data" , function( chunk ) {
-	    console.log("BODY: " + chunk );
-	    res.send( chunk );
+//	    console.log("BODY: " + chunk );
+		data += chunk;
+//	    res.send( chunk );
+		console.log("DATA: " + data );
 	  });
+
+	response.on("end" , function () {
+		console.log("Sending JSON to client");
+		res.send( data );
+	});
 
 	}).on('error' , function( e ) {	
 	  console.log("Got error: " + e.message );
 	});
-
 
 };
 
@@ -160,6 +169,18 @@ exports.listStream = function( req , res ) {
 		console.log( data.toString("utf8") );
 	    code += data;
 		res.send({action:'list' , status: code});
+	});
+
+};
+
+exports.setVolume = function( req , res ) {
+	var code = "";
+	socket.write("STREAMER#VOLUME#" + req.params.vol );
+
+	socket.on('data' , function( data ) {
+		console.log( data.toString("utf8") );
+	    code += data;
+		res.send({action:'setVolume' , status: code});
 	});
 
 };

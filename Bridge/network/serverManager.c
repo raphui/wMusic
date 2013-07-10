@@ -135,8 +135,8 @@ void receivingThread( void *arg )
 
     if( arguments->port == PORT_CLI )
         sendVoidSocket( arguments->socket , input , sizeof( input ) );
-    else
-        usleep( 300 ); info = IAMBRIDGE; sendVoidSocket( arguments->socket , ( void *)&info , sizeof( int ) );    //Sending info that the remote is connected to a bridge.
+    else //usleep( 2000 ) for WAN connection, usleep( 300 ) for LAN connection.
+        usleep( 2000 ); info = IAMBRIDGE; sendVoidSocket( arguments->socket , ( void *)&info , sizeof( int ) );    //Sending info that the remote is connected to a bridge.
 
     while( 1 )
     {

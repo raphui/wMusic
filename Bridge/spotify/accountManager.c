@@ -115,7 +115,7 @@ void logged_in( sp_session *session , sp_error error )
 
         TRACE_INFO( ACCOUNTMANAGER , "Hello !");
 
-        snprintf( response , 255 , "OK");
+        snprintf( response , 3 , "OK");
 
         sendVoid( ( void * )response , strlen( response ) );
 

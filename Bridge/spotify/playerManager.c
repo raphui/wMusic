@@ -442,7 +442,7 @@ char *getTrackInfos( void )
     LOCK_MUTEX( PLAYERMANAGER , &mutexSession );
 
 
-    //If the return of sp_track_name is a empty string, the an error occured
+    //If the return of sp_track_name is a empty string, then an error occured
     if( strcmp( sp_track_name( currentTrack ) , "" ) == 0 )
     {
         snprintf( buff , 512 , "Cannot get metadata from track.");

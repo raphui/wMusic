@@ -44,6 +44,7 @@ static spotifytNetworkCommand_t spotifyNetworkCmd[] =
     {"STREAMER#UNLOAD"      ,   &unregisterStream           ,   NULL                    ,   NULL            ,   0   },
     {"STREAMER#INFOS"       ,   &getInfosCurrentTrack       ,   NULL                    ,   NULL            ,   0   },
     {"STREAMER#GETLIST"     ,   &getListStream              ,   NULL                    ,   NULL            ,   0   },
+    {"STREAMER#VOLUME"      ,   &audio_set_volume           ,   NULL                    ,   NULL            ,   0   },
     {"STREAMER#GETADDR"     ,   NULL                        ,   NULL                    ,   NULL            ,   0   }   /* /!\ Useless ? <Not implemented !>*/
 };
 
