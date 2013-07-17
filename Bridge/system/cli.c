@@ -100,7 +100,7 @@ void *doCommand( char *cmd )
     unsigned int arg2;
     void *ret = NULL;
 
-    /* Dynamic allocation, because after send the response throught the socket, free() is called. (If it's declare like -char errorMsg[]="zedze"- this will crash for sure. */
+    /* Dynamic allocation, because after send the response throught the socket, free() is called. (If it's declare like -char errorMsg[]="zedze"- this will crash for sure.) */
     char *errorMsg = ( char * )zmalloc( 28 * sizeof( char ) );
 
     memset( errorMsg , 0 , 28 );
