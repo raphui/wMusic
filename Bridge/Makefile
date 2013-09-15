@@ -42,5 +42,5 @@ x86: $(OBJ)
 	$(CC_X86) $(OBJ) -o $(TARGET) $(LIBS)
 
 clean:
-	rm -f $(OBJFILES) rm -f $(TARGET)
+	rm -f $(OBJ) rm -f $(TARGET)
 
