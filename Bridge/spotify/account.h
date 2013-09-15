@@ -15,32 +15,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#ifndef ACCOUNTMANAGER_H
+#define ACCOUNTMANAGER_H
+
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <libspotify/api.h>
 
-#include "spotify/spotify.h"
-#include "system/environment.h"
 #include "utils/types.h"
+#include "utils/trace.h"
+#include "spotify/playlist.h"
+#include "network/server.h"
 
-int main( void )
-{
+/* ############# CALLBACK functions ############# */
+void logged_in( sp_session *session , sp_error error);
+void logged_out( sp_session *session );
 
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
+void initAccountManager( sp_session *session );
 
-    setAdhoc( ESSID , KEY );
-#endif
+int login( const char *username , const char *password );
+int logout( sp_session *session );
 
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
+int logged;
 
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
-
-        return PC_ERROR;
-    }
-
-    printf("\n");
-    return 0;
-}
-
+#endif // ACCOUNTMANAGER_H

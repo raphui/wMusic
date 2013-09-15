@@ -15,32 +15,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#ifndef SEARCHMANAGER_H
+#define SEARCHMANAGER_H
+
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <pthread.h>
+#include <libspotify/api.h>
 
-#include "spotify/spotify.h"
-#include "system/environment.h"
 #include "utils/types.h"
+#include "utils/trace.h"
+#include "utils/zmemory.h"
+#include "network/server.h"
 
-int main( void )
-{
+#define MAX_SEARCH_COUNT    100
 
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
+int search( sp_session *session , char *query );
 
-    setAdhoc( ESSID , KEY );
-#endif
+const char *printAlbum( sp_album *album );
+const char *printArtist( sp_artist *artist );
+const char *printTrack( sp_track *track );
+int trackDuration( sp_track *track );
+char *trackUri( sp_track *track , char *uri );
 
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
 
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
-
-        return PC_ERROR;
-    }
-
-    printf("\n");
-    return 0;
-}
-
+#endif // SEARCHMANAGER_H

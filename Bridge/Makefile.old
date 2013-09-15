@@ -1,13 +1,12 @@
-TARGET := wMusic-Bridge-x86
+TARGET := wMusic-Bridge
 PROJECT_HOME := /home/raphio/Development/wMusic/Bridge
 INCLUDES_SRC := -I$(PROJECT_HOME)
-INCLUDES_LIBS_HEADERS := -I/usr/local/include/ -I/usr/include/
-GCC := gcc
+INCLUDES_LIBS_HEADERS := -I/usr/local/include/
+INCLUDES_HEADERS := -I/opt/cross/x-tools/arm-unknown-linux-gnueabi/arm-unknown-linux-gnueabi/sysroot/usr/include
+CC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-g++
+GCC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-gcc
 DEBUGFLAGS_C-Compiler := -g -O0 -fno-omit-frame-pointer -pipe -Wall
-LIBS := -lvlc -lspotify -lasound -lpthread
-
-SRCF= $(wildcard *.c)
-OBJF= $(SRC:.c=.o)
+LIBS := -L/home/raphio/Development/wMusic/ARMLibs -lvlc -lspotify -lasound -lpthread-2.13 -lvlccore -ldbus-1 -lrt-2.13
 
 OBJFILES := main.o \
 	audio/audio.o \
@@ -32,7 +31,7 @@ OBJFILES := main.o \
 SRC := 	main.c \
 	audio/audio.c \
 	audio/alsa-audio.c \
-	file/file.c \
+	file/fileManager.c \
 	network/network.c \
 	network/server.c \
 	network/stream.c \
@@ -48,13 +47,9 @@ SRC := 	main.c \
 	utils/trace.c \
 	utils/zmemory.c \
 	vlc/vlcManager.c
-	
 
 %.o: %.c
 	$(GCC) $(DEBUGFLAGS_C-Compiler) $(INCLUDES_SRC) $(INCLUDES_LIBS_HEADERS) -c -fmessage-length=0 -o $@ $<
-
-test: $(OBJF)
-	$(GCC) $(OBJF) -o $(TARGET) $(LIBS)
 
 all: $(OBJFILES)
 	$(GCC) $(OBJFILES) -o $(TARGET) $(LIBS)

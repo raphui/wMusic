@@ -36,8 +36,8 @@
 #include "audio.h"
 #include "utils/zmemory.h"
 #include "utils/types.h"
-#include "file/fileManager.h"
-#include "network/serverManager.h"
+#include "file/file.h"
+#include "network/server.h"
 
 static snd_pcm_t *alsa_open(char *dev, int rate, int channels)
 {

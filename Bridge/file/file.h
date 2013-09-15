@@ -15,32 +15,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#ifndef FILEMANAGER_H
+#define FILEMANAGER_H
+
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-#include "spotify/spotify.h"
-#include "system/environment.h"
+#include "utils/trace.h"
 #include "utils/types.h"
+#include "vlc/vlcManager.h"
 
-int main( void )
-{
-
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
-
-    setAdhoc( ESSID , KEY );
+#if CROSS_COMPILE
+#define REF_FILE    "/home/pi/music.wav"
+#define STREAM_FOLDER "/home/pi/"
+#else
+#define REF_FILE    "/home/raphio/music.wav"
+#define STREAM_FOLDER "/home/raphio/"
 #endif
 
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
+#define DATA_SIZE   8192
 
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
 
-        return PC_ERROR;
-    }
+int createFile( char *name );
+int writeFile( void *data );
 
-    printf("\n");
-    return 0;
-}
-
+#endif // FILEMANAGER_H

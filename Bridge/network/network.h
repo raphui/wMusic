@@ -15,32 +15,36 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef NETWORKCOMMAND_H
+#define NETWORKCOMMAND_H
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "spotify/spotify.h"
-#include "system/environment.h"
+#include "spotify/player.h"
+#include "spotify/search.h"
+#include "spotify/playlist.h"
+#include "spotify/account.h"
+#include "network/server.h"
+#include "network/stream.h"
 #include "utils/types.h"
+#include "utils/trace.h"
 
-int main( void )
+#define NETWORK_COUNT_COMMAND   26
+#define MAX_QUERY_LENGTH        1024
+
+typedef struct spotifytNetworkCommand
 {
 
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
+    char *command;
+    int ( *executeCommandOneArg )( void *arg1 );
+    int ( *executeCommandTwoArg )( void *arg1 , void *arg2 );
+    char *specificArg;
+    int needSession;
 
-    setAdhoc( ESSID , KEY );
-#endif
+}spotifytNetworkCommand_t;
 
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
+void doAction( char *command );
 
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
-
-        return PC_ERROR;
-    }
-
-    printf("\n");
-    return 0;
-}
-
+#endif // NETWORKCOMMAND_H

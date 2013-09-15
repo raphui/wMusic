@@ -15,32 +15,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef ENVIRONMENTMANAGER_H
+#define ENVIRONMENTMANAGER_H
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "spotify/spotify.h"
-#include "system/environment.h"
 #include "utils/types.h"
+#include "utils/trace.h"
 
-int main( void )
-{
+#define SET_AHDOC_SCRIPT    "Scripts/set_ad-hoc.sh"
+#define RETRIEVE_ESSID      "Scripts/retrieve_essid.sh"
+#define RETRIEVE_INFOS_IP   "Scripts/retrieve_infos_ip.sh"
 
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
 
-    setAdhoc( ESSID , KEY );
-#endif
+void setAdhoc( char *essidName , char *key );
 
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
-
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
-
-        return PC_ERROR;
-    }
-
-    printf("\n");
-    return 0;
-}
-
+#endif // ENVIRONMENTMANAGER_H

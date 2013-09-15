@@ -104,8 +104,6 @@ int streamFile( char *filename )
                 {
                     TRACE_1( VLCMANAGER , "Start diffuse the stream.");
 
-				
-					playStream( name );
                 }
             }
         }

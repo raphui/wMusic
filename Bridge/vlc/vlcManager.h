@@ -25,7 +25,7 @@
 #include "utils/trace.h"
 #include "utils/types.h"
 #include "utils/zmemory.h"
-#include "network/streamManager.h"
+#include "network/stream.h"
 
 int streamFile( char *filename );
 int destroyVlc( void );

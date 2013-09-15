@@ -15,32 +15,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "spotify/spotify.h"
 #include "system/environment.h"
-#include "utils/types.h"
 
-int main( void )
+void setAdhoc( char *essidName , char *key )
 {
+    TRACE_2( ENVIRONMENTMANAGER , "setAdhoc( %s , %s )" , essidName , key );
 
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
+    char cmd[1024];
 
-    setAdhoc( ESSID , KEY );
-#endif
+    TRACE_3( ENVIRONMENTMANAGER , "Starting construct the command.");
 
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
+    sprintf( cmd , "%s %s %s" , SET_AHDOC_SCRIPT , essidName , key );
 
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
+    system( cmd );
 
-        return PC_ERROR;
-    }
-
-    printf("\n");
-    return 0;
+    TRACE_1( ENVIRONMENTMANAGER , "Command executed.");
 }
-

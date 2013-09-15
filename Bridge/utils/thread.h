@@ -15,32 +15,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef THREADMANAGER_H
+#define THREADMANAGER_H
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
+#include <signal.h>
+#include <semaphore.h>
+#include <unistd.h>
 
-#include "spotify/spotify.h"
-#include "system/environment.h"
 #include "utils/types.h"
+#include "utils/trace.h"
+#include "utils/zmemory.h"
 
-int main( void )
-{
+void createThread( void *routine , void *arg );
+void incrementThreadCount( int n );
+char *getThreadCount( void );
+void releaseThread( void );
 
-#if SET_ENV
-    TRACE_INFO( SPOTIFYMANAGER , "Setting up system environment.");
-
-    setAdhoc( ESSID , KEY );
-#endif
-
-    TRACE_INFO( SPOTIFYMANAGER , "Starting Spotify manager.");
-
-    if( launchSpotifyManager() == CONNECTION_ERROR )
-    {
-        TRACE_ERROR( SPOTIFYMANAGER , "Connection to Spotify failed.");
-
-        return PC_ERROR;
-    }
-
-    printf("\n");
-    return 0;
-}
-
+#endif // THREADMANAGER_H

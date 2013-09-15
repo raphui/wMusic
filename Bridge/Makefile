@@ -1,60 +1,45 @@
 TARGET := wMusic-Bridge
+TARGET_X86 := wMusic-Bridge-x86
+
 PROJECT_HOME := /home/raphio/Development/wMusic/Bridge
+
 INCLUDES_SRC := -I$(PROJECT_HOME)
+
 INCLUDES_LIBS_HEADERS := -I/usr/local/include/
+INCLUDES_LIBS_HEADERS_X86 := -I/usr/local/include/ -I/usr/include/
 INCLUDES_HEADERS := -I/opt/cross/x-tools/arm-unknown-linux-gnueabi/arm-unknown-linux-gnueabi/sysroot/usr/include
-CC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-g++
-GCC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-gcc
+
+CC := /opt/cross/x-tools/arm-unknown-linux-gnueabi/bin/arm-unknown-linux-gnueabi-gcc
+CC_X86 := gcc
+
 DEBUGFLAGS_C-Compiler := -g -O0 -fno-omit-frame-pointer -pipe -Wall
+
 LIBS := -L/home/raphio/Development/wMusic/ARMLibs -lvlc -lspotify -lasound -lpthread-2.13 -lvlccore -ldbus-1 -lrt-2.13
+LIBS_X86 := -lvlc -lspotify -lasound -lpthread
 
-OBJFILES := main.o \
-	audio/audio.o \
-	audio/alsa-audio.o \
-	file/fileManager.o \
-	network/networkCommand.o \
-	network/serverManager.o \
-	network/streamManager.o \
-	spotify/accountManager.o \
-	spotify/playlistManager.o \
-	spotify/playerManager.o \
-	spotify/searchManager.o \
-	spotify/playQueueManager.o \
-	spotify/spotifyManager.o \
-	system/cli.o \
-	system/environmentManager.o \
-	utils/threadManager.o \
-	utils/trace.o \
-	utils/zmemory.o \
-	vlc/vlcManager.o
+SRC := $(wildcard */*.c)
+SRC := $(SRC) $(wildcard *.c)
+EXCLUDES := $(shell ls shairport/*.c)
+SRC := $(filter-out $(EXCLUDES) , $(SRC) )
+OBJ := $(SRC:.c=.o)
 
-SRC := 	main.c \
-	audio/audio.c \
-	audio/alsa-audio.c \
-	file/fileManager.c \
-	network/networkCommand.c \
-	network/serverManager.c \
-	network/streamManager.c \
-	spotify/accountManager.c \
-	spotify/playlistManager.c \
-	spotify/playerManager.c \
-	spotify/searchManager.c \
-	spotify/playQueueManager.c \
-	spotify/spotifyManager.c \
-	system/cli.c \
-	system/environmentManager.c \
-	utils/threadManager.c \
-	utils/trace.c \
-	utils/zmemory.c \
-	vlc/vlcManager.c
 
+#ifeq( $@ , arm )
 %.o: %.c
-	$(GCC) $(DEBUGFLAGS_C-Compiler) $(INCLUDES_SRC) $(INCLUDES_LIBS_HEADERS) -c -fmessage-length=0 -o $@ $<
+	$(CC) $(DEBUGFLAGS_C-Compiler) $(INCLUDES_SRC) $(INCLUDES_LIBS_HEADERS) -c -fmessage-length=0 -o $@ $<
+#else
+#%.o: %.c
+#	$(CC_X86) $(DEBUGFLAGS_C-Compiler) $(INCLUDES_SRC) $(INCLUDES_LIBS_HEADERS) -c -fmessage-length=0 -o $@ $<
+#endif
 
-all: $(OBJFILES)
-	$(GCC) $(OBJFILES) -o $(TARGET) $(LIBS)
-	rm -f $(OBJFILES)
-	rm -f *.o
+all: $(OBJ)
+	$(CC) $(OBJ) -o $(TARGET) $(LIBS)
+
+arm: $(OBJ)
+	$(CC) $(OBJ) -o $(TARGET) $(LIBS)
+
+x86: $(OBJ)
+	$(CC_X86) $(OBJ) -o $(TARGET) $(LIBS)
 
 clean:
 	rm -f $(OBJFILES) rm -f $(TARGET)

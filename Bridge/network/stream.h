@@ -15,37 +15,44 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CLI_H
-#define CLI_H
+#ifndef STREAMMANAGER_H
+#define STREAMMANAGER_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils/trace.h"
-#include "utils/types.h"
-#include "utils/zmemory.h"
-#include "utils/thread.h"
-#include "network/server.h"
 #include "spotify/playQueueManager.h"
+#include "spotify/player.h"
+#include "spotify/playlist.h"
+#include "utils/types.h"
+#include "utils/trace.h"
+#include "utils/zmemory.h"
+#include "vlc/vlcManager.h"
+#include "network/server.h"
 
-#define CLI_COUNT_COMMAND       6
-#define SET_CLI_COUNT_COMMAND   1
+#define MAX_STREAM  10
 
-typedef struct cliCommand
+typedef struct streamProperties
 {
-    char *command;
-    char *( *func )( void );
+    char *url;
+    char *name;
+    playqueue_fifo_t *playqueue;
 
-}cliCommand_t;
+}streamProperties_t;
 
-typedef struct setCliCommand
-{
-    char *command;
-    char *( *func )( unsigned int , unsigned int );
+streamProperties_t streamProps[MAX_STREAM];
 
-}setCliCommand_t;
+int initStreamer( void );
+int loadStreamer( char *url , char *name );
+int playStreamer( char *name );
+int pauseStreamer( char *name );
+int nextTrackInStream( char *name );
+int loadPlaylistInStream( char *playlist , char *name );
+int registerNewStream( char *url , char *name );
+int unregisterStream( char *name );
+int getStreamUrlFromName( const char *name );
+void getInfosCurrentTrack( char *name );
+void getListStream( void );
 
-void *doCommand( char *cmd );
-
-#endif // CLI_H
+#endif // STREAMMANAGER_H
