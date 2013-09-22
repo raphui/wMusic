@@ -14,7 +14,7 @@ wMusic is now working :)
 
 ### Using it
 
-Now to use it , you have to clone the repo : https://github.com/wVibes/wRemote , it's the mobile application to use it.
+Now to use it , you have to clone the repo : https://github.com/dbraillon/wVibes , it's the mobile application to use it.
 
 ### Sonos-Like system
 
